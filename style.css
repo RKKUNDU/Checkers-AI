@@ -1,0 +1,42 @@
+.noPiece{
+    width: 20px;
+    height: 60px;
+    padding: 12px;
+    background-color:#f5bc78;
+    
+}
+.redPiece
+{
+    width: 20px;
+    height: 20px;
+    padding: 12px;
+    background:#99692f;
+    background-color: red;
+    border: 1px solid white;
+    border-radius: 20px;
+}
+.blackPiece
+{
+    width: 20px;
+    height: 20px;
+    padding: 12px;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 50px;
+}
+.whiteSpace{
+background-color:#99692f;
+}
+td{
+    background-color: #BA7A3A;
+    width:65px;
+    height: 65px;
+    text-align: center;		
+}
+table{
+	position: relative;
+	width: 640px;
+	height: 640px;
+	margin-left: auto ;
+	margin-right: auto;
+}
