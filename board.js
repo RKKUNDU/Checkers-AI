@@ -176,11 +176,30 @@ class Board {
         return all_moves.length == 0;
     }
 
+    opponent_has_no_move() {
+        var all_moves = this.get_all_opponent_moves();
+        return all_moves.length == 0;
+    }
+
     get_all_moves() {
         var all_moves = new Array();
         for (var i = 1; i <= 8; i++) {
             for (var j = 1; j <= 8; j++) {
                 if ((this.is_ai_red && this.is_red_piece(i, j)) || (!this.is_ai_red && this.is_black_piece(i, j))) {
+                    moves = this.get_moves_of_piece(i, j);
+                    all_moves.concat(moves);
+                }    
+            }
+        }
+
+        return all_moves;
+    }
+
+    get_all_opponent_moves() {
+        var all_moves = new Array();
+        for (var i = 1; i <= 8; i++) {
+            for (var j = 1; j <= 8; j++) {
+                if ((!this.is_ai_red && this.is_red_piece(i, j)) || (this.is_ai_red && this.is_black_piece(i, j))) {
                     moves = this.get_moves_of_piece(i, j);
                     all_moves.concat(moves);
                 }    
@@ -229,14 +248,120 @@ class Board {
         }
     }
 
-    make_move(from_row, from_col, to_row, to_col) {
+    make_move(move) {
         // TODO: whole function
         // make the move
         // capture the move
     }
 
+    has_won() {
+        // There is no opponent piece
+        if ((this.is_ai_red && this.count_black_pieces == 0) || (!this.is_ai_red && this.count_red_pieces == 0))
+            return true;
+
+        // opponent has no move
+        if (this.opponent_has_no_move())
+            return true;  // TODO: confirm this is according to rule
+
+        // TODO: check if there is more ways to win
+    }
+
+    has_lost() {
+        // There is no opponent piece
+        if ((this.is_ai_red && this.count_red_pieces == 0) || (!this.is_ai_red && this.count_black_pieces == 0))
+            return true;
+
+        // there is no move for the player
+        if (this.has_no_move()) 
+            return true; // TODO: confirm this is according to rule
+
+        // TODO: check if there is more ways to lose
+    }
+
+    has_drawn() {
+        // TODO: check rules
+        return false;
+    }
+
+    is_game_finished() {
+        return this.has_won || this.has_lost() || this.has_drawn();
+    }
+
+    copyOf(obj) {
+        /*
+            Create copy of this object to `obj`
+        */
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++) 
+                obj.board[i][j] = this.board[i][j];
+        
+        obj.is_ai_red = this.is_ai_red;
+        obj.is_red_top = this.is_red_top;
+
+        return obj;
+    }
 }
 
 var board = new Board(true);
 board.print_board();
 board.get_moves_of_piece(4,1);
+
+var MAX_DEPTH = 5;
+// alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
+// board.print_board();
+
+function alpha_beta(board, depth, alpha, beta, maximizer) {
+    if (depth == 0 || board.is_game_finished())
+        return board.evaluate_board()
+
+    if (maximizer) {
+        var max_val = Number.MIN_VALUE;
+        var moves = board.get_all_moves();
+        var best_move;
+
+        for (var i = 0; i < moves.length; i++) {
+
+            var board_copy = new Board();
+            board.copyOf(board_copy);
+            board_copy.make_move(moves[i]);
+            var val = alpha_beta(board_copy, depth-1, alpha, beta, false);
+
+            if (val > max_val) {
+                max_val = val;
+                best_move = moves[i];
+            }
+
+            if (val > alpha)
+                alpha = val;
+
+            if (alpha >= beta)
+                break;
+        }
+
+        if (depth == MAX_DEPTH) 
+            board.make_move(best_move);
+        
+        return max_val;
+    } else {
+        var min_val = Number.MAX_VALUE;
+        var moves = board.get_all_moves();
+
+        for (var i = 0; i < moves.length; i++) {
+            var board_copy = new Board();
+            board.copyOf(board_copy);
+            board_copy.make_move(moves[i]);
+            var val = alpha_beta(board_copy, depth-1, alpha, beta, true);
+
+            if (val < min_val)
+                min_val = val;
+
+            if (val < beta)
+                beta = val;
+
+            if (alpha >= beta)
+                break;
+        }
+    
+        return min_val;
+    }
+}
