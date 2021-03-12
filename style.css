@@ -40,10 +40,43 @@ background-color:#99692f;
 
 .noPiece{
     background-color: grey;
-    left:10px; 
-    width:65px;
-    height: 65px;
+    width: 20px;
+    height: 60px;
+    padding: 12px;
     		
+}
+.possibleMove{
+    margin-top:auto;
+    margin-left:auto;
+    margin-bottom:auto; 
+    margin-right:auto;
+    width: 20px;
+    height: 20px;
+    padding: 12px;
+    background-color: #f7b24a ;
+}
+.capture{
+    margin-top:auto;
+    margin-left:auto;
+    margin-bottom:auto; 
+    margin-right:auto;
+    width: 20px;
+    height: 20px;
+    padding: 12px;
+    background-color: grey;
+}
+.clicked{
+    margin-top:auto;
+    margin-left:auto;
+    margin-bottom:auto; 
+    margin-right:auto;
+    width: 20px;
+    height: 20px;
+    align-content: center;
+    background:#99692f;
+    background-color: #ffd4c2;
+    border: white;
+    border-radius: 10px;
 }
 td{
     background-color: grey;
@@ -58,3 +91,5 @@ table{
 	margin-right: auto;
 
 }
+
+
