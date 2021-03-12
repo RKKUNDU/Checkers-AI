@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="board.js"></script>
 	<title>Checkers</title>
 </head>
 <body style="background-color: black;">
@@ -90,7 +92,52 @@
 	        	<td class="emptyCell" id="88"></td>
 	        </tr>
 	  </table>
-	
+	<script type="text/javascript">
+	var prevClicked;
+	var possible1, possible2;
+	var thisClick=0;
+	  $(document).ready(function(){
+  			$("td").click(function(){
+				if(thisClick == 0)
+				{
+					thisClick = this;
+					//alert(thisClick.id+" is clicked");
+					var cellClass = $('#'+thisClick.id).attr('class');
+					if(!cellClass)
+					{
+						var pieceClass = $("#"+thisClick.id).children("p").attr('class');
+                        if(pieceClass == "redPiece")
+						{ $("#"+thisClick.id).toggleClass("clicked"); }
+					}
+					//console.log(cellClass);
+				}  
+    			else {
+					prevClick = thisClick;
+					thisClick = this;
+					var prevClass = $("#"+prevClick.id).attr('class');
+					console.log(prevClass);
+					if(!prevClass || prevClass == "clicked")
+					{
+						//console.log($("#"+prevClick.id).children("p").attr('class'));
+						var pieceClass = $("#"+prevClick.id).children("p").attr('class');
+                        if(pieceClass == "redPiece")
+						{ $("#"+prevClick.id).toggleClass("clicked"); }
+						
+					 } 
+					
+					var cellClass = $('#'+thisClick.id).attr('class');
+					if(!cellClass)
+					{
+						var pieceClass = $("#"+thisClick.id).children("p").attr('class');
+                        if(pieceClass == "redPiece")
+						{ $("#"+thisClick.id).toggleClass("clicked"); }
+					}
+					console.log($('#'+thisClick.id).attr('class'));
+					//alert("Click has changed"+thisClick.id+" is clicked."); 
+				}
+  			});
+		});
+	</script>
 	  </main>
 	  </body>
 <! https://www.w3schools.com/howto/howto_js_treeview.asp >
