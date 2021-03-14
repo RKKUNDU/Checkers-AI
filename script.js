@@ -32,6 +32,7 @@
 			else {
 				prevClick = thisClick;
 				thisClick = this;
+				
 						
 
 				var prevClass = $("#"+prevClick.id).attr('class');
