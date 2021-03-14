@@ -46,14 +46,10 @@ background-color:#99692f;
     		
 }
 .possibleMove{
-    margin-top:auto;
-    margin-left:auto;
-    margin-bottom:auto; 
-    margin-right:auto;
     width: 20px;
-    height: 20px;
+    height: 60px;
     padding: 12px;
-    background-color: #f7b24a ;
+    background-color: #252424 ;
 }
 .capture{
     margin-top:auto;
