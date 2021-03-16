@@ -443,41 +443,12 @@ class Board {
         console.log('--------------------');
         alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
         board.print_board();
-
-        // this.print_board();
-        // console.log(this.get_all_opponent_moves());
-        // var all = board.get_all_opponent_moves();
-        // for (var i = 0; i < all.length; i++) {
-        //     console.log(all[i]['from_row'], all[i]['from_col'], all[i]['moves']);
-        //     for (var j = 0; j < all[i]['moves'].length; j++)
-        //         console.log(all[i]['moves'][j]['captures']);
-        // }
-
-        // for (var i = 1; i <= 8; i++)
-        //     console.log(i, "::: ", this.get_moves_of_piece(3, i));
-        // this.is_ai_red = false;
-        // console.log(this.get_moves_of_piece(6, 3));
-        // console.log(this.get_all_moves());
-        // this.get_all_moves();
-        // this.print_board();
-                    
     }
 }
 
 var MAX_DEPTH = 3;
 var board = new Board(true, true);
 board.test();
-// console.log(board.get_moves_of_piece(3, 2, 0));
-// var all = board.get_all_opponent_moves();
-// for (var i = 0; i < all.length; i++) {
-//     console.log(all[i]['from_row'], all[i]['from_col'], all[i]['moves']);
-// }
-// console.log(board.get_all_moves());
-// console.log(all[9]['moves'][1]['to_row']);
-
-// console.log('--------------------');
-// alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
-// board.print_board();
 
 function alpha_beta(board, depth, alpha, beta, maximizer) {
     if (depth == 0 || board.is_game_finished())
