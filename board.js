@@ -219,34 +219,32 @@ class Board {
                 Array of arrays
                 each array of the following format : [from_row, from_col, to_row, to_col]
         */
-        if(row<=0 && row>8 && col<=0 && col>8){
-            //moves_lst1=[]
+        if(row<=0 || row>8 || col<=0 || col>8)
             return -1;
-        }
+        
         if (!this.is_piece(row, col))
             return new Array();
+
         var i=row;
         var j=col;
         var moves_lst=[];
         if (!this.is_king_piece(row, col)) {
             if (this.is_red_piece(row, col)) {
                 if (this.is_red_top) {
-                    
-                    //Left
+                    // Left
                     if(rec_call==0){
                         if(this.is_empty_cell(i+1,j-1)){
                             moves_lst.push({'to_row':i+1,'to_col':j-1})
                         }
-                        else if(this.board[i+1][j-1] == 1){
+                        else if(this.is_red_piece(i, j)){
                             // do_nothing
                         }
                     }
-                    if(this.board[i+1][j-1]==-1){
+                    if(this.is_black_piece(i, j)){
                         tmp=this.get_moves_of_piece(i+2,j-2,1)
-                        if(tmp==-1){
+                        if(tmp == -1){
                             moves_lst.push({'to_row':i,'to_col':j})
-                        }
-                        if(tmp.length==0){
+                        } else if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2})
                         }else{
                             moves_lst.push(tmp);
@@ -254,14 +252,12 @@ class Board {
 
                     }
 
-
-                    //Right
+                    // Right
                     if(rec_call==0){
-                        if(this.board[i+1][j+1] != 1 && this.board[i+1][j+1] != -1){
+                        if(this.is_empty_cell(i+1, j+1)){
                             moves_lst.push({'to_row':i+1,'to_col':j+1})
-                        
                         }
-                        else if(this.board[i+1][j+1] == 1){
+                        else if(this.is_black_piece(i, j)){
             
                         }
                     }
@@ -306,7 +302,7 @@ class Board {
 
     make_move(row,col,to_row,to_col,rec_call=0) {
 
-        if(row<=0 && row>8 && col<=0 && col>8){
+        if(row<=0 || row>8 || col<=0 || col>8){
             //moves_lst1=[]
             //return new Array();
             return -1
@@ -463,11 +459,28 @@ class Board {
 
         return obj;
     }
+
+    test() {
+        this.board=[[4,4,4,4,4,4,4,4,4],
+                    [4,3,1,3,1,3,1,3,1],
+                    [4,1,3,1,3,1,3,1,3],
+                    [4,3,1,3,1,3,1,3,1],
+                    [4,0,3,0,3,0,3,0,3],
+                    [4,3,0,3,0,3,0,3,0],
+                    [4,-1,3,-1,3,-1,3,-1,3],
+                    [4,3,-1,3,-1,3,-1,3,-1],
+                    [4,-1,3,-1,3,-1,3,-1,3]];
+
+        this.print_board();
+        for (var i = 1; i <= 8; i++)
+            console.log(i, "::: ", this.get_moves_of_piece(3, i));
+        // this.print_board();
+                    
+    }
 }
 
 var board = new Board(true);
-board.print_board();
-board.get_moves_of_piece(4,1);
+board.test();
 
 var MAX_DEPTH = 5;
 // alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
