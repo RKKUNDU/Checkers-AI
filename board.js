@@ -219,11 +219,11 @@ class Board {
                 Array of arrays
                 each array of the following format : [from_row, from_col, to_row, to_col]
         */
-        if(row<=0 || row>8 || col<=0 || col>8)
+        if(row <= 0 || row > 8 || col <= 0 || col > 8)
             return -1;
-        
-        // if (!this.is_piece(row, col) && !this.is_empty_cell(row, col))
-        //     return new Array();
+
+        if (rec_call == 0 && !this.is_piece(row, col)) 
+            return new Array();
 
         var i=row;
         var j=col;
@@ -240,13 +240,11 @@ class Board {
                             // do_nothing
                         }
                     }
-                    if(this.is_black_piece(i, j)){
+                    if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         var tmp=this.get_moves_of_piece(i+2,j-2,1)
-                        if(tmp == -1){
-                            moves_lst.push({'to_row':i,'to_col':j})
-                        } else if(tmp.length == 0) {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2})
-                        }else{
+                        } else{
                             for (var i = 0; i < tmp.length; i++)
                                 moves_lst.push(tmp[i]);
                         }
@@ -259,18 +257,16 @@ class Board {
                             moves_lst.push({'to_row':i+1,'to_col':j+1})
                         }
                         else if(this.is_red_piece(i+1, j+1)){
-            
+                            // do_nothing
                         }
                     }
 
-                    if(this.is_black_piece(i+1, j+1)){
+                    if(this.is_black_piece(i+1, j+1 )&& this.is_empty_cell(i+2, j+2)){
                         var tmp=this.get_moves_of_piece(i+2,j+2,1)
-                        if(tmp==-1){
-                            moves_lst.push({'to_row':i,'to_col':j})
-                        }
-                        if(tmp.length==0){
+                        
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2})
-                        }else{
+                        } else {
                             for (var i = 0; i < tmp.length; i++)
                                 moves_lst.push(tmp[i]);
                         }
@@ -477,8 +473,8 @@ class Board {
                     [4,3,1,3,1,3,1,3,1],
                     [4,1,3,1,3,1,3,1,3],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,1,3,0,3,0,3,0,3],
-                    [4,3,-1,3,0,3,0,3,0],
+                    [4,1,3,-1,3,0,3,0,3],
+                    [4,3,3,3,0,3,0,3,0],
                     [4,-1,3,0,3,-1,3,-1,3],
                     [4,3,-1,3,-1,3,-1,3,-1],
                     [4,-1,3,-1,3,0,3,-1,3]];
@@ -487,7 +483,7 @@ class Board {
         this.print_board();
         // for (var i = 1; i <= 8; i++)
         //     console.log(i, "::: ", this.get_moves_of_piece(3, i));
-        console.log(this.get_moves_of_piece(4, 1));
+        console.log(this.get_moves_of_piece(3, 4));
         // this.print_board();
                     
     }
