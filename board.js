@@ -186,7 +186,9 @@ class Board {
         for (var i = 1; i <= 8; i++) {
             for (var j = 1; j <= 8; j++) {
                 if ((this.is_ai_red && this.is_red_piece(i, j)) || (!this.is_ai_red && this.is_black_piece(i, j))) {
-                    moves = this.get_moves_of_piece(i, j);
+                    var moves = this.get_moves_of_piece(i, j);
+                    console.log(i, j);
+                    console.log(moves);
                     all_moves.concat(moves);
                 }    
             }
@@ -200,7 +202,7 @@ class Board {
         for (var i = 1; i <= 8; i++) {
             for (var j = 1; j <= 8; j++) {
                 if ((!this.is_ai_red && this.is_red_piece(i, j)) || (this.is_ai_red && this.is_black_piece(i, j))) {
-                    moves = this.get_moves_of_piece(i, j);
+                    var moves = this.get_moves_of_piece(i, j);
                     all_moves.concat(moves);
                 }    
             }
@@ -245,8 +247,7 @@ class Board {
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2})
                         } else{
-                            for (var i = 0; i < tmp.length; i++)
-                                moves_lst.push(tmp[i]);
+                            moves_lst.concat(tmp);
                         }
 
                     }
@@ -267,8 +268,7 @@ class Board {
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2})
                         } else {
-                            for (var i = 0; i < tmp.length; i++)
-                                moves_lst.push(tmp[i]);
+                            moves_lst.concat(tmp);
                         }
                         //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
                     }
@@ -483,13 +483,14 @@ class Board {
         this.print_board();
         // for (var i = 1; i <= 8; i++)
         //     console.log(i, "::: ", this.get_moves_of_piece(3, i));
-        console.log(this.get_moves_of_piece(3, 4));
+        // console.log(this.get_moves_of_piece(3, 4));
+        console.log(this.get_all_moves());
         // this.print_board();
                     
     }
 }
 
-var board = new Board(true);
+var board = new Board(true, true);
 board.test();
 
 var MAX_DEPTH = 5;
