@@ -235,17 +235,22 @@ class Board {
                     // Left
                     if(rec_call==0){
                         if(this.is_empty_cell(i+1,j-1)){
-                            moves_lst.push({'to_row':i+1,'to_col':j-1})
+                            moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
                         }
                         else if(this.is_red_piece(i+1, j-1)){
                             // do_nothing
                         }
                     }
                     if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
+                        // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
+
                         var tmp=this.get_moves_of_piece(i+2,j-2,1)
                         if(tmp.length == 0) {
-                            moves_lst.push({'to_row':i+2,'to_col':j-2})
+                            moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
                         } else{
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i+1, j-1]);
+                            }
                             moves_lst = moves_lst.concat(tmp);
                         }
                     }
@@ -253,19 +258,23 @@ class Board {
                     // Right
                     if(rec_call==0){
                         if(this.is_empty_cell(i+1, j+1)){
-                            moves_lst.push({'to_row':i+1,'to_col':j+1})
+                            moves_lst.push({'to_row':i+1,'to_col':j+1, 'captures': []});
                         }
                         else if(this.is_red_piece(i+1, j+1)){
                             // do_nothing
                         }
                     }
 
-                    if(this.is_black_piece(i+1, j+1 )&& this.is_empty_cell(i+2, j+2)){
+                    if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
+                        // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
                         var tmp=this.get_moves_of_piece(i+2,j+2,1)
                         
                         if(tmp.length == 0) {
-                            moves_lst.push({'to_row':i+2,'to_col':j+2})
+                            moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
                         } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i+1, j+1]);
+                            }
                             moves_lst = moves_lst.concat(tmp);
                         }
                         //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
@@ -280,18 +289,22 @@ class Board {
                     // move in Left diagonal 
                     if(rec_call == 0){
                         if(this.is_empty_cell(i-1,j-1)) {
-                            moves_lst.push({'to_row':i-1,'to_col':j-1});
+                            moves_lst.push({'to_row':i-1,'to_col':j-1, 'captures': []});
                         } else if(this.is_black_piece(i-1,j-1)) {
                             // do_nothing
                         }
                     }
 
                     if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
+                        // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
                         var tmp = this.get_moves_of_piece(i-2,j-2,2);
                         
                         if(tmp.length==0){
-                            moves_lst.push({'to_row':i-2,'to_col':j-2});
+                            moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
                         } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i-1, j-1]);
+                            }
                             moves_lst = moves_lst.concat(tmp);
                         }
                     }
@@ -299,17 +312,22 @@ class Board {
                     // move in Right diagonal
                     if(rec_call == 0){
                         if(this.is_empty_cell(i-1,j+1)){
-                            moves_lst.push({'to_row':i-1,'to_col':j+1});
+                            moves_lst.push({'to_row':i-1,'to_col':j+1, 'captures': []});
                         } else if(this.is_black_piece(i-1,j+1)) {
                             // do nothing
                         }
                     }
 
                     if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
+                        // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
+
                         tmp = this.get_moves_of_piece(i-2,j+2,2);
                         if(tmp.length==0) {
-                            moves_lst.push({'to_row':i-2,'to_col':j+2})
+                            moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
                         } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i-1, j+1]);
+                            }
                             moves_lst = moves_lst.concat(tmp);
                         }
                     }
@@ -321,117 +339,34 @@ class Board {
         return moves_lst;
     }
 
-    make_move(row,col,to_row,to_col,rec_call=0) {
+    make_move(move) {
+        /*
+            Argument:
+                move : Dictionary with following keys
+                        from_row : int
+                        from_col : int
+                        to_row : int
+                        to_col : int
+                        captures : Array of Arrays. Each internal array has two elements [row, col] 
 
-        if(row<=0 || row>8 || col<=0 || col>8){
-            //moves_lst1=[]
-            //return new Array();
-            return -1
-        }
-        if (!this.is_piece(row, col))
-            return -1;
-        if(row==to_row && col==to_col){
-            board[row][col]=1;
-            return 1;
-        }
-        var i=row;
-        var j=col;
-        var capture_lst=[];
-        if (!this.is_king_piece(row, col)) {
-            if (this.is_red_piece(row, col)) {
-                if (this.is_red_top) {
-                    
-                    //Left
-                    if(rec_call==0){
-                        if((i+1)==to_row && (j-1)==to_col){
-                            return capture_lst;
-                        }
-                       
-                        else if(this.board[i+1][j-1] == 1){
-                            // do_nothing
-                        }
-                    }
-                    if(this.board[i+1][j-1]==-1){
-                        tmp=this.make_move(i+2,j-2,to_row,to_col,1)
-                        if(tmp==-1){
-                            //do nothing
-                        }else{
-                            if(tmp==1){
-                                board[i+1][j-1]=0
-                                capture_lst.push({'to_row':i+1,'to_col':j-1})
-                                return capture_lst;
-                            }else{
-                                board[i+1][j-1]=0
-                                capture_lst.push(tmp);
-                                capture_lst.push({'to_row':i+1,'to_col':j-1})
-                                return capture_lst;
-                            }
-                            
-                            
-                        }
+        */
+        var from_row = move['from_row'];
+        var from_col = move['from_col'];
+        var to_row = move['to_row'];
+        var to_col = move['to_col'];
+        var captures = move['captures'];
+        
+        this.board[to_row][to_col] = this.board[from_row][from_col];
+        // Make the cell empty
+        this.board[from_row][from_col] = 0;
 
-                    }
-
-
-                    //Right
-                    if(rec_call==0){
-                        if(i+1 ==to_row && j+1 == to_col){
-                            return capture_lst
-                        }
-                        else if(this.board[i+1][j+1] == 1){
+        for (var i=0; i < captures.length; i++) {
+            var row = captures[i][0];
+            var col = captures[i][1];
             
-                        }
-                    }
-
-                    if(this.board[i+1][j+1]==-1){
-                        tmp=this.make_move(i+2,j+2,to_row,to_col,1)
-                        if(tmp==-1){
-                            //do nothing
-                        }else{
-                            if(tmp==1){
-                                board[i+1][j+1]=0
-                                capture_lst.push({'to_row':i+1,'to_col':j+1})
-                                return capture_lst;
-                            }else{
-                                board[i+1][j+1]=0
-                                capture_lst.push(tmp);
-                                capture_lst.push({'to_row':i+1,'to_col':j+1})
-                                return capture_lst;
-                            }
-                            
-                            
-                        }
-
-                        //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
-                    }
-
-                    
-                    // move downward direction 
-                    //var moves = new Array();
-
-                    // move left diagonal
-                    //if (col != 1 && this.is_empty_cell(row+1, col-1)) 
-                     //   moves.push([row, col, row+1, col-1]);
-                    
-                    // move right diagonal
-                    //if (col != 8 && this.is_empty_cell(row+1, col+1))
-                     //   moves.push([row, col, row+1, col+1]);
-                    
-                    // TODO: capture opponent pieces and jump
-                    //return moves;
-                } else {
-                    // move upward direction
-                    
-                }
-            }
-        } else {
-            // TODO: check rules
+            // capture the piece by making the cell empty
+            this.board[row][col] = 0;
         }
-        return capture_lst;
-
-        // TODO: whole function
-        // make the move
-        // capture the move
     }
 
     has_won() {
@@ -494,19 +429,29 @@ class Board {
 
         this.board=[[4,4,4,4,4,4,4,4,4],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,1,3,0,3,1,3,1,3],
+                    [4,1,3,1,3,1,3,1,3],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,0,3,0,3,0,3,0,3],
-                    [4,3,1,3,0,3,0,3,0],
+                    [4,0,3,-1,3,0,3,0,3],
+                    [4,3,0,3,0,3,0,3,0],
                     [4,-1,3,-1,3,-1,3,-1,3],
-                    [4,3,-1,3,-1,3,-1,3,-1],
+                    [4,3,-1,3,-1,3,0,3,-1],
                     [4,-1,3,-1,3,-1,3,-1,3]];
 
-        this.print_board();
-        var all = board.get_all_opponent_moves();
-        for (var i = 0; i < all.length; i++) {
-            console.log(all[i]['from_row'], all[i]['from_col'], all[i]['moves']);
-        }
+
+        var MAX_DEPTH = 3;
+        board.print_board();
+        console.log('--------------------');
+        alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
+        board.print_board();
+
+        // this.print_board();
+        // console.log(this.get_all_opponent_moves());
+        // var all = board.get_all_opponent_moves();
+        // for (var i = 0; i < all.length; i++) {
+        //     console.log(all[i]['from_row'], all[i]['from_col'], all[i]['moves']);
+        //     for (var j = 0; j < all[i]['moves'].length; j++)
+        //         console.log(all[i]['moves'][j]['captures']);
+        // }
 
         // for (var i = 1; i <= 8; i++)
         //     console.log(i, "::: ", this.get_moves_of_piece(3, i));
@@ -519,9 +464,8 @@ class Board {
     }
 }
 
-var MAX_DEPTH = 5;
+var MAX_DEPTH = 3;
 var board = new Board(true, true);
-// board.print_board();
 board.test();
 // console.log(board.get_moves_of_piece(3, 2, 0));
 // var all = board.get_all_opponent_moves();
@@ -531,7 +475,7 @@ board.test();
 // console.log(board.get_all_moves());
 // console.log(all[9]['moves'][1]['to_row']);
 
-
+// console.log('--------------------');
 // alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
 // board.print_board();
 
@@ -540,20 +484,33 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
         return board.evaluate_board();
 
     if (maximizer) {
-        var max_val = Number.MIN_VALUE;
+        var max_val = Number.NEGATIVE_INFINITY;
         var moves = board.get_all_moves();
-        var best_move;
+        var best_move = {};
 
         for (var i = 0; i < moves.length; i++) {
             for (var j = 0; j < moves[i]['moves'].length; j++) {
                 var board_copy = new Board();
                 board.copyOf(board_copy);
-                board_copy.make_move(moves[i]['from_row'], moves[i]['from_col'], moves[i]['moves'][j]['to_row'], moves[i]['moves'][j]['to_col']);
+
+                var move = {
+                    'from_row': moves[i]['from_row'],
+                    'from_col': moves[i]['from_col'],
+                    'to_row': moves[i]['moves'][j]['to_row'],
+                    'to_col': moves[i]['moves'][j]['to_col'],
+                    'captures': moves[i]['moves'][j]['captures']
+                };
+                
+                board_copy.make_move(move);
                 var val = alpha_beta(board_copy, depth-1, alpha, beta, false);
 
                 if (val > max_val) {
                     max_val = val;
-                    best_move = {'from_row': moves[i]['from_row'], 'from_col': moves[i]['from_col'], 'to_row': moves[i]['moves'][j]['to_row'], 'to_col': moves[i]['moves'][j]['to_col']};
+                    best_move.from_row = move['from_row'];
+                    best_move.from_col = move['from_col'];
+                    best_move.to_row = move['to_row'];
+                    best_move.to_col = move['to_col'];
+                    best_move.captures = move['captures'];
                 }
 
                 if (val > alpha)
@@ -565,18 +522,27 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
         }
 
         if (depth == MAX_DEPTH) 
-            board.make_move(best_move['from_row'], best_move['from_col'], best_move['to_row'], best_move['to_col']);
+            board.make_move(best_move);
         
         return max_val;
     } else {
-        var min_val = Number.MAX_VALUE;
+        var min_val = Number.POSITIVE_INFINITY;
         var moves = board.get_all_moves();
 
         for (var i = 0; i < moves.length; i++) {
             for (var j = 0; j < moves[i]['moves'].length; j++) {
                 var board_copy = new Board();
                 board.copyOf(board_copy);
-                board_copy.make_move(moves[i]['from_row'], moves[i]['from_col'], moves[i]['moves'][j]['to_row'], moves[i]['moves'][j]['to_col']);
+
+                var move = {
+                    'from_row': moves[i]['from_row'],
+                    'from_col': moves[i]['from_col'],
+                    'to_row': moves[i]['moves'][j]['to_row'],
+                    'to_col': moves[i]['moves'][j]['to_col'],
+                    'captures': moves[i]['moves'][j]['captures']
+                };
+
+                board_copy.make_move(move);
                 var val = alpha_beta(board_copy, depth-1, alpha, beta, true);
 
                 if (val < min_val)
