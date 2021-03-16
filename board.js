@@ -212,10 +212,12 @@ class Board {
             Arguments:
                 row (int) : row no of the piece
                 col (int) : col no of the piece
-                left :- direction
+                rec_call  : 0 if it's not a recursive call
+                            1 if it's a recursive call from a red piece
+                            2 if it's a recursive call from a black piece
             Returns:
-                Array of arrays
-                each array of the following format : [from_row, from_col, to_row, to_col]
+                Array of dictionaries
+                each dictionary is of the following format : {'to_row': , 'to_col': , 'captures': [[row, col], ...]]
         */
         if(row <= 0 || row > 8 || col <= 0 || col > 8)
             return -1;
@@ -228,13 +230,14 @@ class Board {
         var moves_lst=[];
         if (!this.is_king_piece(row, col)) {
             if (this.is_red_piece(row, col) || rec_call == 1) {
+                // move downward direction
                 if (this.is_red_top) {
                     // Left
                     if(rec_call==0){
                         if(this.is_empty_cell(i+1,j-1)){
                             moves_lst.push({'to_row':i+1,'to_col':j-1})
                         }
-                        else if(this.is_red_piece(i, j)){
+                        else if(this.is_red_piece(i+1, j-1)){
                             // do_nothing
                         }
                     }
@@ -243,9 +246,8 @@ class Board {
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2})
                         } else{
-                            moves_lst.concat(tmp);
+                            moves_lst = moves_lst.concat(tmp);
                         }
-
                     }
 
                     // Right
@@ -264,32 +266,57 @@ class Board {
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2})
                         } else {
-                            moves_lst.concat(tmp);
+                            moves_lst = moves_lst.concat(tmp);
                         }
                         //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
                     }
-
-                    
-                    // move downward direction 
-                    //var moves = new Array();
-
-                    // move left diagonal
-                    //if (col != 1 && this.is_empty_cell(row+1, col-1)) 
-                     //   moves.push([row, col, row+1, col-1]);
-                    
-                    // move right diagonal
-                    //if (col != 8 && this.is_empty_cell(row+1, col+1))
-                     //   moves.push([row, col, row+1, col+1]);
-                    
-                    // TODO: capture opponent pieces and jump
-                    //return moves;
-                } else {
-                    // move upward direction
+                } else { // TODO: move upward direction
                     
                 }
-            }
+            } else if (this.is_black_piece(row, col) || rec_call == 2) {
+                // move upward direction
+                if (this.is_red_top) {
+                    
+                    // move in Left diagonal 
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j-1)) {
+                            moves_lst.push({'to_row':i-1,'to_col':j-1});
+                        } else if(this.is_black_piece(i-1,j-1)) {
+                            // do_nothing
+                        }
+                    }
+
+                    if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
+                        var tmp = this.get_moves_of_piece(i-2,j-2,2);
+                        
+                        if(tmp.length==0){
+                            moves_lst.push({'to_row':i-2,'to_col':j-2});
+                        } else {
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+
+                    // move in Right diagonal
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j+1)){
+                            moves_lst.push({'to_row':i-1,'to_col':j+1});
+                        } else if(this.is_black_piece(i-1,j+1)) {
+                            // do nothing
+                        }
+                    }
+
+                    if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
+                        tmp = this.get_moves_of_piece(i-2,j+2,2);
+                        if(tmp.length==0) {
+                            moves_lst.push({'to_row':i-2,'to_col':j+2})
+                        } else {
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+                }
+            } 
         } else {
-            // TODO: check rules
+            // TODO: check rules for king pieces
         }
         return moves_lst;
     }
@@ -467,20 +494,25 @@ class Board {
 
         this.board=[[4,4,4,4,4,4,4,4,4],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,1,3,1,3,1,3,1,3],
+                    [4,1,3,0,3,1,3,1,3],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,1,3,-1,3,0,3,0,3],
-                    [4,3,3,3,0,3,0,3,0],
-                    [4,-1,3,0,3,-1,3,-1,3],
+                    [4,0,3,0,3,0,3,0,3],
+                    [4,3,1,3,0,3,0,3,0],
+                    [4,-1,3,-1,3,-1,3,-1,3],
                     [4,3,-1,3,-1,3,-1,3,-1],
-                    [4,-1,3,-1,3,0,3,-1,3]];
-
+                    [4,-1,3,-1,3,-1,3,-1,3]];
 
         this.print_board();
+        var all = board.get_all_opponent_moves();
+        for (var i = 0; i < all.length; i++) {
+            console.log(all[i]['from_row'], all[i]['from_col'], all[i]['moves']);
+        }
+
         // for (var i = 1; i <= 8; i++)
         //     console.log(i, "::: ", this.get_moves_of_piece(3, i));
-        // console.log(this.get_moves_of_piece(3, 4));
-        console.log(this.get_all_moves());
+        // this.is_ai_red = false;
+        // console.log(this.get_moves_of_piece(6, 3));
+        // console.log(this.get_all_moves());
         // this.get_all_moves();
         // this.print_board();
                     
@@ -489,9 +521,13 @@ class Board {
 
 var MAX_DEPTH = 5;
 var board = new Board(true, true);
-board.print_board();
+// board.print_board();
+board.test();
 // console.log(board.get_moves_of_piece(3, 2, 0));
-console.log(board.get_all_opponent_moves());
+// var all = board.get_all_opponent_moves();
+// for (var i = 0; i < all.length; i++) {
+//     console.log(all[i]['from_row'], all[i]['from_col'], all[i]['moves']);
+// }
 // console.log(board.get_all_moves());
 // console.log(all[9]['moves'][1]['to_row']);
 
