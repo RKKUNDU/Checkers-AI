@@ -187,9 +187,10 @@ class Board {
             for (var j = 1; j <= 8; j++) {
                 if ((this.is_ai_red && this.is_red_piece(i, j)) || (!this.is_ai_red && this.is_black_piece(i, j))) {
                     var moves = this.get_moves_of_piece(i, j);
-                    console.log(i, j);
-                    console.log(moves);
-                    all_moves.concat(moves);
+                    if (moves.length != 0) {
+                        var dict = {'from_row': i, 'from_col' : j, 'moves': moves};
+                        all_moves.push(dict);
+                    }
                 }    
             }
         }
@@ -198,16 +199,11 @@ class Board {
     }
 
     get_all_opponent_moves() {
-        var all_moves = new Array();
-        for (var i = 1; i <= 8; i++) {
-            for (var j = 1; j <= 8; j++) {
-                if ((!this.is_ai_red && this.is_red_piece(i, j)) || (this.is_ai_red && this.is_black_piece(i, j))) {
-                    var moves = this.get_moves_of_piece(i, j);
-                    all_moves.concat(moves);
-                }    
-            }
-        }
-
+        // invert the colour of the AI player. Hence, opposite player's color will be AI player's colour 
+        this.is_ai_red = !this.is_ai_red;
+        var all_moves = this.get_all_moves();
+        //revert the change
+        this.is_ai_red = !this.is_ai_red;
         return all_moves;
     }
 
@@ -413,7 +409,7 @@ class Board {
 
     has_won() {
         // There is no opponent piece
-        if ((this.is_ai_red && this.count_black_pieces == 0) || (!this.is_ai_red && this.count_red_pieces == 0))
+        if ((this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0))
             return true;
 
         // opponent has no move
@@ -425,7 +421,7 @@ class Board {
 
     has_lost() {
         // There is no opponent piece
-        if ((this.is_ai_red && this.count_red_pieces == 0) || (!this.is_ai_red && this.count_black_pieces == 0))
+        if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
             return true;
 
         // there is no move for the player
@@ -441,7 +437,7 @@ class Board {
     }
 
     is_game_finished() {
-        return this.has_won || this.has_lost() || this.has_drawn();
+        return this.has_won() || this.has_lost() || this.has_drawn();
     }
 
     copyOf(obj) {
@@ -485,21 +481,27 @@ class Board {
         //     console.log(i, "::: ", this.get_moves_of_piece(3, i));
         // console.log(this.get_moves_of_piece(3, 4));
         console.log(this.get_all_moves());
+        // this.get_all_moves();
         // this.print_board();
                     
     }
 }
 
-var board = new Board(true, true);
-board.test();
-
 var MAX_DEPTH = 5;
+var board = new Board(true, true);
+board.print_board();
+// console.log(board.get_moves_of_piece(3, 2, 0));
+console.log(board.get_all_opponent_moves());
+// console.log(board.get_all_moves());
+// console.log(all[9]['moves'][1]['to_row']);
+
+
 // alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
 // board.print_board();
 
 function alpha_beta(board, depth, alpha, beta, maximizer) {
     if (depth == 0 || board.is_game_finished())
-        return board.evaluate_board()
+        return board.evaluate_board();
 
     if (maximizer) {
         var max_val = Number.MIN_VALUE;
@@ -507,26 +509,27 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
         var best_move;
 
         for (var i = 0; i < moves.length; i++) {
+            for (var j = 0; j < moves[i]['moves'].length; j++) {
+                var board_copy = new Board();
+                board.copyOf(board_copy);
+                board_copy.make_move(moves[i]['from_row'], moves[i]['from_col'], moves[i]['moves'][j]['to_row'], moves[i]['moves'][j]['to_col']);
+                var val = alpha_beta(board_copy, depth-1, alpha, beta, false);
 
-            var board_copy = new Board();
-            board.copyOf(board_copy);
-            board_copy.make_move(moves[i]);
-            var val = alpha_beta(board_copy, depth-1, alpha, beta, false);
+                if (val > max_val) {
+                    max_val = val;
+                    best_move = {'from_row': moves[i]['from_row'], 'from_col': moves[i]['from_col'], 'to_row': moves[i]['moves'][j]['to_row'], 'to_col': moves[i]['moves'][j]['to_col']};
+                }
 
-            if (val > max_val) {
-                max_val = val;
-                best_move = moves[i];
+                if (val > alpha)
+                    alpha = val;
+
+                if (alpha >= beta)
+                    break;
             }
-
-            if (val > alpha)
-                alpha = val;
-
-            if (alpha >= beta)
-                break;
         }
 
         if (depth == MAX_DEPTH) 
-            board.make_move(best_move);
+            board.make_move(best_move['from_row'], best_move['from_col'], best_move['to_row'], best_move['to_col']);
         
         return max_val;
     } else {
@@ -534,21 +537,23 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
         var moves = board.get_all_moves();
 
         for (var i = 0; i < moves.length; i++) {
-            var board_copy = new Board();
-            board.copyOf(board_copy);
-            board_copy.make_move(moves[i]);
-            var val = alpha_beta(board_copy, depth-1, alpha, beta, true);
+            for (var j = 0; j < moves[i]['moves'].length; j++) {
+                var board_copy = new Board();
+                board.copyOf(board_copy);
+                board_copy.make_move(moves[i]['from_row'], moves[i]['from_col'], moves[i]['moves'][j]['to_row'], moves[i]['moves'][j]['to_col']);
+                var val = alpha_beta(board_copy, depth-1, alpha, beta, true);
 
-            if (val < min_val)
-                min_val = val;
+                if (val < min_val)
+                    min_val = val;
 
-            if (val < beta)
-                beta = val;
+                if (val < beta)
+                    beta = val;
 
-            if (alpha >= beta)
-                break;
+                if (alpha >= beta)
+                    break;
+            }
         }
-    
+        
         return min_val;
     }
 }
