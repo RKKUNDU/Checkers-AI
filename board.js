@@ -363,6 +363,19 @@ class Board {
         for (var i=0; i < captures.length; i++) {
             var row = captures[i][0];
             var col = captures[i][1];
+
+            // if a (not crowned) piece captures opponent's piece of 7th or 2nd row (should be in the opposite side), it becomes a crowned piece
+            if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_black_piece(row, col) && row == 7) 
+                this.board[to_row][to_col] = 2; // red king piece
+            
+            if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_red_piece(row, col) && row == 2) 
+                this.board[to_row][to_col] = -2; // black king piece
+            
+            if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_black_piece(row, col) && row == 2) 
+                this.board[to_row][to_col] = 2; // red king piece
+            
+            if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(row, col) && row == 7) 
+                this.board[to_row][to_col] = -2; // black king piece
             
             // capture the piece by making the cell empty
             this.board[row][col] = 0;
@@ -433,16 +446,17 @@ class Board {
                     [4,3,1,3,1,3,1,3,1],
                     [4,0,3,-1,3,0,3,0,3],
                     [4,3,0,3,0,3,0,3,0],
-                    [4,-1,3,-1,3,-1,3,-1,3],
+                    [4,-1,3,-1,3,-1,3,1,3],
                     [4,3,-1,3,-1,3,0,3,-1],
-                    [4,-1,3,-1,3,-1,3,-1,3]];
+                    [4,-1,3,-1,3,0,3,-1,3]];
 
 
-        var MAX_DEPTH = 3;
-        board.print_board();
+        this.print_board();
+        console.log(this.evaluate_board());
         console.log('--------------------');
-        alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
-        board.print_board();
+        alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
+        this.print_board();
+        console.log(this.evaluate_board());
     }
 }
 
@@ -498,7 +512,7 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
         return max_val;
     } else {
         var min_val = Number.POSITIVE_INFINITY;
-        var moves = board.get_all_moves();
+        var moves = board.get_all_opponent_moves();
 
         for (var i = 0; i < moves.length; i++) {
             for (var j = 0; j < moves[i]['moves'].length; j++) {
