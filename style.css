@@ -1,3 +1,4 @@
+
 .emptyCell{
     width: 20px;
     height: 60px;
@@ -14,11 +15,28 @@
     width: 20px;
     height: 20px;
     padding: 12px;
+    color: white;
     align-content: center;
     background:#99692f;
     background-color: brown;
     border: 3px solid white;
     border-radius: 20px;
+}
+.redKingPiece
+{
+margin-top:auto;
+margin-left:auto;
+margin-bottom:auto;
+margin-right:auto;
+width: 20px;
+height: 20px;
+padding: 12px;
+color:white;
+align-content: center;
+background:red;
+background-color: brown;
+border: 3px solid rgb(245, 118, 34);
+border-radius: 20px;
 }
 .blackPiece
 {
@@ -41,15 +59,27 @@ background-color:#99692f;
 .noPiece{
     background-color: grey;
     width: 20px;
-    height: 60px;
+    height: 20px;
     padding: 12px;
-    		
+    margin-top:auto;
+    margin-left:auto;
+    margin-bottom:auto; 
+    margin-right:auto;
+    align-content: center;
+
+    border: 3px solid gray;
+    border-radius: 1px;
 }
 .possibleMove{
     width: 20px;
-    height: 60px;
+    height: 20px;
     padding: 12px;
-    background-color: #252424 ;
+    align-content: center;
+    background: white;
+    background-color: white ;
+    border: 0.5px solid white;
+    border-radius: 8px;
+    
 }
 .capture{
     margin-top:auto;
@@ -74,6 +104,21 @@ background-color:#99692f;
     border: white;
     border-radius: 10px;
 }
+.blackKingPiece
+{
+margin-top:auto;
+margin-left:auto;
+margin-bottom:auto;
+margin-right:auto;
+width: 20px;
+height: 20px;
+padding: 12px;
+color:white;
+align-content: center;
+background-color: black;
+border: 3px solid red;
+border-radius: 20px;
+}
 td{
     background-color: grey;
     
@@ -87,5 +132,6 @@ table{
 	margin-right: auto;
 
 }
+
 
 
