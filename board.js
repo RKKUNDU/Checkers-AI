@@ -348,9 +348,13 @@ class Board {
                     }
                     if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
-                        this.board[i+2][j-2]=2;
+
+                        var tmp_cell = this.board[i+1][j-1];
+                        // fix for back & forth king jump
+                        this.board[i+1][j-1]=0;
                         var tmp=this.get_moves_of_piece(i+2,j-2,3);
-                        this.board[i+2][j-2]=0;
+                        this.board[i+1][j-1]=tmp_cell;
+
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
                         } else{
@@ -373,9 +377,11 @@ class Board {
 
                     if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
-                        this.board[i+2][j+2]=2
+                        var tmp_cell = this.board[i+1][j+1];
+                        // fix for back & forth king jump
+                        this.board[i+1][j+1]=0;
                         var tmp=this.get_moves_of_piece(i+2,j+2,3)
-                        this.board[i+2][j+2]=0
+                        this.board[i+1][j+1]=tmp_cell;
                         
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
@@ -398,9 +404,12 @@ class Board {
 
                     if(this.is_black_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
-                        this.board[i-2][j-2]=2
+                        var tmp_cell = this.board[i-1][j-1];
+                        // fix for back & forth king jump
+                        this.board[i-1][j-1]=0;
                         var tmp = this.get_moves_of_piece(i-2,j-2,3);
-                        this.board[i-2][j-2]=0
+                        this.board[i-1][j-1]=tmp_cell;
+
                         if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
                         } else {
@@ -422,9 +431,12 @@ class Board {
 
                     if(this.is_black_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
-                        this.board[i-2][j+2]=2
+                        var tmp_cell = this.board[i-1][j+1];
+                        // fix for back & forth king jump
+                        this.board[i-1][j+1]=0;
                         tmp = this.get_moves_of_piece(i-2,j+2,3);
-                        this.board[i-2][j+2]=0
+                        this.board[i-1][j+1]=tmp_cell;
+
                         if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
                         } else {
@@ -453,9 +465,12 @@ class Board {
 
                     if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
-                        this.board[i-2][j-2]=-2
+                        var tmp_cell = this.board[i-1][j-1];
+                        // fix for back & forth king jump
+                        this.board[i-1][j-1]=0;
                         var tmp = this.get_moves_of_piece(i-2,j-2,4);
-                        this.board[i-2][j-2]=0
+                        this.board[i-1][j-1]=tmp_cell;
+
                         if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
                         } else {
@@ -477,9 +492,12 @@ class Board {
 
                     if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
-                        this.board[i-2][j+2]=-2
+                        var tmp_cell = this.board[i-1][j+1];
+                        // fix for back & forth king jump
+                        this.board[i-1][j+1]=0;
                         tmp = this.get_moves_of_piece(i-2,j+2,4);
-                        this.board[i-2][j+2]=0
+                        this.board[i-1][j+1]=tmp_cell;
+
                         if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
                         } else {
@@ -490,7 +508,7 @@ class Board {
                         }
                     }
                     
-                                        // Left
+                    // Left
                     if(rec_call==0){
                         if(this.is_empty_cell(i+1,j-1)){
                             moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
@@ -501,9 +519,12 @@ class Board {
                     }
                     if(this.is_red_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
-                        this.board[i+2][j-2]=-2
+                        var tmp_cell = this.board[i+1][j-1];
+                        // fix for back & forth king jump
+                        this.board[i+1][j-1]=0;
                         var tmp=this.get_moves_of_piece(i+2,j-2,4)
-                        this.board[i+2][j-2]=0
+                        this.board[i+1][j-1]=tmp_cell;
+
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
                         } else{
@@ -526,9 +547,12 @@ class Board {
 
                     if(this.is_red_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
-                        this.board[i+2][j+2]=-2
+                        var tmp_cell = this.board[i+1][j+1];
+                        // fix for back & forth king jump
+                        this.board[i+1][j+1]=0;
                         var tmp=this.get_moves_of_piece(i+2,j+2,4)
-                        this.board[i+2][j+2]=0
+                        this.board[i+1][j+1]=tmp_cell;
+
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
                         } else {
@@ -584,23 +608,23 @@ class Board {
             
             if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(row, col) && row == 7) 
                 this.board[to_row][to_col] = -2; // black king piece
-            
-            if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_black_piece(to_row, to_col) && to_row == 1)
-                this.board[to_row][to_col] = -2; // black king piece
-
-            if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 8)
-                this.board[to_row][to_col] = 2; // red king piece
-
-            if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_black_piece(to_row, to_col) && to_row == 8)
-                this.board[to_row][to_col] = -2; // black king piece
-
-            if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 1)
-                this.board[to_row][to_col] = 2; // red king piece
-            
 
             // capture the piece by making the cell empty
             this.board[row][col] = 0;
         }
+
+        if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_black_piece(to_row, to_col) && to_row == 1)
+            this.board[to_row][to_col] = -2; // black king piece
+
+        if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 8)
+            this.board[to_row][to_col] = 2; // red king piece
+
+        if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_black_piece(to_row, to_col) && to_row == 8)
+            this.board[to_row][to_col] = -2; // black king piece
+
+        if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 1)
+            this.board[to_row][to_col] = 2; // red king piece
+            
     }
 
     has_won() {
@@ -662,8 +686,8 @@ class Board {
                     [4,-1,3,-1,3,-1,3,-1,3]];
 
         this.board=[[4,4,4,4,4,4,4,4,4],
-                    [4,3,1,3,1,3,1,3,1],
-                    [4,1,3,1,3,1,3,1,3],
+                    [4,3,1,3,1,3,0,3,1],
+                    [4,1,3,1,3,-1,3,1,3],
                     [4,3,1,3,1,3,1,3,1],
                     [4,0,3,-1,3,0,3,0,3],
                     [4,3,0,3,0,3,0,3,0],
@@ -673,11 +697,12 @@ class Board {
 
 
         this.print_board();
-        console.log(this.evaluate_board());
-        console.log('--------------------');
-        alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
-        this.print_board();
-        console.log(this.evaluate_board());
+        console.log(this.get_all_moves(3, 4))
+        // console.log(this.evaluate_board());
+        // console.log('--------------------');
+        // alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
+        // this.print_board();
+        // console.log(this.evaluate_board());
     }
 }
 
@@ -727,8 +752,10 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
             }
         }
 
-        if (depth == MAX_DEPTH) 
+        if (depth == MAX_DEPTH) {
             board.make_move(best_move);
+            return best_move;
+        }
         
         return max_val;
     } else {
