@@ -228,7 +228,7 @@ class Board {
         var i=row;
         var j=col;
         var moves_lst=[];
-        if (!this.is_king_piece(row, col)) {
+        if (!this.is_king_piece(row, col) && (rec_call!=3 && rec_call !=4) ) {
             if (this.is_red_piece(row, col) || rec_call == 1) {
                 // move downward direction
                 if (this.is_red_top) {
@@ -348,8 +348,9 @@ class Board {
                     }
                     if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
-
-                        var tmp=this.get_moves_of_piece(i+2,j-2,3)
+                        this.board[i+2][j-2]=2;
+                        var tmp=this.get_moves_of_piece(i+2,j-2,3);
+                        this.board[i+2][j-2]=0;
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
                         } else{
@@ -372,7 +373,9 @@ class Board {
 
                     if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
+                        this.board[i+2][j+2]=2
                         var tmp=this.get_moves_of_piece(i+2,j+2,3)
+                        this.board[i+2][j+2]=0
                         
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
@@ -395,8 +398,9 @@ class Board {
 
                     if(this.is_black_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
+                        this.board[i-2][j-2]=2
                         var tmp = this.get_moves_of_piece(i-2,j-2,3);
-                        
+                        this.board[i-2][j-2]=0
                         if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
                         } else {
@@ -418,8 +422,9 @@ class Board {
 
                     if(this.is_black_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
-
+                        this.board[i-2][j+2]=2
                         tmp = this.get_moves_of_piece(i-2,j+2,3);
+                        this.board[i-2][j+2]=0
                         if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
                         } else {
@@ -448,8 +453,9 @@ class Board {
 
                     if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
+                        this.board[i-2][j-2]=-2
                         var tmp = this.get_moves_of_piece(i-2,j-2,4);
-                        
+                        this.board[i-2][j-2]=0
                         if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
                         } else {
@@ -471,8 +477,9 @@ class Board {
 
                     if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
-
+                        this.board[i-2][j+2]=-2
                         tmp = this.get_moves_of_piece(i-2,j+2,4);
+                        this.board[i-2][j+2]=0
                         if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
                         } else {
@@ -494,8 +501,9 @@ class Board {
                     }
                     if(this.is_red_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
-
+                        this.board[i+2][j-2]=-2
                         var tmp=this.get_moves_of_piece(i+2,j-2,4)
+                        this.board[i+2][j-2]=0
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
                         } else{
@@ -518,8 +526,9 @@ class Board {
 
                     if(this.is_red_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
+                        this.board[i+2][j+2]=-2
                         var tmp=this.get_moves_of_piece(i+2,j+2,4)
-                        
+                        this.board[i+2][j+2]=0
                         if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
                         } else {
