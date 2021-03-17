@@ -334,6 +334,205 @@ class Board {
                 }
             } 
         } else {
+            if (this.is_red_piece(row, col) || rec_call == 3) {
+                // move downward direction
+                if (this.is_red_top) {
+                    // Left
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1,j-1)){
+                            moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
+                        }
+                        else if(this.is_red_piece(i+1, j-1)){
+                            // do_nothing
+                        }
+                    }
+                    if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
+                        // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
+
+                        var tmp=this.get_moves_of_piece(i+2,j-2,3)
+                        if(tmp.length == 0) {
+                            moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
+                        } else{
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i+1, j-1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+
+                    // Right
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1, j+1)){
+                            moves_lst.push({'to_row':i+1,'to_col':j+1, 'captures': []});
+                        }
+                        else if(this.is_red_piece(i+1, j+1)){
+                            // do_nothing
+                        }
+                    }
+
+                    if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
+                        // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
+                        var tmp=this.get_moves_of_piece(i+2,j+2,3)
+                        
+                        if(tmp.length == 0) {
+                            moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i+1, j+1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                        //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
+                    }
+                    // move in Left diagonal 
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j-1)) {
+                            moves_lst.push({'to_row':i-1,'to_col':j-1, 'captures': []});
+                        } else if(this.is_red_piece(i-1,j-1)) {
+                            // do_nothing
+                        }
+                    }
+
+                    if(this.is_black_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
+                        // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
+                        var tmp = this.get_moves_of_piece(i-2,j-2,3);
+                        
+                        if(tmp.length==0){
+                            moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i-1, j-1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+
+                    // move in Right diagonal
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j+1)){
+                            moves_lst.push({'to_row':i-1,'to_col':j+1, 'captures': []});
+                        } else if(this.is_red_piece(i-1,j+1)) {
+                            // do nothing
+                        }
+                    }
+
+                    if(this.is_black_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
+                        // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
+
+                        tmp = this.get_moves_of_piece(i-2,j+2,3);
+                        if(tmp.length==0) {
+                            moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i-1, j+1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+                } else { // TODO: move upward direction
+                    
+                }
+                
+            } else if (this.is_black_piece(row, col) || rec_call == 4) {
+                // move upward direction
+                if (this.is_red_top) {
+                    
+                    // move in Left diagonal 
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j-1)) {
+                            moves_lst.push({'to_row':i-1,'to_col':j-1, 'captures': []});
+                        } else if(this.is_black_piece(i-1,j-1)) {
+                            // do_nothing
+                        }
+                    }
+
+                    if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
+                        // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
+                        var tmp = this.get_moves_of_piece(i-2,j-2,4);
+                        
+                        if(tmp.length==0){
+                            moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i-1, j-1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+
+                    // move in Right diagonal
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j+1)){
+                            moves_lst.push({'to_row':i-1,'to_col':j+1, 'captures': []});
+                        } else if(this.is_black_piece(i-1,j+1)) {
+                            // do nothing
+                        }
+                    }
+
+                    if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
+                        // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
+
+                        tmp = this.get_moves_of_piece(i-2,j+2,4);
+                        if(tmp.length==0) {
+                            moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i-1, j+1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+                    
+                                        // Left
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1,j-1)){
+                            moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
+                        }
+                        else if(this.is_black_piece(i+1, j-1)){
+                            // do_nothing
+                        }
+                    }
+                    if(this.is_red_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
+                        // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
+
+                        var tmp=this.get_moves_of_piece(i+2,j-2,4)
+                        if(tmp.length == 0) {
+                            moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
+                        } else{
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i+1, j-1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                    }
+
+                    // Right
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1, j+1)){
+                            moves_lst.push({'to_row':i+1,'to_col':j+1, 'captures': []});
+                        }
+                        else if(this.is_black_piece(i+1, j+1)){
+                            // do_nothing
+                        }
+                    }
+
+                    if(this.is_red_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
+                        // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
+                        var tmp=this.get_moves_of_piece(i+2,j+2,4)
+                        
+                        if(tmp.length == 0) {
+                            moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
+                                tmp[x]['captures'].push([i+1, j+1]);
+                            }
+                            moves_lst = moves_lst.concat(tmp);
+                        }
+                        //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
+                    }
+
+                }
+            }
             // TODO: check rules for king pieces
         }
         return moves_lst;
