@@ -377,6 +377,19 @@ class Board {
             if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(row, col) && row == 7) 
                 this.board[to_row][to_col] = -2; // black king piece
             
+            if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_black_piece(to_row, to_col) && to_row == 1)
+                this.board[to_row][to_col] = -2; // black king piece
+
+            if (!this.is_king_piece(to_row, to_col) && this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 8)
+                this.board[to_row][to_col] = 2; // red king piece
+
+            if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_black_piece(to_row, to_col) && to_row == 8)
+                this.board[to_row][to_col] = -2; // black king piece
+
+            if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 1)
+                this.board[to_row][to_col] = 2; // red king piece
+            
+
             // capture the piece by making the cell empty
             this.board[row][col] = 0;
         }
