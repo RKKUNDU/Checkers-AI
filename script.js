@@ -39,6 +39,7 @@
 		  $("td").click(clickable);
 			
 		});
+		/* ===================================== Cell clickable code starts here =========================== */
 		function clickable(){
 			if(!board.is_game_finished() && !ai_turn) {
 				if(thisClick == 0)
@@ -74,8 +75,6 @@
 					
 					var prevClass = $("#"+prevClick.id).attr('class');
 
-					//console.log("===",prevClass,"======");
-
 					if(!prevClass || prevClass == "clicked")
 					{
 						//make previous click normal. 
@@ -84,7 +83,6 @@
 						if(prevPieceClass == "redPiece" || prevPieceClass == "redKingPiece")
 						{ 
 							//if previously red piece was clicked the make previous piece normal.
-							console.log("executing toogle");
 							$("#"+prevClick.id).toggleClass("clicked");
 						}
 							
@@ -96,12 +94,12 @@
 					if(currentPossibleMoves.includes( parseInt(thisClick.id,10)) )
 					{
 							hideMoves(currentPossibleMoves);
-							//console.log("hide moves");
 							makeMove(this.id, prevClick.id, currentCapturesAndMoves);
-							//console.log("Moved to new cell");
+
 							//if game has finished then display this message
 							if(board.is_game_finished())
 							{
+								syncWait(1000);
 								if(board.has_won())
 								{
 									
@@ -114,16 +112,18 @@
 									}
 								}
 							}
-							else{
-							currentPossibleMoves =[];
-							currentCapturesAndMoves=[];
-							prevPossibleMoves=[];
-							thisClick = 0;
-							prevClick = 0;
-							redsTurn = false;
-							setTimeout(() => {  handle_ai_turn(); }, 2000);
-							//handle_ai_turn();
-							ai_turn = true;
+
+							else
+							{
+								currentPossibleMoves =[];
+								currentCapturesAndMoves=[];
+								prevPossibleMoves=[];
+								thisClick = 0;
+								prevClick = 0;
+								redsTurn = false;
+								setTimeout(() => {  handle_ai_turn(); }, 2000);
+								//handle_ai_turn();
+								ai_turn = true;
 							}
 							
 					}
@@ -167,14 +167,16 @@
 				}
 			}
 		  };
-
+/*====================================cell Clickable function ends here ====================================== */
 		function handle_ai_turn()
 		{
-			console.log("Black's turn");
+			console.log("AI's turn");
 			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
 			AImove(blacksMove);
 			ai_turn = false;
+			
 			if(board.is_game_finished()){
+				syncWait(1000);
 				if(board.has_won())
 				{
 					if(!alert("AI has won!!"))
@@ -189,48 +191,50 @@
 
 		function AImove(move)
 		{
-			console.log(move);
+			
 			var from_id = (parseInt(move.from_row,10) * 10) + (parseInt(move.from_col,10));
 			var to_id = (parseInt(move.to_row,10)*10 ) + (parseInt(move.to_col,10));
-			console.log(board.board[move.from_row][move.from_col]);
-			if(board.is_king_piece(move.to_row,move.to_col)){
+
+			if(board.is_king_piece(move.to_row,move.to_col))
+			{
 
 				$("#"+from_id).children("p").removeClass("blackKingPiece");
 				$("#"+from_id).children("p").addClass("noPiece");
 				$("#"+to_id).children("p").removeClass("noPiece");
 				$("#"+to_id).children("p").addClass("blackKingPiece");
 			}
-			else{
-
-			$("#"+from_id).children("p").removeClass("blackPiece");
-			$("#"+from_id).children("p").addClass("noPiece");
-			$("#"+to_id).children("p").removeClass("noPiece");
-			$("#"+to_id).children("p").addClass("blackPiece");
+			else
+			{
+				$("#"+from_id).children("p").removeClass("blackPiece");
+				$("#"+from_id).children("p").addClass("noPiece");
+				$("#"+to_id).children("p").removeClass("noPiece");
+				$("#"+to_id).children("p").addClass("blackPiece");
 			}
+
 			//check if this piece has become a king piece
-			
-			
-			if(board.is_king_piece(move.to_row,move.to_col) && board.is_black_piece(move.to_row,move.to_col)){
-				console.log("AI  piece has become a king piece");
+			if(board.is_king_piece(move.to_row,move.to_col) && board.is_black_piece(move.to_row,move.to_col))
+			{
 				$("#"+to_id).children("p").removeClass("blackPiece");
 				$("#"+to_id).children("p").addClass("blackKingPiece");
 			}
 
-			AIcaptures = decodeCaptures(move.captures);
-			// finding out intermediate cells (when multiple captures)
-			var intermediateCells = decodeCaptures(get_path(move.from_row, move.from_col,move.captures,move.captures.length-1));
+			var AIcaptures = decodeCaptures(move.captures);
 			
-			if(intermediateCells.length)
+			// finding out intermediate cells (when multiple captures)
+			var intermediateCells =[];
+			if(AIcaptures.length)
 			{
-				console.log("printing intermediate cells");
-				console.log(intermediateCells[0]);
+				intermediateCells = decodeCaptures(get_path(move.from_row, move.from_col,move.captures,move.captures.length-1));
+				//showIntermediate(intermediateCells);
 			}
 			
-
 			if(AIcaptures.length)
 			{
 				setTimeout(() => {displayRedCaptures(AIcaptures, intermediateCells); }, 500);
+				
+				//hideIntermediate(intermediateCells);
 			}
+
 			ai_turn = !ai_turn;
 			
 		};
@@ -239,6 +243,7 @@
 		{
 			var row_id = Math.floor(selectedCell/10); 
 			var col_id = selectedCell%10;
+
 			if(board.is_king_piece(row_id,col_id))
 			{
 				$("#"+selectedCell).children("p").removeClass("noPiece");
@@ -252,6 +257,7 @@
 				$("#"+prevCell).children("p").removeClass("redPiece");
 				$("#"+prevCell).children("p").addClass("noPiece");
 			}
+
 			var from_id = parseInt(prevClick.id,10);
 			var to_id = parseInt(thisClick.id, 10);
 			var row1 = Math.floor(from_id/10); var col1 = from_id%10;
@@ -270,25 +276,30 @@
 			board.make_move(move);
 
 			//check if this piece has become a king piece
-			if(board.is_king_piece(row2,col2) && board.is_red_piece(row2,col2)){
-				//console.log("Red piece has become a king piece");
+			if(board.is_king_piece(row2,col2) && board.is_red_piece(row2,col2))
+			{
+				
 				$("#"+to_id).children("p").removeClass("redPiece");
 				$("#"+to_id).children("p").addClass("redKingPiece");
 			}
 
 			Redcaptures = decodeCaptures(captures);
-
-			var intermediateCells = decodeCaptures(get_path(row1,row2,captures,captures.length-1));
 			
-			showIntermediate(intermediateCells);
-		
+			var intermediateCells=[];
+			if(Redcaptures.length)
+			{	
+				intermediateCells = decodeCaptures(get_path(row1,row2,captures,captures.length-1));
+				//showIntermediate(intermediateCells);
+				
+			}
+
 			if(Redcaptures.length)
 			{
 				setTimeout(() => {displayBlackCaptures(Redcaptures, intermediateCells); }, 500);
-				//displayBlackCaptures(Redcaptures);
+				//hideIntermediate(intermediateCells);
 			}
 
-			hideIntermediate(intermediateCells);
+			//hideIntermediate(intermediateCells);
 			if(board.is_game_finished()){
 				if(board.has_won())
 				{
@@ -327,6 +338,7 @@
 			}
 
 		};
+
 		function hideMoves(possibleMoves)
 		{
 			if(possibleMoves.length)
@@ -359,6 +371,7 @@
 			console.log(allMoves);
 			return moves;
 		};
+
 		function showIntermediate(intermediate)
 		{
 			if(intermediate.length)
@@ -367,27 +380,30 @@
 				for(i=0;i<intermediate.length;i++)
 				{
 					ID = intermediate[i];
-					$("#"+ID).children("p").removeClass("noPiece");
-					
-					$("#"+ID).children("p").addClass("showPath");
+					//$("#"+ID).children("p").removeClass("noPiece");
+					console.log("shsbab");
+					$("#"+ID).toggleClass("showPath");
 				}
 			
 			}
 
 		};
+
 		function hideIntermediate(intermediate)
 		{
+			syncWait(200);
 			if(intermediate.length)
 			{
 				var ID;
 				for(i=0;i<intermediate.length;i++)
 				{
 					ID = intermediate[i];
-					$("#"+ID).children("p").removeClass("showPath");
-					$("#"+ID).children("p").addClass("noPiece");
+					$("#"+ID).toggleClass("showPath");
+					//$("#"+ID).children("p").addClass("noPiece");
 				}
 			}
 		};
+
 		function displayRedCaptures(captures,intermediate)
 		{
 			
@@ -450,10 +466,10 @@
 			return captures;
 		};
 
-		function pause(milliseconds) {
-			var dt = new Date();
-			while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
-		}
 		
+		const syncWait = ms => {
+			const end = Date.now() + ms
+			while (Date.now() < end) continue
+		}
 		
 		
