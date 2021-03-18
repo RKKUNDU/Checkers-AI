@@ -20,30 +20,26 @@
 			player_Class = "blackPiece";
 			ai_turn = true;
 		}
-		/*
-		while(!board.is_game_finished())
+		if(board.is_game_finished())
 		{
-			if (ai_turn)
+			if(board.has_won())
 			{
-				console.log("Black's turn");
-				ai_moves = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
-				AImove(ai_moves);
-				ai_turn = !ai_turn;
-			} 
-			else 
-			{ 
-				ai_turn = !ai_turn;
-			
+				
+					if(!alert("AI has won!!"))
+						window.location.reload();
+					
+				else if(board.has_lost())
+				{	if(!alert("You won!!"))
+						window.location.reload();
+				}
 			}
-	
 		}
-		*/
 		$(document).ready(function(){
 		  $("td").click(clickable);
 			
 		});
 		function clickable(){
-			if(!board.is_game_finished()) {
+			if(!board.is_game_finished() && !ai_turn) {
 				if(thisClick == 0)
 				{	
 					//user has clicked for the first time
@@ -53,18 +49,20 @@
 					
 					if(!cellClass)
 					{
+						
 						var pieceClass = $("#"+thisClick.id).children("p").attr('class');
 						if(pieceClass == player_class)
 						{ 
 							$("#"+thisClick.id).toggleClass("clicked"); 
+							var rowId = Math.floor(this.id / 10);
+							var colId = this.id%10;
+							currentCapturesAndMoves = board.get_moves_of_piece(rowId, colId);
+							currentPossibleMoves = decodeMoves(currentCapturesAndMoves);
+							displayPossibleMove(currentPossibleMoves, prevPossibleMoves);
 						}
 						
 						
-						var rowId = Math.floor(this.id / 10);
-						var colId = this.id%10;
-						currentCapturesAndMoves = board.get_moves_of_piece(rowId, colId);
-						currentPossibleMoves = decodeMoves(currentCapturesAndMoves);
-						displayPossibleMove(currentPossibleMoves, prevPossibleMoves);
+						
 					}
 					
 				}  
@@ -105,6 +103,7 @@
 							prevClick = 0;
 							redsTurn = false;
 							setTimeout(() => {  handle_ai_turn(); }, 2000);
+							ai_turn = true;
 							//handle_ai_turn();
 					}
 					// otherwise if player has clicked on another redPiece to check possible moves
@@ -124,29 +123,138 @@
 						displayPossibleMove(currentPossibleMoves, prevPossibleMoves);
 						
 					}
+					// if player has clicked on some other cell, then hide previous possible moves. Reset currentPossibleMoves and prevPossibleMoves
+					else if(currentPossibleMoves.length){
+						hideMoves(currentPossibleMoves);
+						currentPossibleMoves=[];
+						prevPossibleMoves=[];
+					}
 					console.log("class of current clicked piece is:");
 					console.log($('#'+thisClick.id).attr('class'));
 				}
 		    }
-			/*
-			else{
-				console.log("Black's turn");
-				blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
-				AImove(blacksMove);
-				ai_turn = !ai_turn;
-			}*/
+			else if(board.is_game_finished()){
+				if(board.has_won())
+				{
+					if(!alert("AI has won!!"))
+						window.location.reload();
+				}	
+				else if(board.has_lost())
+				{	if(!alert("You won!!"))
+						window.location.reload();
+				}
+			}
 		  };
 
-		  function handle_ai_turn()
-		  {
+		function handle_ai_turn()
+		{
 			console.log("Black's turn");
 			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
 			AImove(blacksMove);
-			ai_turn = !ai_turn;
-		  }
+			ai_turn = false;
+			if(board.is_game_finished()){
+				if(board.has_won())
+				{
+					if(!alert("AI has won!!"))
+						window.location.reload();
+				}	
+				else if(board.has_lost())
+				{	if(!alert("You won!!"))
+						window.location.reload();
+				}
+			}
+		}
 
-		  function displayPossibleMove(possibleMoves,prevPossible){
+		function AImove(move)
+		{
+			console.log(move);
+			var from_id = (parseInt(move.from_row,10) * 10) + (parseInt(move.from_col,10));
+			var to_id = (parseInt(move.to_row,10)*10 ) + (parseInt(move.to_col,10));
+			console.log(board.board[move.from_row][move.from_col]);
+			if(board.is_king_piece(move.to_row,move.to_col)){
+
+				$("#"+from_id).children("p").removeClass("blackKingPiece");
+				$("#"+from_id).children("p").addClass("noPiece");
+				$("#"+to_id).children("p").removeClass("noPiece");
+				$("#"+to_id).children("p").addClass("blackKingPiece");
+			}
+			else{
+
+			$("#"+from_id).children("p").removeClass("blackPiece");
+			$("#"+from_id).children("p").addClass("noPiece");
+			$("#"+to_id).children("p").removeClass("noPiece");
+			$("#"+to_id).children("p").addClass("blackPiece");
+			}
+			//check if this piece has become a king piece
+			console.log(board.board[move.to_row][move.to_col]);
 			
+			if(board.is_king_piece(move.to_row,move.to_col) && board.is_black_piece(move.to_row,move.to_col)){
+				console.log("this has become a king piece");
+				$("#"+to_id).children("p").removeClass("blackPiece");
+				$("#"+to_id).children("p").addClass("blackKingPiece");
+			}
+			AIcaptures = decodeCaptures(move.captures);
+			if(AIcaptures.length)
+			{
+				setTimeout(() => {displayRedCaptures(AIcaptures); }, 500);
+			}
+			ai_turn = !ai_turn;
+			board.print_board();
+		};
+
+		function makeMove(selectedCell, prevCell,captures)
+		{
+			var row_id = Math.floor(selectedCell/10); 
+			var col_id = selectedCell%10;
+			if(board.is_king_piece(row_id,col_id))
+			{
+				$("#"+selectedCell).children("p").removeClass("noPiece");
+				$("#"+selectedCell).children("p").addClass("redKingPiece");
+				$("#"+prevCell).children("p").removeClass("redKingPiece");
+				$("#"+prevCell).children("p").addClass("noPiece");
+			}
+			else{
+				$("#"+selectedCell).children("p").removeClass("noPiece");
+				$("#"+selectedCell).children("p").addClass("redPiece");
+				$("#"+prevCell).children("p").removeClass("redPiece");
+				$("#"+prevCell).children("p").addClass("noPiece");
+			}
+			var from_id = parseInt(prevClick.id,10);
+			var to_id = parseInt(thisClick.id, 10);
+			var row1 = Math.floor(from_id/10); var col1 = from_id%10;
+			var row2 = Math.floor(to_id/10); var col2 = to_id %10;
+		
+			// retrieve captures from currentCapturesAndMoves
+			var captures=[]
+			for (var i = 0; i < currentCapturesAndMoves.length; i++)
+			 {
+				if (currentCapturesAndMoves[i]['to_row'] == row2 && currentCapturesAndMoves[i]['to_col'] == col2) 
+				{
+					 captures = currentCapturesAndMoves[i].captures;
+				}
+			}
+			var move = {'from_row':row1,'from_col':col1, "to_row":row2, "to_col":col2,'captures':captures};
+			board.make_move(move);
+
+			//check if this piece has become a king piece
+			if(board.is_king_piece(row2,col2) && board.is_red_piece(row2,col2)){
+				console.log("this has become a king piece");
+				$("#"+to_id).children("p").removeClass("redPiece");
+				$("#"+to_id).children("p").addClass("redKingPiece");
+			}
+
+			Redcaptures = decodeCaptures(captures);
+			console.log(Redcaptures);
+			if(Redcaptures.length)
+			{
+				setTimeout(() => {displayBlackCaptures(Redcaptures); }, 500);
+				//displayBlackCaptures(Redcaptures);
+			}
+
+		};
+
+		function displayPossibleMove(possibleMoves,prevPossible)
+		{
 			if(prevPossible.length)
 			{
 				var id2; 
@@ -182,58 +290,7 @@
 				}
 			}
 		};
-
-		function makeMove(selectedCell, prevCell,captures)
-		{
-			$("#"+selectedCell).children("p").removeClass("noPiece");
-			$("#"+selectedCell).children("p").addClass("redPiece");
-			$("#"+prevCell).children("p").removeClass("redPiece");
-			$("#"+prevCell).children("p").addClass("noPiece");
-
-			var from_id = parseInt(prevClick.id,10);
-			var to_id = parseInt(thisClick.id, 10);
-			var row1 = Math.floor(from_id/10); var col1 = from_id%10;
-			var row2 = Math.floor(to_id/10); var col2 = to_id %10;
 		
-			// retrieve captures from currentCapturesAndMoves
-			var captures=[]
-			for (var i = 0; i < currentCapturesAndMoves.length; i++)
-			 {
-				if (currentCapturesAndMoves[i]['to_row'] == row2 && currentCapturesAndMoves[i]['to_col'] == col2) 
-				{
-					 captures = currentCapturesAndMoves[i].captures;
-				}
-			}
-			var move = {'from_row':row1,'from_col':col1, "to_row":row2, "to_col":col2,'captures':captures};
-			board.make_move(move);
-
-			Redcaptures = decodeCaptures(captures);
-			console.log(Redcaptures);
-			if(Redcaptures.length)
-			{
-				setTimeout(() => {displayBlackCaptures(Redcaptures); }, 500);
-				//displayBlackCaptures(Redcaptures);
-			}
-
-		};
-		function AImove(move)
-		{
-			console.log(move);
-			var from_id = (parseInt(move.from_row,10) * 10) + (parseInt(move.from_col,10));
-			var to_id = (parseInt(move.to_row,10)*10 ) + (parseInt(move.to_col,10));
-			
-			$("#"+from_id).children("p").removeClass("blackPiece");
-			$("#"+from_id).children("p").addClass("noPiece");
-			$("#"+to_id).children("p").removeClass("noPiece");
-			$("#"+to_id).children("p").addClass("blackPiece");
-
-			AIcaptures = decodeCaptures(move.captures);
-			if(AIcaptures.length)
-			{
-				setTimeout(() => {displayRedCaptures(AIcaptures); }, 500);
-			}
-
-		};
 		function decodeMoves(allPossibleMoves)
 		{
 			//format of  allPossibleMoves : [ [{'to_row':1 , 'to_col':2},{'to_row':3,'to_col':4},{'captures':[]}] ];
@@ -261,9 +318,16 @@
 				for(i=0;i<captures.length;i++)
 				{ 
 					id  = captures[i];
-					
-					$("#"+id).children("p").removeClass("redPiece");
-					$("#"+id).children("p").addClass("noPiece");
+					if($("#"+id).children("p").attr("class") == "redKingPiece")
+					{
+						$("#"+id).children("p").removeClass("redKingPiece");
+						$("#"+id).children("p").addClass("noPiece");
+					}
+					else
+					{
+						$("#"+id).children("p").removeClass("redPiece");
+						$("#"+id).children("p").addClass("noPiece");
+					}
 				}
 			}
 		};
@@ -276,9 +340,18 @@
 				for(i=0;i<captures.length;i++)
 				{ 
 					id  = captures[i];
-					$("#"+id).children("p").removeClass("blackPiece");
-					$("#"+id).children("p").addClass("noPiece");
+					if($("#"+id).children("p").attr("class") == "blackKingPiece")
+					{
+						$("#"+id).children("p").removeClass("blackKingPiece");
+						$("#"+id).children("p").addClass("noPiece");
+					}
+					else
+					{
+						$("#"+id).children("p").removeClass("blackPiece");
+						$("#"+id).children("p").addClass("noPiece");
+					}
 				}
+				
 			}
 		};
 		
@@ -296,6 +369,11 @@
 			}
 			return captures;
 		};
+
+		function pause(milliseconds) {
+			var dt = new Date();
+			while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+		}
 		
 		
 		
