@@ -687,17 +687,33 @@ class Board {
 
         this.board=[[4,4,4,4,4,4,4,4,4],
                     [4,3,1,3,1,3,0,3,1],
-                    [4,1,3,1,3,-1,3,1,3],
+                    [4,1,3,1,3,0,3,1,3],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,0,3,-1,3,0,3,0,3],
-                    [4,3,0,3,0,3,0,3,0],
-                    [4,-1,3,-1,3,-1,3,1,3],
+                    [4,0,3,-2,3,0,3,0,3],
+                    [4,3,0,3,1,3,1,3,0],
+                    [4,-1,3,-1,3,0,3,1,3],
+                    [4,3,-1,3,-1,3,0,3,-1],
+                    [4,-1,3,-1,3,0,3,-1,3]];
+
+
+        this.board=[[4,4,4,4,4,4,4,4,4],
+                    [4,3,1,3,1,3,0,3,1],
+                    [4,1,3,1,3,1,3,1,3],
+                    [4,3,1,3,0,3,1,3,0],
+                    [4,0,3,1,3,0,3,0,3],
+                    [4,3,-2,3,1,3,1,3,0],
+                    [4,-1,3,-1,3,0,3,1,3],
                     [4,3,-1,3,-1,3,0,3,-1],
                     [4,-1,3,-1,3,0,3,-1,3]];
 
 
         this.print_board();
-        console.log(this.get_all_moves(3, 4))
+        var row = 5, col = 2;
+        var moves = this.get_moves_of_piece(row, col);
+        for (var i = 0; i < moves.length; i++) {
+            console.log(moves[i].to_row, moves[i].to_col, moves[i].captures);
+            console.log(get_path(row, col, moves[i].captures, moves[i].captures.length-1));
+        }
         // console.log(this.evaluate_board());
         // console.log('--------------------');
         // alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
@@ -709,6 +725,45 @@ class Board {
 var MAX_DEPTH = 3;
 var board = new Board(true, true);
 board.test();
+
+function get_path(from_row, from_col, captures_array, captures_index) {
+    /*
+        Arguments:
+            from_row (int) : row no of the previous cell (where the piece was present before capturing the last piece)
+            from_col (int) : col no of the previous cell (where the piece was present before capturing the last piece)
+            captures_array (array of arrays) : array containing all the [row, col] of captured pieces (in reverse order as returned by the get_move_of_piece())
+            captures_index : the index of the captured piece (in the captures_array) which will be jumped now
+        
+        Returns:
+            Array of Arrays. Each internal array of the format [row, col]
+
+            The returned array contains [row, col] of all the intermediate cells (i.e. start & final cell are not included in the array)
+    */
+    if (captures_index <= 0 || captures_index >= captures_array.length)
+        return new Array();
+
+    var row = captures_array[captures_index][0];
+    var col = captures_array[captures_index][1];
+
+    var next_cell;
+
+    // moving downward right diagonal
+    if ((from_row + 1) == row && (from_col + 1) == col)
+        next_cell = [from_row + 2, from_col + 2];
+    // moving downward left diagonal
+    else if ((from_row + 1) == row && (from_col - 1) == col)
+        next_cell = [from_row + 2, from_col - 2];
+    // moving upward right diagonal
+    else if ((from_row - 1) == row && (from_col + 1) == col)
+        next_cell = [from_row - 2, from_col + 2];
+    // moving upward left diagonal
+    else if ((from_row - 1) == row && (from_col - 1) == col)
+        next_cell = [from_row - 2, from_col - 2];
+
+    var arr = get_path(next_cell[0], next_cell[1], captures_array, captures_index - 1);
+    return [next_cell].concat(arr);
+}
+
 
 function alpha_beta(board, depth, alpha, beta, maximizer) {
     if (depth == 0 || board.is_game_finished())
