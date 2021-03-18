@@ -1,4 +1,3 @@
-
 .emptyCell{
     width: 20px;
     height: 60px;
@@ -21,6 +20,10 @@
     background-color: brown;
     border: 3px solid white;
     border-radius: 20px;
+    -webkit-transition: 0.8s ease-in-out;
+	-moz-transition: 0.8s ease-in-out;
+  -o-transition: 0.8s ease-in-out;
+  transition: 0.8s ease-in-out;
 }
 .redKingPiece
 {
@@ -37,6 +40,10 @@ background:red;
 background-color: brown;
 border: 3px solid rgb(245, 118, 34);
 border-radius: 20px;
+-webkit-transition: 0.5s ease-in-out;
+	-moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
 }
 .blackPiece
 {
@@ -50,6 +57,10 @@ border-radius: 20px;
     background-color: black;
     border: 3px solid white;
     border-radius: 20px;
+    -webkit-transition: 0.5s ease-in-out;
+	-moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
 }
 
 .whiteSpace{
@@ -69,6 +80,10 @@ background-color:#99692f;
 
     border: 3px solid gray;
     border-radius: 1px;
+    -webkit-transition: 0.5s ease-in-out;
+	-moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
 }
 .possibleMove{
     width: 20px;
@@ -118,6 +133,26 @@ align-content: center;
 background-color: black;
 border: 3px solid red;
 border-radius: 20px;
+-webkit-transition: 1s ease-in-out;
+	-moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;
+}
+
+.showCapture
+{
+    width: 20px;
+    height: 20px;
+    padding: 12px;
+    align-content: center;
+    background: rgb(250, 226, 89);
+    background-color: rgb(250, 226, 89) ;
+    border: 0.5px solid rgb(250, 226, 89);
+    border-radius: 8px;
+    -webkit-transition: 1s ease-in-out;
+	-moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;
 }
 td{
     background-color: grey;
@@ -132,6 +167,5 @@ table{
 	margin-right: auto;
 
 }
-
 
 
