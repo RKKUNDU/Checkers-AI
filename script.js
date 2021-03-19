@@ -1,6 +1,7 @@
 		
-		var MAX_DEPTH = 1;
-		
+		var MAX_DEPTH = 4;
+		var startGame = false;
+		var quitGame = false;
 		var currentPossibleMoves=[];
 		var currentCapturesAndMoves = [];
 		var prevPossibleMoves=[];
@@ -41,7 +42,8 @@
 		});
 		/* ===================================== Cell clickable code starts here =========================== */
 		function clickable(){
-			if(!board.is_game_finished() && !ai_turn) {
+			if(startGame && !board.is_game_finished() && !ai_turn) {
+				
 				if(thisClick == 0)
 				{	
 					//user has clicked for the first time
@@ -121,6 +123,8 @@
 								thisClick = 0;
 								prevClick = 0;
 								redsTurn = false;
+								$("#RedTurn").hide();
+								$("#BlackTurn").show();
 								setTimeout(() => {  handle_ai_turn(); }, 2000);
 								//handle_ai_turn();
 								ai_turn = true;
@@ -156,26 +160,6 @@
 				}
 		    }
 			else if(board.is_game_finished()){
-				if(board.has_won())
-				{
-					if(!alert("AI has won!!"))
-						window.location.reload();
-				}	
-				else if(board.has_lost())
-				{	if(!alert("You won!!"))
-						window.location.reload();
-				}
-			}
-		  };
-/*====================================cell Clickable function ends here ====================================== */
-		function handle_ai_turn()
-		{
-			console.log("AI's turn");
-			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
-			AImove(blacksMove);
-			ai_turn = false;
-			
-			if(board.is_game_finished()){
 				syncWait(1000);
 				if(board.has_won())
 				{
@@ -187,6 +171,36 @@
 						window.location.reload();
 				}
 			}
+			else if(!startGame)
+			{
+				alert("Press \"Play\" button to start the game ");
+			}
+		  };
+/*====================================cell Clickable function ends here ====================================== */
+		function handle_ai_turn()
+		{
+			console.log("AI's turn");
+			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
+			AImove(blacksMove);
+			ai_turn = false;
+			
+			if(board.is_game_finished()){
+				
+				if(board.has_won())
+				{
+					syncWait(1000);
+					if(!alert("AI has won!!"))
+						window.location.reload();
+				}	
+				else if(board.has_lost())
+				{	
+					syncWait(1000);
+					if(!alert("You won!!"))
+						window.location.reload();
+				}
+			}
+			$("#RedTurn").show();
+			$("#BlackTurn").hide();
 		}
 
 		function AImove(move)
@@ -194,6 +208,17 @@
 			
 			var from_id = (parseInt(move.from_row,10) * 10) + (parseInt(move.from_col,10));
 			var to_id = (parseInt(move.to_row,10)*10 ) + (parseInt(move.to_col,10));
+
+			var AIcaptures = decodeCaptures(move.captures);
+			
+			// finding out intermediate cells (when multiple captures)
+			var intermediateCells =[];
+			
+			if(AIcaptures.length)
+			{
+				intermediateCells = decodeCaptures(get_path(move.from_row, move.from_col,move.captures,move.captures.length-1));
+				showIntermediate(intermediateCells);
+			}
 
 			if(board.is_king_piece(move.to_row,move.to_col))
 			{
@@ -205,6 +230,7 @@
 			}
 			else
 			{
+				console.log("black to no piece");
 				$("#"+from_id).children("p").removeClass("blackPiece");
 				$("#"+from_id).children("p").addClass("noPiece");
 				$("#"+to_id).children("p").removeClass("noPiece");
@@ -218,15 +244,7 @@
 				$("#"+to_id).children("p").addClass("blackKingPiece");
 			}
 
-			var AIcaptures = decodeCaptures(move.captures);
 			
-			// finding out intermediate cells (when multiple captures)
-			var intermediateCells =[];
-			if(AIcaptures.length)
-			{
-				intermediateCells = decodeCaptures(get_path(move.from_row, move.from_col,move.captures,move.captures.length-1));
-				//showIntermediate(intermediateCells);
-			}
 			
 			if(AIcaptures.length)
 			{
@@ -239,24 +257,12 @@
 			
 		};
 
-		function makeMove(selectedCell, prevCell,captures)
+		function makeMove(selectedCell, prevCell,catures)
 		{
 			var row_id = Math.floor(selectedCell/10); 
 			var col_id = selectedCell%10;
 
-			if(board.is_king_piece(row_id,col_id))
-			{
-				$("#"+selectedCell).children("p").removeClass("noPiece");
-				$("#"+selectedCell).children("p").addClass("redKingPiece");
-				$("#"+prevCell).children("p").removeClass("redKingPiece");
-				$("#"+prevCell).children("p").addClass("noPiece");
-			}
-			else{
-				$("#"+selectedCell).children("p").removeClass("noPiece");
-				$("#"+selectedCell).children("p").addClass("redPiece");
-				$("#"+prevCell).children("p").removeClass("redPiece");
-				$("#"+prevCell).children("p").addClass("noPiece");
-			}
+			
 
 			var from_id = parseInt(prevClick.id,10);
 			var to_id = parseInt(thisClick.id, 10);
@@ -284,13 +290,28 @@
 			}
 
 			Redcaptures = decodeCaptures(captures);
-			
+			console.log("captures have been decoded");
 			var intermediateCells=[];
+			
 			if(Redcaptures.length)
 			{	
 				intermediateCells = decodeCaptures(get_path(row1,row2,captures,captures.length-1));
 				//showIntermediate(intermediateCells);
 				
+			}
+			
+			if(board.is_king_piece(row_id,col_id))
+			{
+				$("#"+selectedCell).children("p").removeClass("noPiece");
+				$("#"+selectedCell).children("p").addClass("redKingPiece");
+				$("#"+prevCell).children("p").removeClass("redKingPiece");
+				$("#"+prevCell).children("p").addClass("noPiece");
+			}
+			else{
+				$("#"+selectedCell).children("p").removeClass("noPiece");
+				$("#"+selectedCell).children("p").addClass("redPiece");
+				$("#"+prevCell).children("p").removeClass("redPiece");
+				$("#"+prevCell).children("p").addClass("noPiece");
 			}
 
 			if(Redcaptures.length)
@@ -380,9 +401,11 @@
 				for(i=0;i<intermediate.length;i++)
 				{
 					ID = intermediate[i];
-					//$("#"+ID).children("p").removeClass("noPiece");
+					$("#"+ID).fadeOut();
+					$("#"+ID).fadeIn();
+					//$("#"+ID).children("p").addClass("noPiece");
 					console.log("shsbab");
-					$("#"+ID).toggleClass("showPath");
+					//$("#"+ID).toggleClass("noPiece");
 				}
 			
 			}
@@ -465,7 +488,18 @@
 			}
 			return captures;
 		};
-
+		function GameStarted()
+		{
+			startGame = true;
+			$("#Play").attr("disabled",true);
+			$("#RedTurn").show();
+			//$("#BlackTurn").fadeOut();
+		};
+		function GameStopped()
+		{
+			quitGame = true;
+			window.location.reload();
+		};
 		
 		const syncWait = ms => {
 			const end = Date.now() + ms
