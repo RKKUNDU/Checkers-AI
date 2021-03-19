@@ -17,8 +17,8 @@
     color: white;
     align-content: center;
     background:#99692f;
-    background-color: brown;
-    border: 3px solid white;
+    background-color:#cf0505;
+    border: 3px solid rgb(241, 46, 46);
     border-radius: 20px;
     -webkit-transition: 0.8s ease-in-out;
 	-moz-transition: 0.8s ease-in-out;
@@ -37,8 +37,8 @@ padding: 12px;
 color:white;
 align-content: center;
 background:red;
-background-color: brown;
-border: 3px solid rgb(245, 118, 34);
+background-color: #cf0505;
+border: 3px solid rgb(243, 247, 56);
 border-radius: 20px;
 -webkit-transition: 0.5s ease-in-out;
 	-moz-transition: 0.5s ease-in-out;
@@ -54,7 +54,7 @@ border-radius: 20px;
     width: 20px;
     height: 20px;
     padding: 12px;
-    background-color: black;
+    background-color: midnightblue;
     border: 3px solid white;
     border-radius: 20px;
     -webkit-transition: 0.5s ease-in-out;
@@ -62,13 +62,33 @@ border-radius: 20px;
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
 }
+.blackKingPiece
+{
+margin-top:auto;
+margin-left:auto;
+margin-bottom:auto;
+margin-right:auto;
+width: 20px;
+height: 20px;
+padding: 12px;
+color:white;
+align-content: center;
+background-color: rgb(28, 28, 73);
+border: 3px solid rgb(243, 247, 56);
+border-radius: 20px;
+-webkit-transition: 1s ease-in-out;
+    -moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;
+}
+
 
 .whiteSpace{
 background-color:#99692f;
 }
 
 .noPiece{
-    background-color: grey;
+    background-color: black;
     width: 20px;
     height: 20px;
     padding: 12px;
@@ -78,7 +98,7 @@ background-color:#99692f;
     margin-right:auto;
     align-content: center;
 
-    border: 3px solid gray;
+    border: 3px solid black;
     border-radius: 1px;
     -webkit-transition: 0.5s ease-in-out;
 	-moz-transition: 0.5s ease-in-out;
@@ -90,8 +110,8 @@ background-color:#99692f;
     height: 20px;
     padding: 12px;
     align-content: center;
-    background: white;
-    background-color: white ;
+    background: #ffd4c2;
+    background-color: #ffd4c2 ;
     border: 0.5px solid white;
     border-radius: 8px;
     
@@ -119,25 +139,6 @@ background-color:#99692f;
     border: white;
     border-radius: 10px;
 }
-.blackKingPiece
-{
-margin-top:auto;
-margin-left:auto;
-margin-bottom:auto;
-margin-right:auto;
-width: 20px;
-height: 20px;
-padding: 12px;
-color:white;
-align-content: center;
-background-color: black;
-border: 3px solid red;
-border-radius: 20px;
--webkit-transition: 1s ease-in-out;
-	-moz-transition: 1s ease-in-out;
-  -o-transition: 1s ease-in-out;
-  transition: 1s ease-in-out;
-}
 
 .showCapture
 {
@@ -155,17 +156,167 @@ border-radius: 20px;
   transition: 1s ease-in-out;
 }
 td{
-    background-color: grey;
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 6px;
+
     
 }
 
 table{
-	position: relative;
-	width: 640px;
-	height: 640px;
-	margin-left: auto ;
-	margin-right: auto;
+    position: relative;
+    width: 640px;
+    height: 640px;
+    margin-left: auto ;
+    margin-right: auto;
+    margin-top: 0px;
+    border: 10px solid lightgrey;
+    border-radius: 4px;
 
 }
 
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  transition-duration: .4s;
+  cursor: pointer;
+}
+
+.button1 {
+  
+  margin-top: 10px;
+  width: 200px;
+
+  background-color: lightgrey; 
+  color: black; 
+  border: 2px solid black;
+  border-radius: 10px;
+  display: block;
+  padding: 10px;
+  margin-left: 80px;
+}
+
+.button1:hover {
+  background-color:black;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  display: block;
+
+}
+.button1:disabled,
+.button1[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  float: left;
+  background-color: #494440;
+  background-image: url('bg5.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+ 
+}
+
+.class1
+{
+  width: 26.33%;
+  float: left;
+  height: 650px;
+  align-content: vertical;
+  
+}
+.class2
+{
+  width: 40.33%;
+  float: left;
+  height: 90%;
+  align-items: center;
+  background-attachment: fixed; 
+  
+}
+.class3 
+{
+  width: 30%;
+  float: left;
+  margin-left: 30px;
+  height: 735px;
+  
+}
+.class4 
+{
+  height:100%;
+  width: 100%;
+  margin-top:0px;
+  float: left;
+  background-color: lightgrey;
+  display: none;
+  border-radius: 20px;
+  border: 5px solid black;
+}
+.class5 
+{
+  height:100%;
+  width: 100%;
+  margin-top:200px;
+  float: left;
+    
+}
+.tableClass{
+  position: relative;
+  box-shadow:20px 20px 50px 15px rgb(63, 62, 62); 
+}
+p{
+  
+  text-align: center;
+  position: relative;
+}
+
+#RedTurn
+{
+  color:#faab61;
+  font-size: 35px;
+  font-family:"Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  float: left;
+  padding: 2px;
+  align-items: center;
+  text-align: right;
+  width: 45%;
+  height: 40px;
+  text-shadow: text-shadow: 2px 2px 5px red;;
+}
+#BlackTurn{
+  color :rgb(63, 206, 224);
+  font-size: 35px;
+  font-family:"Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  padding: 2px;
+  float: left;
+  align-items: center;
+  text-align: right;
+  align-items: center;
+  width: 45%;
+  height: 40px;
+}
+.turn{
+  width: 100%;
+  float: left;
+  height: 10%;
+  align-items: center;
+  background-attachment: fixed; 
+  padding: 5px;
+    
+}
 
