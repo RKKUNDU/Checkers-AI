@@ -56,14 +56,15 @@
 			</div>
 			<div class="class1">
 				<div class="class5">
+					<select name="DifficultyLevel" id="level" class="button button1" onchange="difficultyLevel('level')">
+    						<option value="Easy" id="Easy" >Easy</option>
+    						<option value="Medium" id="Medium" >Medium</option>
+   	 					<option value="Hard" id="Hard" >Hard</option>
+  					</select>
 					<button class="button button1" id="Play" onclick="GameStarted()"> Play</button>
 					<button class="button button1" id="stop" onclick="GameStopped()"> Quit</button>
 					<button class="button button1" id="show" onclick="showRules('rule','show')">Display Rules</button>
-					<select name="DifficultyLevel" id="level" class="button button1" onchange="difficultyLevel('level')">
-    					<option value="Easy" id="Easy" >Easy</option>
-    					<option value="Medium" id="Medium" >Medium</option>
-   	 					<option value="Hard" id="Hard" >Hard</option>
-  					</select>
+					
 
 				</div>
 			</div>
