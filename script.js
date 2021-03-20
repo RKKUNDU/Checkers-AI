@@ -123,8 +123,8 @@
 								thisClick = 0;
 								prevClick = 0;
 								redsTurn = false;
-								$("#RedTurn").hide();
-								$("#BlackTurn").show();
+								$("#RedTurn").css("opacity","0.0");
+								$("#BlackTurn").css("opacity","1.0");
 								setTimeout(() => {  handle_ai_turn(); }, 2000);
 								//handle_ai_turn();
 								ai_turn = true;
@@ -199,8 +199,8 @@
 						window.location.reload();
 				}
 			}
-			$("#RedTurn").show();
-			$("#BlackTurn").hide();
+			$("#RedTurn").css("opacity","1.0");
+			$("#BlackTurn").css("opacity","0.0");
 		}
 
 		function AImove(move)
@@ -492,8 +492,8 @@
 		{
 			startGame = true;
 			$("#Play").attr("disabled",true);
-			$("#RedTurn").show();
-			//$("#BlackTurn").fadeOut();
+			//$("#RedTurn").show();
+			$("#BlackTurn").css("opacity","0.0");
 		};
 		function GameStopped()
 		{
