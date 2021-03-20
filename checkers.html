@@ -25,6 +25,25 @@
 			}
 		};
 
+		function difficultyLevel(id){
+			
+			var d = document.getElementById(id);
+			id1=d.options[d.selectedIndex].id;  
+			if(id1 == "Medium")
+			{
+				MAX_DEPTH = 4;
+				console.log(MAX_DEPTH);
+			}
+			else if(id1 == "Hard"){
+				MAX_DEPTH = 6;
+				console.log(MAX_DEPTH);	
+			}
+			else{
+				MAX_DEPTH = 1;
+				console.log(MAX_DEPTH);
+			}	
+		}
+
 
 
 	</script>	
@@ -40,6 +59,11 @@
 					<button class="button button1" id="Play" onclick="GameStarted()"> Play</button>
 					<button class="button button1" id="stop" onclick="GameStopped()"> Quit</button>
 					<button class="button button1" id="show" onclick="showRules('rule','show')">Display Rules</button>
+					<select name="DifficultyLevel" id="level" class="button button1" onchange="difficultyLevel('level')">
+    					<option value="Easy" id="Easy" >Easy</option>
+    					<option value="Medium" id="Medium" >Medium</option>
+   	 					<option value="Hard" id="Hard" >Hard</option>
+  					</select>
 
 				</div>
 			</div>
