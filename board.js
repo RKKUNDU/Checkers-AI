@@ -20,6 +20,7 @@ class Board {
         this.is_red_top = is_red_top;
         this.is_ai_red = is_ai_red;
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
+        this.MAX_DEPTH = 5;
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -797,6 +798,8 @@ class Board {
         
         obj.is_ai_red = this.is_ai_red;
         obj.is_red_top = this.is_red_top;
+        obj.MAX_DEPTH = this.MAX_DEPTH;
+        obj.heuristic = this.heuristic;
 
         return obj;
     }
@@ -816,7 +819,7 @@ class Board {
         
         // Make the user AI. So that minimax can be called by the user
         this.is_ai_red = ! this.is_ai_red;
-        var best_move = alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true, false);
+        var best_move = alpha_beta(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false);
 
         // Revert back the change
         this.is_ai_red = ! this.is_ai_red;
@@ -944,10 +947,10 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
             }
         }
 
-        if (depth == MAX_DEPTH && make_move) {
+        if (depth == board.MAX_DEPTH && make_move) {
             board.make_move(best_move);
             return best_move;
-        } else if (depth == MAX_DEPTH && !make_move) {
+        } else if (depth == board.MAX_DEPTH && !make_move) {
             return best_move;
         }
         
