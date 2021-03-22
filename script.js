@@ -1,5 +1,5 @@
 		
-		var MAX_DEPTH = 4;
+		var MAX_DEPTH = 1;
 		var startGame = false;
 		var quitGame = false;
 		var currentPossibleMoves=[];
@@ -65,7 +65,7 @@
 							displayPossibleMove(currentPossibleMoves, prevPossibleMoves);
 						}
 						
-						
+						console.log(MAX_DEPTH);
 						
 					}
 					
@@ -123,9 +123,12 @@
 								thisClick = 0;
 								prevClick = 0;
 								redsTurn = false;
-								$("#RedTurn").css("opacity","0.0");
+								$("#RedTurn").css("opacity","0.5");
 								$("#BlackTurn").css("opacity","1.0");
 								setTimeout(() => {  handle_ai_turn(); }, 2000);
+								//await new Promise(done => setTimeout(() => done(), 2000));
+								//me();
+								//delay(2000);
 								//handle_ai_turn();
 								ai_turn = true;
 							}
@@ -179,6 +182,7 @@
 /*====================================cell Clickable function ends here ====================================== */
 		function handle_ai_turn()
 		{
+			
 			console.log("AI's turn");
 			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
 			AImove(blacksMove);
@@ -200,7 +204,8 @@
 				}
 			}
 			$("#RedTurn").css("opacity","1.0");
-			$("#BlackTurn").css("opacity","0.0");
+			$("#BlackTurn").css("opacity","0.5");
+			ai_turn = false;
 		}
 
 		function AImove(move)
@@ -248,12 +253,12 @@
 			
 			if(AIcaptures.length)
 			{
-				setTimeout(() => {displayRedCaptures(AIcaptures, intermediateCells); }, 500);
-				
+				//setTimeout(() => {displayRedCaptures(AIcaptures, intermediateCells); }, 500);
+				displayRedCaptures(AIcaptures, intermediateCells);
 				//hideIntermediate(intermediateCells);
 			}
 
-			ai_turn = !ai_turn;
+			
 			
 		};
 
@@ -290,13 +295,13 @@
 			}
 
 			Redcaptures = decodeCaptures(captures);
-			console.log("captures have been decoded");
+			//console.log("captures have been decoded");
 			var intermediateCells=[];
 			
 			if(Redcaptures.length)
 			{	
 				intermediateCells = decodeCaptures(get_path(row1,row2,captures,captures.length-1));
-				//showIntermediate(intermediateCells);
+				showIntermediate(intermediateCells);
 				
 			}
 			
@@ -308,15 +313,17 @@
 				$("#"+prevCell).children("p").addClass("noPiece");
 			}
 			else{
+				console.log("maving piece, making red to nopiece");
 				$("#"+selectedCell).children("p").removeClass("noPiece");
 				$("#"+selectedCell).children("p").addClass("redPiece");
 				$("#"+prevCell).children("p").removeClass("redPiece");
 				$("#"+prevCell).children("p").addClass("noPiece");
 			}
-
+			board.print_board();
 			if(Redcaptures.length)
 			{
-				setTimeout(() => {displayBlackCaptures(Redcaptures, intermediateCells); }, 500);
+				//setTimeout(() => {displayBlackCaptures(Redcaptures, intermediateCells); }, 500);
+				displayBlackCaptures(Redcaptures, intermediateCells);
 				//hideIntermediate(intermediateCells);
 			}
 
@@ -332,7 +339,7 @@
 						window.location.reload();
 				}
 			}
-			
+			ai_turn = true;
 		};
 		
 		function displayPossibleMove(possibleMoves,prevPossible)
@@ -353,6 +360,7 @@
 				for(i=0;i<possibleMoves.length;i++)
 				{ 
 					id  = possibleMoves[i];
+					//$("#"+id2).children("p").removeClass("noPiece");
 					$("#"+id).children("p").addClass("possibleMove");
 					
 				}
@@ -368,6 +376,7 @@
 				for(i=0;i<possibleMoves.length;i++)
 				{ 
 					id  = possibleMoves[i];
+					console.log("chaning possible move to nopiece");
 					$("#"+id).children("p").removeClass("possibleMove");
 					$("#"+id).children("p").addClass("noPiece");
 				}
@@ -389,7 +398,7 @@
 				}
 				allMoves.push(moves);
 			}
-			console.log(allMoves);
+			//console.log(allMoves);
 			return moves;
 		};
 
@@ -488,16 +497,18 @@
 			}
 			return captures;
 		};
+
 		function GameStarted()
 		{
 			startGame = true;
 			$("#Play").attr("disabled",true);
 			//$("#RedTurn").show();
-			$("#BlackTurn").css("opacity","0.0");
+			$("#BlackTurn").css("opacity","0.5");
 		};
 		function GameStopped()
 		{
 			quitGame = true;
+	
 			window.location.reload();
 		};
 		
@@ -505,5 +516,18 @@
 			const end = Date.now() + ms
 			while (Date.now() < end) continue
 		}
-		
-		
+		function delay(n) {  
+			n = n || 2000;
+			return new Promise(done => {
+			  setTimeout(() => {
+				done();
+			  }, n);
+			});
+		  }
+		  
+		async function me() {
+			//cLog("Start");
+			await new Promise(done => setTimeout(() => done(), 5000));
+			//cLog("End");
+		  }
+		  
