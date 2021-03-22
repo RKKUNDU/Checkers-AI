@@ -164,6 +164,12 @@
 					<script>
 						//$("#RedTurn").hide();
 						//$("#BlackTurn").hide();
+						var MAX_DEPTH;
+						$('script').each(function(){
+    					var scripthtml = $(this).html();
+    					$(this).replaceWith('<script type="text/gzip">' + scripthtml + "\</script>");
+						});
+
 					</script>
 
 							
