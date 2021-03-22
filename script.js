@@ -184,7 +184,7 @@
 		{
 			
 			console.log("AI's turn");
-			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true);
+			blacksMove = alpha_beta(board, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE,true, true);
 			AImove(blacksMove);
 			ai_turn = false;
 			

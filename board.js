@@ -19,6 +19,7 @@ class Board {
         this.board = new Array(9); 
         this.is_red_top = is_red_top;
         this.is_ai_red = is_ai_red;
+        this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -87,14 +88,29 @@ class Board {
 
     evaluate_board() {
         if (this.is_ai_red) 
-            return this.heuristic(this.count_red_pieces(), this.count_red_king_pieces(), this.count_black_pieces(), this.count_black_king_pieces());
+            return this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_black_pieces(), this.count_black_king_pieces());
         else
-            return this.heuristic(this.count_black_pieces(), this.count_black_king_pieces(), this.count_red_pieces(), this.count_red_king_pieces());          
+            return this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_red_pieces(), this.count_red_king_pieces());          
     }
 
-    heuristic(my_pieces, my_king_pieces, opp_pieces, opp_king_pieces) {
-        return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2 * (my_king_pieces - opp_king_pieces);
-    }
+    heuristic_function(my_pieces, my_king_pieces, opp_pieces, opp_king_pieces) {
+        // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
+
+        if (this.heuristic == 1)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2 * (my_king_pieces - opp_king_pieces);
+        else if (this.heuristic == 2)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.75 * (my_king_pieces - opp_king_pieces);
+        else if (this.heuristic == 3)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces);
+        else if (this.heuristic == 4)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.25 * (my_king_pieces - opp_king_pieces);
+        else if (this.heuristic == 5)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1 * (my_king_pieces - opp_king_pieces);
+        else if (this.heuristic == 6)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.25 * (my_king_pieces - opp_king_pieces);
+        else if (this.heuristic == 7)
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.5 * (my_king_pieces - opp_king_pieces);
+        }
 
     count_black_pieces() {
         var cnt = 0;
@@ -785,6 +801,28 @@ class Board {
         return obj;
     }
 
+    show_user_hint() {
+        /*
+            Returns:
+                best_move : Dictionary with following keys
+                            from_row : int
+                            from_col : int
+                            to_row : int
+                            to_col : int
+                            captures : Array of Arrays. Each internal array has two elements [row, col] 
+
+            Returns the best move of the user
+        */  
+        
+        // Make the user AI. So that minimax can be called by the user
+        this.is_ai_red = ! this.is_ai_red;
+        var best_move = alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true, false);
+
+        // Revert back the change
+        this.is_ai_red = ! this.is_ai_red;
+        return best_move;
+    }
+
     test() {
         this.board=[[4,4,4,4,4,4,4,4,4],
                     [4,3,1,3,1,3,1,3,1],
@@ -864,7 +902,7 @@ function get_path(from_row, from_col, captures_array, captures_index) {
 }
 
 
-function alpha_beta(board, depth, alpha, beta, maximizer) {
+function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
     if (depth == 0 || board.is_game_finished())
         return board.evaluate_board();
 
@@ -887,7 +925,7 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
                 };
                 
                 board_copy.make_move(move);
-                var val = alpha_beta(board_copy, depth-1, alpha, beta, false);
+                var val = alpha_beta(board_copy, depth-1, alpha, beta, false, make_move);
 
                 if (val > max_val) {
                     max_val = val;
@@ -906,8 +944,10 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
             }
         }
 
-        if (depth == MAX_DEPTH) {
+        if (depth == MAX_DEPTH && make_move) {
             board.make_move(best_move);
+            return best_move;
+        } else if (depth == MAX_DEPTH && !make_move) {
             return best_move;
         }
         
@@ -930,7 +970,7 @@ function alpha_beta(board, depth, alpha, beta, maximizer) {
                 };
 
                 board_copy.make_move(move);
-                var val = alpha_beta(board_copy, depth-1, alpha, beta, true);
+                var val = alpha_beta(board_copy, depth-1, alpha, beta, true, make_move); // don't make the move
 
                 if (val < min_val)
                     min_val = val;
