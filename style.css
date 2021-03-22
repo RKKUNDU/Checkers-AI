@@ -21,7 +21,7 @@
     border: 3px solid rgb(241, 46, 46);
     border-radius: 20px;
     -webkit-transition: 0.8s ease-in-out;
-	-moz-transition: 0.8s ease-in-out;
+  -moz-transition: 0.8s ease-in-out;
   -o-transition: 0.8s ease-in-out;
   transition: 0.8s ease-in-out;
 }
@@ -41,7 +41,7 @@ background-color: #cf0505;
 border: 3px solid rgb(243, 247, 56);
 border-radius: 20px;
 -webkit-transition: 0.5s ease-in-out;
-	-moz-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
 }
@@ -58,7 +58,7 @@ border-radius: 20px;
     border: 3px solid white;
     border-radius: 20px;
     -webkit-transition: 0.5s ease-in-out;
-	-moz-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
 }
@@ -101,7 +101,7 @@ background-color:#99692f;
     border: 3px solid black;
     border-radius: 1px;
     -webkit-transition: 0.5s ease-in-out;
-	-moz-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
 }
@@ -151,7 +151,7 @@ background-color:#99692f;
     border: 0.5px solid rgb(250, 226, 89);
     border-radius: 8px;
     -webkit-transition: 1s ease-in-out;
-	-moz-transition: 1s ease-in-out;
+  -moz-transition: 1s ease-in-out;
   -o-transition: 1s ease-in-out;
   transition: 1s ease-in-out;
 }
@@ -285,7 +285,7 @@ p{
 
 #RedTurn
 {
-  color:#ee722a;
+  color:#faab61;
   font-size: 35px;
   font-family:"Lucida Console", "Courier New", monospace;
   font-weight: bold;
@@ -319,4 +319,12 @@ p{
   padding: 5px;
     
 }
-
+li{
+  margin-left: 10px;
+  margin-top: 20px;
+  margin-right: 10px;
+  font-size: 18px;
+  text-indent: 15px;
+  text-align: justify;
+  font-family: verdana;
+}
