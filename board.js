@@ -826,6 +826,218 @@ class Board {
         return best_move;
     }
 
+    show_max_gain_util() {
+        /*
+            Returns the piece with maximum gain
+
+            move : Dictionary with following keys
+                    from_row : int
+                    from_col : int
+                    gain : int
+        */
+        var gains = this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true);
+        var max_gain_move;
+        var max_gain = Number.NEGATIVE_INFINITY;
+
+        for (var i = 0; i < gains.length; i++) {
+            var gain = gains[i][0].val - this.evaluate_board(); 
+            if (gain > max_gain) {
+                max_gain_move = gains[i];
+                max_gain = gain;
+            }
+        }
+
+        // return the piece which has best move and gain
+        var ret = {
+            'from_row': max_gain_move[0].from_row, 
+            'from_col': max_gain_move[0].from_col, 
+            'gain' : max_gain
+        };
+        
+        return ret; 
+    }
+
+    show_gains_of_piece_util(row, col) {
+        /*
+            Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
+            starts from the (row, col)). Each move is a dictionary with following keys:
+                    from_row : int
+                    from_col : int
+                    to_row : int
+                    to_col : int
+                    captures : array of captured cells [row, col]
+                    gain : int
+
+        */
+        return this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col);
+    }
+    
+    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col) {
+        // alpha_beta() function reused
+        
+        /*
+            show gains of all the moves of the piece (row, col)      if for_single_piece is true
+            show gains of all the moves of all the pieces            otherwise 
+        */
+
+        if (depth == 0 || board.is_game_finished()) {
+            // NO MOVE depicted by (-1, -1) to (-1, -1)
+            var best_next_move = {};
+            best_next_move.from_row = -1;
+            best_next_move.from_col = -1;
+            best_next_move.to_row = -1;
+            best_next_move.to_col = -1;
+            best_next_move.captures = [];
+            best_next_move.gain = 0;
+            best_next_move.val = board.evaluate_board();
+            return [best_next_move];
+        }
+    
+        if (maximizer) {
+            var max_val = Number.NEGATIVE_INFINITY;
+            var moves;
+            if (! for_single_piece)
+                moves = board.get_all_moves();
+            else {
+                console.log("Showing gains for the piece", row, col);
+                moves = board.get_moves_of_piece(row, col);
+                if (moves.length != 0) {
+                    var dict = {'from_row': row, 'from_col' : col, 'moves': moves};
+                    moves = [dict];
+                } else 
+                    moves = [];
+            }
+                
+            var best_move = {};
+            var best_next_move_sequence = [];
+            var store_gains = [];
+
+            for (var i = 0; i < moves.length; i++) {
+                for (var j = 0; j < moves[i]['moves'].length; j++) {
+                    var this_move = {};
+
+                    var board_copy = new Board();
+                    board.copyOf(board_copy);
+    
+                    var move = {
+                        'from_row': moves[i]['from_row'],
+                        'from_col': moves[i]['from_col'],
+                        'to_row': moves[i]['moves'][j]['to_row'],
+                        'to_col': moves[i]['moves'][j]['to_col'],
+                        'captures': moves[i]['moves'][j]['captures']
+                    };
+                    
+                    board_copy.make_move(move);
+                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, false);
+                    var val = next_move_sequence[0].val;
+
+                    this_move.from_row = move['from_row'];
+                    this_move.from_col = move['from_col'];
+                    this_move.to_row = move['to_row'];
+                    this_move.to_col = move['to_col'];
+                    this_move.captures = move['captures'];
+                    this_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                    this_move.val = val;
+
+                    var this_move_sequence = [this_move];
+                    this_move_sequence = this_move_sequence.concat(next_move_sequence)
+
+
+                    if (depth == board.MAX_DEPTH) {
+                        store_gains = store_gains.concat([this_move_sequence]);
+                    }
+
+                    if (val > max_val) {
+                        max_val = val;
+                        best_move.from_row = move['from_row'];
+                        best_move.from_col = move['from_col'];
+                        best_move.to_row = move['to_row'];
+                        best_move.to_col = move['to_col'];
+                        best_move.captures = move['captures'];
+                        best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        best_move.val = val;
+
+                        best_next_move_sequence = next_move_sequence;
+                    }
+    
+                    next_move_sequence = null;
+                    move = null;
+                    this_move = null;
+                    board_copy = null;
+
+                    if (val > alpha)
+                        alpha = val;
+    
+                    if (alpha >= beta)
+                        break;
+                }
+
+            }
+            
+            if (depth != board.MAX_DEPTH) {
+                var best_move_sequence = [best_move];
+                best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
+                return best_move_sequence;
+            } else {
+                console.log("this");
+                return store_gains;
+            }
+
+        } else {
+            var min_val = Number.POSITIVE_INFINITY;
+            var moves = board.get_all_opponent_moves();
+            var best_move = {};
+            var best_next_move_sequence = [];
+    
+            for (var i = 0; i < moves.length; i++) {
+                for (var j = 0; j < moves[i]['moves'].length; j++) {
+                    var board_copy = new Board();
+                    board.copyOf(board_copy);
+    
+                    var move = {
+                        'from_row': moves[i]['from_row'],
+                        'from_col': moves[i]['from_col'],
+                        'to_row': moves[i]['moves'][j]['to_row'],
+                        'to_col': moves[i]['moves'][j]['to_col'],
+                        'captures': moves[i]['moves'][j]['captures']
+                    };
+    
+                    board_copy.make_move(move);
+                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, true); 
+                    var val = next_move_sequence[0].val;
+
+                    if (val < min_val) {
+                        min_val = val;
+
+                        best_move.from_row = move['from_row'];
+                        best_move.from_col = move['from_col'];
+                        best_move.to_row = move['to_row'];
+                        best_move.to_col = move['to_col'];
+                        best_move.captures = move['captures'];
+                        best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        best_move.val = val;
+
+                        best_next_move_sequence = next_move_sequence;
+                    }
+    
+                    next_move_sequence = null;
+                    move = null;
+                    board_copy = null;
+
+                    if (val < beta)
+                        beta = val;
+    
+                    if (alpha >= beta)
+                        break;
+                }
+            }
+
+            var best_move_sequence = [best_move];
+            best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
+            
+            return best_move_sequence;
+        }
+    }
     test() {
         this.board=[[4,4,4,4,4,4,4,4,4],
                     [4,3,1,3,1,3,1,3,1],
@@ -848,12 +1060,23 @@ class Board {
                     [4,-1,3,-1,3,0,3,-1,3]];
 
         this.print_board();
-        var row = 4, col = 3;
-        var moves = this.get_moves_of_piece(row, col);
-        for (var i = 0; i < moves.length; i++) {
-            console.log(moves[i].to_row, moves[i].to_col, moves[i].captures);
-            console.log(get_path(row, col, moves[i].captures, moves[i].captures.length-1));
+
+        console.log(this.show_max_gain_util());
+        var x = this.show_gains_of_piece_util(4, 3);
+        console.log("Board eval", this.evaluate_board());
+        for (var i = 0; i < x.length; i++) {
+            console.log("\n");
+            console.log("New State eval: ", x[i][0].val, "Total Gain: ", x[i][0].val - this.evaluate_board());
+            for (var j = 0; j < x[i].length; j++) {
+                console.log("From (", x[i][j].from_row, x[i][j].from_col, ") To (", x[i][j].to_row, x[i][j].to_col, ") Gain", x[i][j].gain);
+            }
         }
+        // var row = 4, col = 3;
+        // var moves = this.get_moves_of_piece(row, col);
+        // for (var i = 0; i < moves.length; i++) {
+        //     console.log(moves[i].to_row, moves[i].to_col, moves[i].captures);
+        //     console.log(get_path(row, col, moves[i].captures, moves[i].captures.length-1));
+        // }
         // console.log(this.evaluate_board());
         // console.log('--------------------');
         // alpha_beta(this, MAX_DEPTH, Number.MIN_VALUE, Number.MAX_VALUE, true);
@@ -862,9 +1085,9 @@ class Board {
     }
 }
 
-var MAX_DEPTH = 3;
-var board = new Board(true, true);
+var board  = new Board(true, false);
 board.test();
+
 
 function get_path(from_row, from_col, captures_array, captures_index) {
     /*
@@ -899,6 +1122,8 @@ function get_path(from_row, from_col, captures_array, captures_index) {
     // moving upward left diagonal
     else if ((from_row - 1) == row && (from_col - 1) == col)
         next_cell = [from_row - 2, from_col - 2];
+    
+    // FIXME: sometimes next_cell is undefined
 
     var arr = get_path(next_cell[0], next_cell[1], captures_array, captures_index - 1);
     return [next_cell].concat(arr);
