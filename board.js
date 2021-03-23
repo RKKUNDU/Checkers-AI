@@ -857,8 +857,40 @@ class Board {
         return ret; 
     }
 
-    show_gains_of_piece_util(row, col) {
+    show_gains_util() {
         /*
+
+            Returns an array dictionary. Each dictionary has following keys:
+                    from_row : int
+                    from_col : int
+                    gain : int
+
+        */
+        var gains = this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, null, null, true);
+        var arr = [];
+        for (var i = 0; i < gains.length; i++) {
+            var gain = gains[i][0].val - this.evaluate_board(); 
+            var from_row =  gains[i][0].from_row;
+            var from_col =  gains[i][0].from_col;
+
+            var dict = {
+                'from_row': from_row,
+                'from_col': from_col,
+                'gain': gain
+            };
+            arr.push(dict);
+        }
+
+        return arr;
+    }
+
+    show_gains_of_piece_util(row, col, only_best) {
+        /*
+            Arguments:
+                row : should be present
+                col : should be present
+                only_best (boolean)  : for showing only the best move (with value of gain)
+
             Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
             starts from the (row, col)). Each move is a dictionary with following keys:
                     from_row : int
@@ -867,17 +899,44 @@ class Board {
                     to_col : int
                     captures : array of captured cells [row, col]
                     gain : int
+                    val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
 
         */
-        return this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col);
+        return this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col, only_best);
     }
     
-    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col) {
+    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col, only_best) {
         // alpha_beta() function reused
         
         /*
+            Arguments:
+                board : board object
+                depth : current depth (should be called with depth=board.MAX_DEPTH)
+                alpha : should be called with alpha=Number.NEGATIVE_INFINITY
+                beta : should be called with alpha=Number.POSITIVE_INFINITY
+                maximizer : should be called with maximizer=true
+
+                Optional:
+                for_single_piece (boolean)
+                row : should be present if for_single_piece is true
+                col : should be present if for_single_piece is true
+                only_best (boolean)  
+
             show gains of all the moves of the piece (row, col)      if for_single_piece is true
+            show gains of the best move of all the pieces            if only_best is true
+            show gain of the best move of the piece (row, col)       if for_single_piece and only_best are true            
             show gains of all the moves of all the pieces            otherwise 
+
+
+            Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
+            starts from the (row, col)). Each move is a dictionary with following keys:
+                    from_row : int
+                    from_col : int
+                    to_row : int
+                    to_col : int
+                    captures : array of captured cells [row, col]
+                    gain : int
+                    val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
         */
 
         if (depth == 0 || board.is_game_finished()) {
@@ -913,6 +972,10 @@ class Board {
             var store_gains = [];
 
             for (var i = 0; i < moves.length; i++) {
+                var loop_max_val = Number.NEGATIVE_INFINITY;
+                var loop_best_move = {};
+                var loop_best_next_move_sequence = [];
+
                 for (var j = 0; j < moves[i]['moves'].length; j++) {
                     var this_move = {};
 
@@ -943,7 +1006,7 @@ class Board {
                     this_move_sequence = this_move_sequence.concat(next_move_sequence)
 
 
-                    if (depth == board.MAX_DEPTH) {
+                    if (depth == board.MAX_DEPTH && !only_best) {
                         store_gains = store_gains.concat([this_move_sequence]);
                     }
 
@@ -959,7 +1022,20 @@ class Board {
 
                         best_next_move_sequence = next_move_sequence;
                     }
-    
+                    
+                    if (val > loop_max_val) {
+                        loop_max_val = val;
+                        loop_best_move.from_row = move['from_row'];
+                        loop_best_move.from_col = move['from_col'];
+                        loop_best_move.to_row = move['to_row'];
+                        loop_best_move.to_col = move['to_col'];
+                        loop_best_move.captures = move['captures'];
+                        loop_best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        loop_best_move.val = val;
+
+                        loop_best_next_move_sequence = next_move_sequence;
+                    }
+
                     next_move_sequence = null;
                     move = null;
                     this_move = null;
@@ -972,6 +1048,11 @@ class Board {
                         break;
                 }
 
+                if (depth == board.MAX_DEPTH && only_best) {
+                    var best_move_sequence = [loop_best_move];
+                    best_move_sequence = best_move_sequence.concat(loop_best_next_move_sequence);
+                    store_gains = store_gains.concat([best_move_sequence]);
+                }
             }
             
             if (depth != board.MAX_DEPTH) {
