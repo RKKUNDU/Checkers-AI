@@ -207,7 +207,10 @@ class Board {
                     if (moves.length != 0) {
                         var dict = {'from_row': i, 'from_col' : j, 'moves': moves};
                         all_moves.push(dict);
+                        dict = null;
                     }
+
+                    moves = null;
                 }    
             }
         }
@@ -1054,6 +1057,8 @@ class Board {
                     store_gains = store_gains.concat([best_move_sequence]);
                 }
             }
+
+            moves = null;
             
             if (depth != board.MAX_DEPTH) {
                 var best_move_sequence = [best_move];
@@ -1112,6 +1117,8 @@ class Board {
                         break;
                 }
             }
+
+            moves = null;
 
             var best_move_sequence = [best_move];
             best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
@@ -1245,6 +1252,9 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                     best_move.captures = move['captures'];
                 }
 
+                board_copy = null;
+                move = null;
+
                 if (val > alpha)
                     alpha = val;
 
@@ -1252,6 +1262,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                     break;
             }
         }
+
+        moves = null;
 
         if (depth == board.MAX_DEPTH && make_move) {
             board.make_move(best_move);
@@ -1281,6 +1293,9 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                 board_copy.make_move(move);
                 var val = alpha_beta(board_copy, depth-1, alpha, beta, true, make_move); // don't make the move
 
+                board_copy = null;
+                move = null;
+
                 if (val < min_val)
                     min_val = val;
 
@@ -1292,6 +1307,7 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
             }
         }
         
+        moves = null;
         return min_val;
     }
 }
