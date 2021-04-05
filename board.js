@@ -363,6 +363,8 @@ class Board {
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
 
                     // move in Right diagonal
@@ -398,6 +400,8 @@ class Board {
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
                 }
             } 
@@ -509,6 +513,8 @@ class Board {
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
 
                     // move in Right diagonal
@@ -531,7 +537,7 @@ class Board {
                         var tmp_cell = this.board[i-1][j+1];
                         this.board[i-1][j+1]=0;
 
-                        tmp = this.get_moves_of_piece(i-2,j+2,3);
+                        var tmp = this.get_moves_of_piece(i-2,j+2,3);
                         
                         this.board[i-1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
@@ -544,6 +550,8 @@ class Board {
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
                 } else { // TODO: move upward direction
                     
@@ -586,6 +594,8 @@ class Board {
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
 
                     // move in Right diagonal
@@ -608,7 +618,7 @@ class Board {
                         var tmp_cell = this.board[i-1][j+1];
                         this.board[i-1][j+1]=0;
 
-                        tmp = this.get_moves_of_piece(i-2,j+2,4);
+                        var tmp = this.get_moves_of_piece(i-2,j+2,4);
                         
                         this.board[i-1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
@@ -621,6 +631,8 @@ class Board {
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
                     
                     // Left
