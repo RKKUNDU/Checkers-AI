@@ -1,0 +1,490 @@
+/*restricted cell*/
+
+.emptyCell{
+  width: 20px;
+  height: 60px;
+  padding: 12px;
+  background-color:lightgrey;
+
+}
+
+/* */ 
+.clicked{
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+  width: 20px;
+  height: 20px;
+  align-content: center;
+  background:#99692f;
+  background-color: #ffd4c2;
+  border: white;
+  border-radius: 10px;
+}
+
+.redPiece
+{
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  color: white;
+  align-content: center;
+  background:#99692f;
+  background-color:#cf0505;
+  border: 3px solid white;
+  border-radius: 20px;
+  -webkit-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
+}
+
+/* */
+.redKingPiece
+{
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto;
+  margin-right:auto;
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  color:white;
+  align-content: center;
+  background:red;
+  background-color: #cf0505;
+  border: 3px solid rgb(243, 247, 56);
+  border-radius: 20px;
+  -webkit-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
+}
+
+/* */
+.blackPiece
+{
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  color:white;
+  background-color: midnightblue;
+  border: 3px solid white;
+  border-radius: 20px;
+  -webkit-transition: 0.8s ease-in-out;
+  -moz-transition: 0.8s ease-in-out;
+  -o-transition: 0.8s ease-in-out;
+  transition: 0.8s ease-in-out;
+}
+
+/* */
+.blackKingPiece
+{
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto;
+  margin-right:auto;
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  color:white;
+  align-content: center;
+  background-color: rgb(28, 28, 73);
+  border: 3px solid rgb(243, 247, 56);
+  border-radius: 20px;
+  -webkit-transition: 0.8s ease-in-out;
+  -moz-transition: 0.8s ease-in-out;
+  -o-transition: 0.8s ease-in-out;
+  transition: 0.8s ease-in-out;
+}
+
+/* */
+.whiteSpace{
+  background-color:#99692f;
+}
+
+/* */
+.noPiece{
+  background-color: black;
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+  align-content: center;
+  color:white;
+  border: 3px solid black;
+  border-radius: 1px;
+  -webkit-transition: 0.5s ease-in-out;
+  -moz-transition: 0.5s ease-in-out;
+  -o-transition: 0.5s ease-in-out;
+  transition: 0.5s ease-in-out;
+}
+
+/* */
+.possibleMove{
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  align-content: center;
+  background: #ffd4c2;
+  background-color: #ffd4c2 ;
+  border: 0.5px solid white;
+  border-radius: 8px;
+  color:black;
+
+}
+
+/* */
+.capture{
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  background-color: grey;
+}
+
+/* */
+
+/* */
+.showCapture
+{
+  width: 20px;
+  height: 20px;
+  padding: 12px;
+  align-content: center;
+  background: rgb(250, 226, 89);
+  background-color: rgb(250, 226, 89) ;
+  border: 0.5px solid rgb(250, 226, 89);
+  border-radius: 8px;
+  -webkit-transition: 1s ease-in-out;
+  -moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;
+}
+
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  transition-duration: .4s;
+  cursor: pointer;
+}
+
+.button1 {
+
+  margin-top: 10px;
+  width: 200px;
+
+  background-color: lightgrey; 
+  color: black; 
+  border: 2px solid black;
+  border-radius: 10px;
+  display: block;
+  padding: 10px;
+  margin-left: 80px;
+}
+
+.button1:hover {
+  background-color:black;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  display: block;
+
+}
+.button1:disabled,
+.button1[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+
+
+.class1
+{
+  width: 26.33%;
+  float: left;
+  height: 650px;
+  align-content: vertical;
+  
+}
+.class2
+{
+  width: 40.33%;
+  float: left;
+  height: 90%;
+  align-items: center;
+  background-attachment: fixed; 
+  
+}
+.class3_play 
+{
+  width: 30%;
+  float: left;
+  margin-left: 30px;
+  display: none;
+  height: 735px;
+  
+}
+.class3_1_play 
+{
+  height:100%;
+  width: 100%;
+  margin-top:0px;
+  float: left;
+  background-color: lightgrey;
+  
+  border-radius: 20px;
+  border: 5px solid black;
+}
+
+#sec3_understand{
+  display:none;
+}
+.class3_understand
+{
+  width: 30%;
+  float: left;
+  display:none;
+  margin-left: 30px;
+  height: 735px;
+  
+}
+.class3_1_understand 
+{
+  height:100%;
+  width: 100%;
+  margin-top:0px;
+  float: left;
+  background-color: lightgrey;
+  
+  border-radius: 20px;
+  border: 5px solid black;
+}
+.play_1 
+{
+  height:100%;
+  width: 100%;
+  margin-top:100px;
+  float: left;
+
+}
+.understand_1 
+{
+  height:100%;
+  width: 100%;
+  margin-top:100px;
+  float: left;
+
+}
+.box{
+  display: none;
+
+}
+.tableClass{
+  position: relative;
+  box-shadow:20px 20px 50px 15px black; 
+}
+
+
+#RedTurn
+{
+  color:#faab61;
+  font-size: 35px;
+  font-family:"Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  float: left;
+  padding: 2px;
+  align-items: center;
+  text-align: right;
+  width: 45%;
+  height: 40px;
+  text-shadow: 2px 2px 5px red;
+}
+#BlackTurn{
+  color :rgb(63, 206, 224);
+  font-size: 35px;
+  font-family:"Lucida Console", "Courier New", monospace;
+  font-weight: bold;
+  padding: 2px;
+  float: left;
+  align-items: center;
+  text-align: left;
+  align-items: center;
+  width: 45%;
+  height: 40px;
+}
+.turn{
+  width: 100%;
+  float: left;
+  height: 10%;
+  align-items: center;
+  background-attachment: fixed; 
+  padding: 5px;
+
+}
+.modes{
+  margin-top: 50px;
+  margin-left:80px; 
+  color:white;
+  font-family: verdana;
+  font-size: 22px;
+}
+
+
+body {
+  width: 100%;
+  height: 100%;
+  float: left;
+  background-color: #494440;
+  background-image: url('bg5.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+
+}
+
+td{
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 6px;
+
+}
+p{
+  font-weight: bold;
+
+}
+
+table{
+  position: relative;
+  width: 640px;
+  height: 640px;
+  margin-left: auto ;
+  margin-right: auto;
+  margin-top: 0px;
+  border: 10px solid lightgrey;
+  border-radius: 4px;
+
+}
+
+
+p{
+
+  text-align: center;
+  position: relative;
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+
+}
+span{
+  visibility: hidden;
+  text-align: center;
+  margin-top:auto;
+  margin-left:auto;
+  margin-bottom:auto; 
+  margin-right:auto;
+
+}
+
+li{
+  margin-left: 10px;
+  margin-top: 20px;
+  margin-right: 10px;
+  font-size: 18px;
+  text-indent: 15px;
+  text-align: justify;
+  font-family: verdana;
+}
+.show_points{
+
+  padding: 20px;
+  font-size: 18px;
+  text-indent: 25px;
+  text-align: justify;
+  font-family: verdana;
+  border: 1px solid black;
+  background-color: white;
+  
+  border-radius: 6px;
+  
+  
+}
+
+#show_table{
+  margin-right: 100px;
+  width: auto;
+  height: auto;
+  float: right;
+  align-content: vertical;
+  border: 10px solid lightgrey;
+  background-color: black;
+  
+  
+}
+a{
+  font-size: 18px;
+  text-indent: 25px;
+
+  font-family: verdana;
+  float: left;
+  margin-top: 50px;
+  padding: 20px;
+  margin-left: 80px;
+  color: white;
+  border: 3px solid lightgrey;
+  background-attachment:fixed;
+}
+
+.undo_button {
+  border: none;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.undo_button1 {
+
+  margin-top: 350px;
+  
+  width:100px;
+  background-color: lightgrey; 
+  color: black; 
+  border-radius: 10px;
+  display: block;
+  margin-left: 830px;
+}
+
+.undo_button1:hover {
+  background-color:black;
+  color: white;
+  display: block;
+
+}
+.undo_button1:disabled,
+.undo_button1[disabled]{
+  background-color: #cccccc;
+  color: #666666;
+}
