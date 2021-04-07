@@ -13,6 +13,42 @@ function showRules(id1, id2)
 	}
 };
 
+
+function changeAItoRed()
+{
+	
+			console.log("here AI can become Red");
+			/*
+			board.is_ai_red = true;
+			ai_class = "redPiece";
+			player_Class = "blackPiece";
+			//ai_turn = true;
+			*/
+}
+function changeAItoBlue()
+{
+			console.log("here AI can become Blue");
+			/*
+			board.is_ai_red = false;
+			ai_class = "blackPiece";
+			player_Class = "redPiece";
+			//ai_turn = true;
+			*/
+}
+function showHA(id){
+	document.getElementById(id).style.display = 'block';
+}
+function showAA(id){
+	document.getElementById(id).style.display = 'block';
+}
+function hideHA(id){
+	document.getElementById(id).style.display = 'none';
+}
+function hideAA(id){
+	document.getElementById(id).style.display = 'none';
+}
+
+
 function showTable(id1){
 	var e = document.getElementById(id1);
 	e.style.display = 'block';
@@ -32,10 +68,60 @@ function hideUnderstand(id){
 	understanding_mode=false;
 }
 
-function disableModes(id1,id2){
+function disableModes(id1,id2,id3){
 	document.getElementById(id1).disabled = true;
 	document.getElementById(id2).disabled = true;
+	document.getElementById(id3).disabled = true;
 }
+function disableAImoveBtn(id)
+{
+	if(id.checked)
+	{
+		document.getElementById("AIMove").innerHTML = "AI-Move";
+		document.getElementById("AIMove").disabled = true;
+		document.getElementById("AIvsAI").disabled = true;
+		AutoAI = true;
+	}
+	else
+	{
+		document.getElementById("AIMove").innerHTML = "AI-Move";
+		document.getElementById("AIMove").disabled = false;	
+		document.getElementById("AIvsAI").disabled = false;
+		AutoAI = false;
+	}
+}
+function disableAImoveBtnAA(id,id1)
+{
+	if(id.checked)
+	{
+		document.getElementById("AIMove").disabled = false;
+		
+		document.getElementById("AIMove").innerHTML = "AI(B)Move";
+		document.getElementById("AIAutoMove").disabled = true;
+		//AutoAI = true;
+	}
+	else
+	{
+		document.getElementById("AIMove").disabled = true;
+		document.getElementById("AIMove").innerHTML = "AI-Move";
+		document.getElementById("AIAutoMove").disabled = false;	
+		//AutoAI = false;
+	}
+}
+function showAIBlueBtn(id)
+{
+	if(id.checked)
+	{
+		document.getElementById("RedAIMove").style.display = 'block';
+		//AutoAI = true;
+	}
+	else
+	{
+		document.getElementById("RedAIMove").style.display = 'none';
+		//AutoAI = false;
+	}
+}
+
 
 function cellVisibility(id){
 
@@ -156,4 +242,58 @@ function showPoints()
 			}
 
 			
+}
+
+var userHintMove = true;
+function showHint()
+{
+ //make a copy of original board and make changes in cloned board
+ 	var modal = document.getElementById("myModal");
+ 
+	 $("#modalBody").empty();
+	 var modalBoard = $("#checkers").clone();
+	 $("#modalBody").append(modalBoard); 
+	 $("#modalBoard").addClass("tableClass");
+ 
+	 modal.style.display = "block";
+	 $("#reviewHints").prop("disabled","true");
+}
+var duplicateBoard = new Board(true, false); 
+function nextHintMove()
+{
+
+	var hints = board.show_user_hint();
+	var fromId = hints.from_row*10 + hints.from_col;
+	var toId = hints.to_row*10 + hints.to_col;
+	var captures = hints.captures;
+ 	//make copy of board object
+ 	duplicateBoard = board.copyOf(duplicateBoard);
+ 	// show which piece to select
+ 
+	 //make from_id to no piece
+ 
+	 board.board[hints.from_row][hints.from_col] = 0;
+	 board.board[hints.to_row][hints.to_col] = 1;
+ 
+	 var i;
+	 for(i=0;i<captures.length;i++)
+	 {
+	 	board.board[captures[i][0]][captures[i][1]] = 0;
+	 }
+	 render_board(board);
+	 $("#modalBody").empty();
+	 var modalBoard = $("#checkers").clone();
+	 $("#modalBody").append(modalBoard); 
+	 $("#modalBoard").addClass("tableClass");
+ 
+	 // reset original board of sec2 div
+	 board = duplicateBoard.copyOf(board);
+	 render_board(board);
+ 
+}
+
+function closeModal()
+{
+	var modal = document.getElementById("myModal");
+	modal.style.display = "none";
 }
