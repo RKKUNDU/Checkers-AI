@@ -25,7 +25,7 @@
 				<input type="radio" id="play" name="mode" value="play" onclick="hideTable('sec3_understand');hideUnderstand('understand')">
 				<label for="play">Play</label><br>
 				<input type="radio" id="understand" name="mode" value="understand" onclick="showTable('sec3_understand');showPoints();hidePlay('play');">
-				<label for="understand">Understand</label>
+				<label for="understand">Understand</label><br>
 				<input type="radio" id="learn" name="mode" value="learn" onclick="hideTable('sec3_understand');hidePlay('play');">
 				<label for="Learn">Learn</label>
 
@@ -40,9 +40,10 @@
 					<option value="Hard" id="Hard" >Hard</option>
 				</select>
 
-				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand')"> Play</button>
-				<button class="button button1" id="stop" onclick="GameStopped();disableModes('play','understand')"> Quit</button>
+				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
+				<button class="button button1" id="stop" onclick="GameStopped();disableModes('play','understand','learn')"> Quit</button>
 				<button class="button button1" id="showRules" onclick="showRules('sec3_play','showRules')">Display Rules</button>
+				<button class="button button1" id="showHint" onclick="showHint()">Show Hint</button>
 				<button id="undo" class="undo_button undo_button1" onClick=""><img width="90px" margin-right="10px" src="undo.png" /></button>
 
 				
@@ -65,11 +66,32 @@
 					<option value="Medium" id="Medium" >Medium</option>
 					<option value="Hard" id="Hard" >Hard</option>
 				</select>
-				<button class="button button1" id="Play_U" onclick="GameStarted();disableModes('play','understand');"> Play</button>
-				<button class="button button1" id="AIMove" onclick = "MakeAIMove();">AI-Move</button>
+				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
+				
+				<form class="modes">
+					
+					<label class="container">
+						<input type="checkbox" id="AIvsAI" onclick="disableAImoveBtnAA(this,'AIMove');showAIBlueBtn(this);">AI-vs-AI 
+						<span class="checkmark"></span>
+					</label><br>
+					
+					<!--input type="radio" id="AI-vs-AI" name="mode" value="AIWithAI" onclick="showAA('AA');hideHA('HA');">
+					<label for="play">AI-vs-AI</label><br>
+					
+					<--input type="radio" id="Human-vs-AI" name="mode" value="HumanWithAI" onclick="showHA('HA');hideAA('AA');">
+					<--label for="understand">Human-vs-AI</label-->
+
+				</form>	
+
+				
+				<button class="button button1 box1" id="RedAIMove"  onclick = "changeAItoRed();MakeAIMove();">AI(R)-Move</button>
+
+					
+				<button class="button button1" id="AIMove" onclick = "changeAItoBlue();MakeAIMove();">AI-Move</button>
+
 				<form class="modes">
 					<label class="container">
-						<input type="checkbox" onclick="disableAImoveBtn(this)">AI-AutoMove
+						<input type="checkbox" id="AIAutoMove" onclick="disableAImoveBtn(this)">AI-AutoMove
 						<span class="checkmark"></span>
 					</label><br>
 					<label class="container">
@@ -83,25 +105,19 @@
         	
 			</div>
 			<div class="learn_1 box">
-				<select name="Player 1" id="player1" class="button button1" onchange="difficultyLevel('level')">
-					<option>Player 1 </option>
-					<option value="AI1" id="AI1" >AI</option>
-					<option value="Human1" id="Human1" >Human</option>
-					
+				<select name="DifficultyLevel" id="level_u" class="button button1" onchange="difficultyLevel('level_u')">
+					<option>Proficiency Level</option>
+					<option value="Easy" id="Easy" >Easy</option>
+					<option value="Medium" id="Medium" >Medium</option>
+					<option value="Hard" id="Hard" >Hard</option>
 				</select>
-				<select name="Player 2" id="player2" class="button button1" onchange="difficultyLevel('level')">
-					<option>Player 2 </option>
-					<option value="AI2" id="AI2" >AI</option>
-					<option value="Human2" id="Human2" >Human</option>
-					
-				</select>
-				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand')"> Play</button>
-				<button class="button button1" id="stop" onclick="GameStopped();disableModes('play','understand')"> Quit</button>
+				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
+				<button class="button button1" id="stop" onclick="GameStopped();disableModes('play','understand','learn')"> Quit</button>
 				<button class="button button1" id="showRules" onclick="showRules('sec3_play','showRules')">Display Rules</button>
 			</div>
 		</div>
 		<div class="class2" id="sec2">
-			<table class="tableClass">
+			<table class="tableClass" id="checkers">
 				<tr>
 					<td class="emptyCell" id="11"><p><span id="cell11">(11)</span></p></td>
 					<td id="12"><p class="noPiece" id="r11"><span id="cell12">(12)</span></p></td>
@@ -205,11 +221,54 @@
 				<li>There is no limit to how many king pieces a player may have.</li>	
 			</div>
 		</div>
+
+
+		<!-- Modal class for showing hints-->
+		<div id="myModal" class="modal">
+
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close">&times;</span>
+					
+					<button class="button button1" id="closeModal" onclick="closeModal()">Close</button>
+					<button class="button button1" id="nextHint" onclick="nextHintMove()">Next Move</button>
+					<button class="button button1" id="reviewHints" onclick="reviewHints()">Review</button>
+				</div>
+				<div class="modal-body" id="modalBody">
+
+				</div>
+				
+				<div class="modal-footer">
+					<h1>Press "Next move" button to animate</h1>
+				</div>
+				
+			</div>
+
+		</div>
+
 		<div class="class3_understand" id="sec3_understand">
 			<div class="class3_1_understand" id="move">
 				<table id="show_table" ></table>
 			</div>
 		</div>  
+		<script>
+			
+			//var btn = document.getElementById("showHint");
+			//var closebtn = document.getElementById("closeButton");
+			var modalBoard = $("#checkers").clone();
+			$("#modalBody").append(modalBoard);	
+			$("#modalBoard").addClass("tableClass");
+
+			var span = document.getElementsByClassName("close")[0];
+			var modal = document.getElementById("myModal");
+
+			window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+			}
+		</script>
 		</main>
 			</body>
 			<! https://www.w3schools.com/howto/howto_js_treeview.asp >
