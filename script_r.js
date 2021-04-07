@@ -13,9 +13,9 @@
 		var startGame = false;
 		var quitGame = false;
 
-		var board =  new Board(true, true);
+		var board =  new Board(true, false);
 		
-		
+		/*
 		board.board[3][2] = 0;
 		board.board[4][3] = 1;
 		board.board[5][4] = -1;
@@ -34,7 +34,7 @@
 		//board.board[3][8] = 0;
 		
 		//board.board[5][4] = -1;
-		
+		*/
 		
 		
 		board.print_board();
@@ -88,7 +88,7 @@
             	 3 restricted cell(pieces can't jump on)
             	 4 possible Moves cell(cell having no piece but)
             	 */
-            	 board.print_board();
+            	 //board.print_board();
             	 
             	 for (var i = 1; i <= 8; i++) 
             	 {

@@ -17,10 +17,12 @@ class Board {
              3 restricted cell
         */
         this.board = new Array(9); 
-        this.is_red_top = true;
-        this.is_ai_red = false;
+        this.is_red_top = is_red_top;
+        this.is_ai_red = is_ai_red;
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
         this.MAX_DEPTH = 5;
+        this.DEPTH_FOR_USER_HINT = 6;
+        this.save_boards=[];
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -74,9 +76,7 @@ class Board {
                     cell = "B";
                 else if (this.board[i][j] == 0)
                     cell = "_";
-                else if(this.board[i][j] == 4)
-                    cell = "*";
-                else
+                else 
                     cell = "x";
 
                 x = x + " " + cell;
@@ -85,8 +85,7 @@ class Board {
         }
     }
 
-    game_finished()
-    {
+    game_finished() {
         return false;
     }
 
@@ -210,7 +209,10 @@ class Board {
                     if (moves.length != 0) {
                         var dict = {'from_row': i, 'from_col' : j, 'moves': moves};
                         all_moves.push(dict);
+                        dict = null;
                     }
+
+                    moves = null;
                 }    
             }
         }
@@ -248,27 +250,20 @@ class Board {
         var i=row;
         var j=col;
         var moves_lst=[];
-        if (!this.is_king_piece(row, col) && (rec_call!=3 && rec_call !=4) ) 
-        {
-            if (this.is_red_piece(row, col) || rec_call == 1) 
-            {
+        if (!this.is_king_piece(row, col) && (rec_call!=3 && rec_call !=4) ) {
+            if (this.is_red_piece(row, col) || rec_call == 1) {
                 // move downward direction
-                if (this.is_red_top) 
-                {
+                if (this.is_red_top) {
                     // Left
-                    if(rec_call==0)
-                    {
-                        if(this.is_empty_cell(i+1,j-1))
-                        {
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1,j-1)){
                             moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
                         }
-                        else if(this.is_red_piece(i+1, j-1))
-                        {
+                        else if(this.is_red_piece(i+1, j-1)){
                             // do_nothing
                         }
                     }
-                    if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2))
-                    {
+                    if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
 
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -284,14 +279,10 @@ class Board {
                         this.board[i+1][j-1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length == 0) 
-                        {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
-                        } 
-                        else
-                        {
-                            for (var x = 0; x < tmp.length; x++) 
-                            {
+                        } else{
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i+1, j-1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
@@ -299,20 +290,16 @@ class Board {
                     }
 
                     // Right
-                    if(rec_call==0)
-                    {
-                        if(this.is_empty_cell(i+1, j+1))
-                        {
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1, j+1)){
                             moves_lst.push({'to_row':i+1,'to_col':j+1, 'captures': []});
                         }
-                        else if(this.is_red_piece(i+1, j+1))
-                        {
+                        else if(this.is_red_piece(i+1, j+1)){
                             // do_nothing
                         }
                     }
 
-                    if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2))
-                    {
+                    if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -328,46 +315,33 @@ class Board {
                         this.board[i][j] = this_cell;
                         this.board[i+1][j+1]=tmp_cell;
                         
-                        if(tmp.length == 0) 
-                        {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
-                        } 
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++)
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i+1, j+1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
                         //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
                     }
-                }
-                else
-                { // TODO: move upward direction
+                } else { // TODO: move upward direction
                     
                 }
-            } 
-            else if (this.is_black_piece(row, col) || rec_call == 2) 
-            {
+            } else if (this.is_black_piece(row, col) || rec_call == 2) {
                 // move upward direction
-                if (this.is_red_top) 
-                {
+                if (this.is_red_top) {
                     
                     // move in Left diagonal 
-                    if(rec_call == 0)
-                    {
-                        if(this.is_empty_cell(i-1,j-1)) 
-                        {
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j-1)) {
                             moves_lst.push({'to_row':i-1,'to_col':j-1, 'captures': []});
-                        } else if(this.is_black_piece(i-1,j-1)) 
-                        {
+                        } else if(this.is_black_piece(i-1,j-1)) {
                             // do_nothing
                         }
                     }
 
-                    if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2))
-                    {
+                    if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -383,35 +357,28 @@ class Board {
                         this.board[i-1][j-1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length==0)
-                        {
+                        if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
-                        } 
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++) 
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i-1, j-1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
 
                     // move in Right diagonal
-                    if(rec_call == 0)
-                    {
-                        if(this.is_empty_cell(i-1,j+1))
-                        {
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j+1)){
                             moves_lst.push({'to_row':i-1,'to_col':j+1, 'captures': []});
-                        } 
-                        else if(this.is_black_piece(i-1,j+1)) 
-                        {
+                        } else if(this.is_black_piece(i-1,j+1)) {
                             // do nothing
                         }
                     }
 
-                    if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2))
-                    {
+                    if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
 
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -427,43 +394,33 @@ class Board {
                         this.board[i-1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
                         
-                        if(tmp.length==0) 
-                        {
+                        if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
-                        } 
-                        else
-                        {
-                            for (var x = 0; x < tmp.length; x++)
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i-1, j+1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
                 }
             } 
-        }
-        else 
-        {
-            if (this.is_red_piece(row, col) || rec_call == 3) 
-            {
+        } else {
+            if (this.is_red_piece(row, col) || rec_call == 3) {
                 // move downward direction
-                if (this.is_red_top) 
-                {
+                if (this.is_red_top) {
                     // Left
-                    if(rec_call==0)
-                    {
-                        if(this.is_empty_cell(i+1,j-1))
-                        {
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1,j-1)){
                             moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
                         }
-                        else if(this.is_red_piece(i+1, j-1))
-                        {
+                        else if(this.is_red_piece(i+1, j-1)){
                             // do_nothing
                         }
                     }
-                    if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2))
-                    {
+                    if(this.is_black_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
 
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -479,12 +436,10 @@ class Board {
                         this.board[i+1][j-1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length == 0) 
-                        {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
                         } else{
-                            for (var x = 0; x < tmp.length; x++) 
-                            {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i+1, j-1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
@@ -492,20 +447,16 @@ class Board {
                     }
 
                     // Right
-                    if(rec_call==0)
-                    {
-                        if(this.is_empty_cell(i+1, j+1))
-                        {
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1, j+1)){
                             moves_lst.push({'to_row':i+1,'to_col':j+1, 'captures': []});
                         }
-                        else if(this.is_red_piece(i+1, j+1))
-                        {
+                        else if(this.is_red_piece(i+1, j+1)){
                             // do_nothing
                         }
                     }
 
-                    if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2))
-                    {
+                    if(this.is_black_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -521,12 +472,10 @@ class Board {
                         this.board[i+1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
                         
-                        if(tmp.length == 0) 
-                        {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
                         } else {
-                            for (var x = 0; x < tmp.length; x++) 
-                            {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i+1, j+1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
@@ -534,19 +483,15 @@ class Board {
                         //moves_lst.push(this.get_moves_of_piece(i+2,j+2,1));
                     }
                     // move in Left diagonal 
-                    if(rec_call == 0)
-                    {
-                        if(this.is_empty_cell(i-1,j-1)) 
-                        {
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j-1)) {
                             moves_lst.push({'to_row':i-1,'to_col':j-1, 'captures': []});
-                        } else if(this.is_red_piece(i-1,j-1)) 
-                        {
+                        } else if(this.is_red_piece(i-1,j-1)) {
                             // do_nothing
                         }
                     }
 
-                    if(this.is_black_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2))
-                    {
+                    if(this.is_black_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -562,34 +507,28 @@ class Board {
                         this.board[i-1][j-1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length==0)
-                        {
+                        if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
-                        } 
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++)
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i-1, j-1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
 
                     // move in Right diagonal
-                    if(rec_call == 0)
-                    {
-                        if(this.is_empty_cell(i-1,j+1))
-                        {
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j+1)){
                             moves_lst.push({'to_row':i-1,'to_col':j+1, 'captures': []});
-                        } else if(this.is_red_piece(i-1,j+1))
-                        {
+                        } else if(this.is_red_piece(i-1,j+1)) {
                             // do nothing
                         }
                     }
 
-                    if(this.is_black_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2))
-                    {
+                    if(this.is_black_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -600,51 +539,40 @@ class Board {
                         var tmp_cell = this.board[i-1][j+1];
                         this.board[i-1][j+1]=0;
 
-                        tmp = this.get_moves_of_piece(i-2,j+2,3);
+                        var tmp = this.get_moves_of_piece(i-2,j+2,3);
                         
                         this.board[i-1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length==0) 
-                        {
+                        if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
-                        }
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++) 
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i-1, j+1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
-                } 
-                else 
-                { // TODO: move upward direction
+                } else { // TODO: move upward direction
                     
                 }
                 
-            } 
-            else if (this.is_black_piece(row, col) || rec_call == 4) 
-            {
+            } else if (this.is_black_piece(row, col) || rec_call == 4) {
                 // move upward direction
-                if (this.is_red_top) 
-                {
+                if (this.is_red_top) {
                     
                     // move in Left diagonal 
-                    if(rec_call == 0)
-                    {
-                        if(this.is_empty_cell(i-1,j-1)) 
-                        {
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j-1)) {
                             moves_lst.push({'to_row':i-1,'to_col':j-1, 'captures': []});
-                        } else if(this.is_black_piece(i-1,j-1)) 
-                        {
+                        } else if(this.is_black_piece(i-1,j-1)) {
                             // do_nothing
                         }
                     }
 
-                    if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2))
-                    {
+                    if(this.is_red_piece(i-1,j-1) && this.is_empty_cell(i-2, j-2)){
                         // red piece at (i-1, j-1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -660,33 +588,28 @@ class Board {
                         this.board[i-1][j-1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length==0)
-                        {
+                        if(tmp.length==0){
                             moves_lst.push({'to_row':i-2,'to_col':j-2, 'captures': [[i-1, j-1]]});
-                        }
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++)
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i-1, j-1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
 
                     // move in Right diagonal
-                    if(rec_call == 0)
-                    {
-                        if(this.is_empty_cell(i-1,j+1))
-                        {
+                    if(rec_call == 0){
+                        if(this.is_empty_cell(i-1,j+1)){
                             moves_lst.push({'to_row':i-1,'to_col':j+1, 'captures': []});
                         } else if(this.is_black_piece(i-1,j+1)) {
                             // do nothing
                         }
                     }
 
-                    if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2))
-                    {
+                    if(this.is_red_piece(i-1,j+1) && this.is_empty_cell(i-2,j+2)){
                         // red piece at (i-1, j+1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -697,39 +620,33 @@ class Board {
                         var tmp_cell = this.board[i-1][j+1];
                         this.board[i-1][j+1]=0;
 
-                        tmp = this.get_moves_of_piece(i-2,j+2,4);
+                        var tmp = this.get_moves_of_piece(i-2,j+2,4);
                         
                         this.board[i-1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length==0) 
-                        {
+                        if(tmp.length==0) {
                             moves_lst.push({'to_row':i-2,'to_col':j+2, 'captures': [[i-1, j+1]]})
-                        } 
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++) 
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i-1, j+1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
                         }
+
+                        tmp = null;
                     }
                     
                     // Left
-                    if(rec_call==0)
-                    {
-                        if(this.is_empty_cell(i+1,j-1))
-                        {
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1,j-1)){
                             moves_lst.push({'to_row':i+1,'to_col':j-1, 'captures': []});
                         }
-                        else if(this.is_black_piece(i+1, j-1))
-                        {
+                        else if(this.is_black_piece(i+1, j-1)){
                             // do_nothing
                         }
                     }
-                    if(this.is_red_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2))
-                    {
+                    if(this.is_red_piece(i+1, j-1) && this.is_empty_cell(i+2, j-2)){
                         // black piece at (i+1, j-1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -745,14 +662,10 @@ class Board {
                         this.board[i+1][j-1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length == 0) 
-                        {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j-2, 'captures': [[i+1, j-1]]});
-                        }
-                        else
-                        {
-                            for (var x = 0; x < tmp.length; x++)
-                            {
+                        } else{
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i+1, j-1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
@@ -760,20 +673,16 @@ class Board {
                     }
 
                     // Right
-                    if(rec_call==0)
-                    {
-                        if(this.is_empty_cell(i+1, j+1))
-                        {
+                    if(rec_call==0){
+                        if(this.is_empty_cell(i+1, j+1)){
                             moves_lst.push({'to_row':i+1,'to_col':j+1, 'captures': []});
                         }
-                        else if(this.is_black_piece(i+1, j+1))
-                        {
+                        else if(this.is_black_piece(i+1, j+1)){
                             // do_nothing
                         }
                     }
 
-                    if(this.is_red_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2))
-                    {
+                    if(this.is_red_piece(i+1, j+1) && this.is_empty_cell(i+2, j+2)){
                         // black piece at (i+1, j+1) will be captured. So, add in the `captures` list
                         
                         // fix for closed path move of King piece (coming back to the starting position)
@@ -789,14 +698,10 @@ class Board {
                         this.board[i+1][j+1]=tmp_cell;
                         this.board[i][j] = this_cell;
 
-                        if(tmp.length == 0) 
-                        {
+                        if(tmp.length == 0) {
                             moves_lst.push({'to_row':i+2,'to_col':j+2, 'captures': [[i+1, j+1]]});
-                        }
-                        else 
-                        {
-                            for (var x = 0; x < tmp.length; x++)
-                            {
+                        } else {
+                            for (var x = 0; x < tmp.length; x++) {
                                 tmp[x]['captures'].push([i+1, j+1]);
                             }
                             moves_lst = moves_lst.concat(tmp);
@@ -828,6 +733,22 @@ class Board {
         var to_col = move['to_col'];
         var captures = move['captures'];
         
+        //Adding Undo Code Here
+
+        if(this.is_red_piece(from_row,from_col)){
+            console.log("added states");
+            if(this.save_boards.length>=5){
+                this.save_boards.shift()
+                this.save_boards.push(this.copyOf(this))
+            }else{
+                this.save_boards.push(this.copyOf(this))
+            }
+            //console.log(this.save_boards);
+            //this.save_boards[0].print_board();
+        }
+
+        //Undo Code Ends Here
+
         this.board[to_row][to_col] = this.board[from_row][from_col];
         // Make the cell empty
         this.board[from_row][from_col] = 0;
@@ -873,10 +794,9 @@ class Board {
             return true;
 
         // opponent has no move
-        
         if (this.opponent_has_no_move())
             return true;  // TODO: confirm this is according to rule
-        
+
         // TODO: check if there is more ways to win
     }
 
@@ -886,10 +806,9 @@ class Board {
             return true;
 
         // there is no move for the player
-        
         if (this.has_no_move()) 
             return true; // TODO: confirm this is according to rule
-        
+
         // TODO: check if there is more ways to lose
     }
 
@@ -914,30 +833,36 @@ class Board {
         obj.is_red_top = this.is_red_top;
         obj.MAX_DEPTH = this.MAX_DEPTH;
         obj.heuristic = this.heuristic;
-
+        obj.DEPTH_FOR_USER_HINT = this.DEPTH_FOR_USER_HINT;
+        obj.save_boards = this.save_boards;
         return obj;
     }
 
     show_user_hint() {
         /*
             Returns:
-                best_move : Dictionary with following keys
-                            from_row : int
-                            from_col : int
-                            to_row : int
-                            to_col : int
-                            captures : Array of Arrays. Each internal array has two elements [row, col] 
 
-            Returns the best move of the user
+                best_move_sequence : Dictionary with following keys
+                    from_row : int
+                    from_col : int
+                    to_row : int
+                    to_col : int
+                    captures : array of captured cells [row, col]
+                    gain : int
+                    val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
+
+            Returns the best move sequence of the user
         */  
         
         // Make the user AI. So that minimax can be called by the user
         this.is_ai_red = ! this.is_ai_red;
-        var best_move = alpha_beta(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false);
+
+        var best_move_sequence = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        best_move_sequence.pop()
 
         // Revert back the change
         this.is_ai_red = ! this.is_ai_red;
-        return best_move;
+        return best_move_sequence;
     }
 
     show_max_gain_util() {
@@ -1168,6 +1093,8 @@ class Board {
                     store_gains = store_gains.concat([best_move_sequence]);
                 }
             }
+
+            moves = null;
             
             if (depth != board.MAX_DEPTH) {
                 var best_move_sequence = [best_move];
@@ -1227,6 +1154,8 @@ class Board {
                 }
             }
 
+            moves = null;
+
             var best_move_sequence = [best_move];
             best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
             
@@ -1245,22 +1174,18 @@ class Board {
                     [4,-1,3,-1,3,-1,3,-1,3]];
 
         this.board=[[4,4,4,4,4,4,4,4,4],
+                    [4,3,1,3,1,3,0,3,1],
+                    [4,0,3,1,3,0,3,1,3],
                     [4,3,1,3,1,3,1,3,1],
-                    [4,1,3,1,3,1,3,1,3],
-                    [4,3,2,3,1,3,1,3,1],
-                    [4,0,3,0,3,0,3,0,3],
-                    [4,3,0,3,0,3,0,3,0],
-                    [4,-1,3,-1,3,-1,3,-1,3],
+                    [4,0,3,-2,3,0,3,0,3],
+                    [4,3,0,3,1,3,1,3,0],
+                    [4,-1,3,-1,3,0,3,1,3],
                     [4,3,-1,3,-1,3,0,3,-1],
                     [4,-1,3,-1,3,0,3,-1,3]];
-        console.log('--------------------\n\n');
+
         this.print_board();
-        console.log('--------------------');
-        this.make_move({"from_row":3,"from_col":2,"to_row":4,"to_col":3,"captures":[]});
-        console.log('--------------------\n\n');
-        this.print_board();
-        console.log('--------------------\n\n');
-        /*console.log(this.show_max_gain_util());
+
+        console.log(this.show_max_gain_util());
         var x = this.show_gains_of_piece_util(4, 3);
         console.log("Board eval", this.evaluate_board());
         for (var i = 0; i < x.length; i++) {
@@ -1270,7 +1195,6 @@ class Board {
                 console.log("From (", x[i][j].from_row, x[i][j].from_col, ") To (", x[i][j].to_row, x[i][j].to_col, ") Gain", x[i][j].gain);
             }
         }
-        */
         // var row = 4, col = 3;
         // var moves = this.get_moves_of_piece(row, col);
         // for (var i = 0; i < moves.length; i++) {
@@ -1285,8 +1209,8 @@ class Board {
     }
 }
 
-//var board  = new Board(true, true);
-//board.test();
+var board  = new Board(true, false);
+board.test();
 
 
 function get_path(from_row, from_col, captures_array, captures_index) {
@@ -1364,6 +1288,9 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                     best_move.captures = move['captures'];
                 }
 
+                board_copy = null;
+                move = null;
+
                 if (val > alpha)
                     alpha = val;
 
@@ -1371,6 +1298,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                     break;
             }
         }
+
+        moves = null;
 
         if (depth == board.MAX_DEPTH && make_move) {
             board.make_move(best_move);
@@ -1400,6 +1329,9 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                 board_copy.make_move(move);
                 var val = alpha_beta(board_copy, depth-1, alpha, beta, true, make_move); // don't make the move
 
+                board_copy = null;
+                move = null;
+
                 if (val < min_val)
                     min_val = val;
 
@@ -1411,6 +1343,7 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
             }
         }
         
+        moves = null;
         return min_val;
     }
 }
