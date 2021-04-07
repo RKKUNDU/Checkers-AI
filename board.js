@@ -23,6 +23,7 @@ class Board {
         this.MAX_DEPTH = 5;
         this.DEPTH_FOR_USER_HINT = 6;
         this.mistakes = new Array(); // store only 5 top mistakes
+        this.prev_boards = new Array(); // store only 5 previous board states
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -814,8 +815,11 @@ class Board {
                 obj.board[i][j] = this.board[i][j];
 
         for (var i = 0; i < this.mistakes.length; i++) 
-            obj.mistakes[i] = this.mistakes[i];
+            obj.mistakes.push(this.mistakes[i]);
         
+        for (var i = 0; i < this.prev_boards.length; i++) 
+            obj.prev_boards.push(this.prev_boards[i]);
+
         obj.is_ai_red = this.is_ai_red;
         obj.is_red_top = this.is_red_top;
         obj.MAX_DEPTH = this.MAX_DEPTH;
@@ -1166,6 +1170,15 @@ class Board {
                 move (dictionary): user's move
                 board (arr[9][9]): board state before the user moved
         */
+
+        // Store previous board states for Undo button
+        if (this.prev_boards.length >= 5){
+            this.prev_boards.shift()
+            this.prev_boards.push(this.board);
+        } else{
+            this.prev_boards.push(this.board);
+        }
+
         var board_copy = new Board();
         board_copy.reset_board(board);
 
