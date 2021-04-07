@@ -21,6 +21,7 @@ class Board {
         this.is_ai_red = is_ai_red;
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
         this.MAX_DEPTH = 5;
+        this.DEPTH_FOR_USER_HINT = 6;
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -815,6 +816,7 @@ class Board {
         obj.is_red_top = this.is_red_top;
         obj.MAX_DEPTH = this.MAX_DEPTH;
         obj.heuristic = this.heuristic;
+        obj.DEPTH_FOR_USER_HINT = this.DEPTH_FOR_USER_HINT;
 
         return obj;
     }
@@ -822,23 +824,28 @@ class Board {
     show_user_hint() {
         /*
             Returns:
-                best_move : Dictionary with following keys
-                            from_row : int
-                            from_col : int
-                            to_row : int
-                            to_col : int
-                            captures : Array of Arrays. Each internal array has two elements [row, col] 
 
-            Returns the best move of the user
+                best_move_sequence : Dictionary with following keys
+                    from_row : int
+                    from_col : int
+                    to_row : int
+                    to_col : int
+                    captures : array of captured cells [row, col]
+                    gain : int
+                    val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
+
+            Returns the best move sequence of the user
         */  
         
         // Make the user AI. So that minimax can be called by the user
         this.is_ai_red = ! this.is_ai_red;
-        var best_move = alpha_beta(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false);
+
+        var best_move_sequence = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        best_move_sequence.pop()
 
         // Revert back the change
         this.is_ai_red = ! this.is_ai_red;
-        return best_move;
+        return best_move_sequence;
     }
 
     show_max_gain_util() {
