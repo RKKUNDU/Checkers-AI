@@ -96,6 +96,7 @@
 					if(currentPossibleMoves.includes( parseInt(thisClick.id,10)) )
 					{
 							hideMoves(currentPossibleMoves);
+							
 							makeMove(this.id, prevClick.id, currentCapturesAndMoves);
 
 							//if game has finished then display this message
