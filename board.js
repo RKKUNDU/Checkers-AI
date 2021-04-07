@@ -22,6 +22,7 @@ class Board {
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
         this.MAX_DEPTH = 5;
         this.DEPTH_FOR_USER_HINT = 6;
+        this.mistakes = new Array(); // store only 5 top mistakes
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -811,12 +812,16 @@ class Board {
         for (var i = 1; i <= 8; i++)
             for (var j = 1; j <= 8; j++) 
                 obj.board[i][j] = this.board[i][j];
+
+        for (var i = 0; i < this.mistakes.length; i++) 
+            obj.mistakes[i] = this.mistakes[i];
         
         obj.is_ai_red = this.is_ai_red;
         obj.is_red_top = this.is_red_top;
         obj.MAX_DEPTH = this.MAX_DEPTH;
         obj.heuristic = this.heuristic;
         obj.DEPTH_FOR_USER_HINT = this.DEPTH_FOR_USER_HINT;
+        
 
         return obj;
     }
@@ -1145,6 +1150,50 @@ class Board {
             return best_move_sequence;
         }
     }
+
+    reset_board(board) {
+        /*
+            Reset the board with the given board state
+        */
+        for (var i = 0; i <= 8; i++)
+            for (var j = 0; j <= 8; j++) 
+                this.board[i][j] = board[i][j];
+    }
+
+    user_moved(move, board) {
+        /*
+            Arguments:
+                move (dictionary): user's move
+                board (arr[9][9]): board state before the user moved
+        */
+        var board_copy = new Board();
+        board_copy.reset_board(board);
+
+        // find the maximum gain if the user had not made the move
+        var best_move_sequence = this.show_gains_of_pieces(board_copy, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        var max_gain = best_move_sequence[0].val - board_copy.evaluate_board();
+        
+        // find the maximum gain considering user's move (i.e. find the best move sequence following the user move)
+        this.is_ai_red = !this.is_ai_red;
+        var best_move_sequence_after_user_move = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT-1, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board();
+        this.is_ai_red = !this.is_ai_red;
+
+        if (max_gain > max_gain_after_user_move)
+            this.mistakes.push({'move': move, 'board': board, 'gain_lost': max_gain-max_gain_after_user_move});
+
+        if (this.mistakes.length > 5) {
+            this.mistakes.sort(function(a, b) {return b.gain_lost - a.gain_lost}); // descending order
+            this.mistakes.pop();
+        }
+
+        board_copy = null;
+    }
+
+    get_mistakes () {
+        return this.mistakes;
+    }
+
     test() {
         this.board=[[4,4,4,4,4,4,4,4,4],
                     [4,3,1,3,1,3,1,3,1],
