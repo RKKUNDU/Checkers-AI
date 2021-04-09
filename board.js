@@ -22,7 +22,6 @@ class Board {
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
         this.MAX_DEPTH = 5;
         this.DEPTH_FOR_USER_HINT = 6;
-        this.save_boards=[];
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -733,22 +732,6 @@ class Board {
         var to_col = move['to_col'];
         var captures = move['captures'];
         
-        /*Adding Undo Code Here
-
-        if(this.is_red_piece(from_row,from_col)){
-            console.log("added states");
-            if(this.save_boards.length>=5){
-                this.save_boards.shift()
-                this.save_boards.push(this.copyOf(this))
-            }else{
-                this.save_boards.push(this.copyOf(this))
-            }
-            //console.log(this.save_boards);
-            //this.save_boards[0].print_board();
-        }
-
-        Undo Code Ends Here */
-
         this.board[to_row][to_col] = this.board[from_row][from_col];
         // Make the cell empty
         this.board[from_row][from_col] = 0;
@@ -834,7 +817,6 @@ class Board {
         obj.MAX_DEPTH = this.MAX_DEPTH;
         obj.heuristic = this.heuristic;
         obj.DEPTH_FOR_USER_HINT = this.DEPTH_FOR_USER_HINT;
-        obj.save_boards = this.save_boards;
         return obj;
     }
 
