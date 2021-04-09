@@ -733,7 +733,7 @@ class Board {
         var to_col = move['to_col'];
         var captures = move['captures'];
         
-        //Adding Undo Code Here
+        /*Adding Undo Code Here
 
         if(this.is_red_piece(from_row,from_col)){
             console.log("added states");
@@ -747,7 +747,7 @@ class Board {
             //this.save_boards[0].print_board();
         }
 
-        //Undo Code Ends Here
+        Undo Code Ends Here */
 
         this.board[to_row][to_col] = this.board[from_row][from_col];
         // Make the cell empty

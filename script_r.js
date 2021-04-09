@@ -15,7 +15,7 @@
 
 		var board =  new Board(true, false);
 		
-		/*
+		
 		board.board[3][2] = 0;
 		board.board[4][3] = 1;
 		board.board[5][4] = -1;
@@ -34,7 +34,7 @@
 		//board.board[3][8] = 0;
 		
 		//board.board[5][4] = -1;
-		*/
+		
 		
 		
 		board.print_board();
@@ -88,7 +88,7 @@
             	 3 restricted cell(pieces can't jump on)
             	 4 possible Moves cell(cell having no piece but)
             	 */
-            	 //board.print_board();
+            	 board.print_board();
             	 
             	 for (var i = 1; i <= 8; i++) 
             	 {
@@ -380,8 +380,23 @@
 								console.log("#######242#######\n\n");
 								console.log("!!!!!prevClick!!!!!! "+prevClick.id);
 								console.log("!!!!!thisClick!!!!!!"+thisClick.id);
-
+								var temp_captures=[];
+								for (var i = 0; i < currentCapturesAndMoves.length; i++)
+								{
+									if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) 
+									{
+										temp_captures = currentCapturesAndMoves[i].captures;
+									}
+								}
+									
+								//hideMoves(currentPossibleMoves);
+								//makeMove(this.id, prevClick.id, currentCapturesAndMoves);
+								
 								hidePrevPossibleMove(prevPossibleMove);
+								move ={from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:temp_captures};
+								board.make_move(move);
+								console.log(temp_captures);
+								/*
 								if(curr_i == 8 && board.board[prev_i][prev_j] == 1)
 								{
 									board.board[curr_i][curr_j]=2;
@@ -405,16 +420,8 @@
 
 								}
 							
-
-								var captures=[];
-								for (var i = 0; i < currentCapturesAndMoves.length; i++)
-								{
-									if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) 
-									{
-										captures = currentCapturesAndMoves[i].captures;
-									}
-								}
-								hideCapturedPiece(captures);
+								*/
+								hideCapturedPiece(temp_captures);
 							
 								render_board(board);
 								if(PossibleMove.includes( parseInt(this.id,10)))	
@@ -541,7 +548,6 @@ function displayMessage()
 		}
 		
 	}
-	
 };
 
 

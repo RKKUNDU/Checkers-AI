@@ -232,6 +232,7 @@
 					<span class="close">&times;</span>
 					
 					<button class="button button1" id="closeModal" onclick="closeModal()">Close</button>
+					<!-- <button class="button button1" id="prevHint" onclick="prevHintMove()">Prev Move</button> -->
 					<button class="button button1" id="nextHint" onclick="nextHintMove()">Next Move</button>
 					<button class="button button1" id="reviewHints" onclick="reviewHints()">Review</button>
 				</div>
@@ -247,6 +248,35 @@
 
 		</div>
 
+		<!-- This modal will display "win Message"-->
+		<div id="winMessageModal" class="winModal">
+			<h2>AI has won!!</h2>
+			<button class="button button1" id="analyse" onclick="analyzeGame()">Analyse Mistakes</button>
+			<button class="button button1" id="closeWinMessage" onclick="closeWinMessage()">Close</button>
+		</div>
+
+		<!-- This modal will show analysis of mistakes-->
+		<div id="analyseModal" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close">&times;</span>
+					<h3>Analyzing mistake 1</h3>
+					<button class="button button1" id="closeAnalyze" onclick="closeAnalyseModal()">Close</button>
+					<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev Move</button>
+					<button class="button button1" id="next_mistake" onclick="nextMistake()">Next Move</button>
+					<button class="button button1" id="review_mistake" onclick="reviewMistakes()">Review</button>
+				</div>
+
+				<div class="modal-body" id="analyseBody">
+				</div>
+
+				<div class="modal-footer">
+					<h1>Use "Next" and "Prev" button to animate</h1>
+				</div>
+			</div>
+		</div>
+
 		<div class="class3_understand" id="sec3_understand">
 			<div class="class3_1_understand" id="move">
 				<table id="show_table" ></table>
@@ -256,18 +286,20 @@
 			
 			//var btn = document.getElementById("showHint");
 			//var closebtn = document.getElementById("closeButton");
+			
 			var modalBoard = $("#checkers").clone();
 			$("#modalBody").append(modalBoard);	
 			$("#modalBoard").addClass("tableClass");
 
 			var span = document.getElementsByClassName("close")[0];
 			var modal = document.getElementById("myModal");
-
+			/*
 			window.onclick = function(event) {
 			if (event.target == modal) {
 				modal.style.display = "none";
 			}
 			}
+			*/
 		</script>
 		</main>
 			</body>

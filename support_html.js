@@ -225,7 +225,7 @@ function showPoints() {
 
 }
 
-var userHintMove = true;
+var hintMoveIndex = 0;
 var duplicateBoard = new Board(true, false);
 var userHints = [];
 var copyUserHints=[];
@@ -241,15 +241,16 @@ function showHint() {
 
 	modal.style.display = "block";
 	$("#reviewHints").prop("disabled", true);
-
+	$("#prevHint").prop("disabled",true);
 	duplicateBoard = board.copyOf(duplicateBoard);
 }
 
 function nextHintMove() {
-	if (userHints.length) 
+	if (hintMoveIndex < userHints.length) 
 	{
-		var hints = userHints[0];
-		userHints.shift();
+		var hints = userHints[hintMoveIndex];
+		//userHints.shift();
+		hintMoveIndex++;
 		var fromId = hints.from_row * 10 + hints.from_col;
 		var toId = hints.to_row * 10 + hints.to_col;
 		var captures = hints.captures;
@@ -284,10 +285,11 @@ function nextHintMove() {
 		$("#modalBody").append(modalBoard);
 		$("#modalBoard").addClass("tableClass");
 
+		$("#prevHint").prop("disabled",false);
 		// reset original board of sec2 div
 		
 	}
-	if (userHints.length == 0) {
+	if (userHints.length == hintMoveIndex) {
 		//disable nextMove button
 		$("#reviewHints").prop("disabled",false);
 		$("#nextHint").prop("disabled",true);
@@ -295,9 +297,66 @@ function nextHintMove() {
 		//reInitialize userHints
 		board = duplicateBoard.copyOf(board);
 		render_board(board);
-		userHints = copyUserHints.slice();
+		//userHints = copyUserHints.slice();
+		hintMoveIndex=0;
 	}
 
+}
+function prevHintMove()
+{
+	if (hintMoveIndex >1) 
+	{
+		console.log("inside prevHint");
+		hintMoveIndex -=2;
+		var hints = userHints[hintMoveIndex];
+		//userHints.shift();
+		
+		var fromId = hints.from_row * 10 + hints.from_col;
+		var toId = hints.to_row * 10 + hints.to_col;
+		var captures = hints.captures;
+		//make copy of board object
+		
+
+		
+		if(board.is_red_piece(hints.from_row,hints.from_col))
+		{
+			if(board.is_king_piece(hints.from_row,hints.from_col))
+				board.board[hints.to_row][hints.to_col] = 2;
+			else
+				board.board[hints.to_row][hints.to_col] = 1;
+		}
+		else if(board.is_black_piece(hints.from_row,hints.from_col))
+		{
+			if(board.is_king_piece(hints.from_row,hints.from_col))
+				board.board[hints.to_row][hints.to_col] = -2;
+			else
+				board.board[hints.to_row][hints.to_col] = -1;
+		}
+		
+		board.board[hints.from_row][hints.from_col] = 0;
+		var i;
+		for (i = 0; i < captures.length; i++) {
+			board.board[captures[i][0]][captures[i][1]] = 0;
+		}
+
+		render_board(board);
+		$("#modalBody").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#modalBody").append(modalBoard);
+		$("#modalBoard").addClass("tableClass");
+		
+	}
+	if (hintMoveIndex ==0) {
+		//disable nextMove button
+		//$("#reviewHints").prop("disabled",true);
+		$("#nextHint").prop("disabled",false);
+		$("#prevHint").prop("disabled",true);
+		//reInitialize userHints
+		board = duplicateBoard.copyOf(board);
+		render_board(board);
+		//userHints = copyUserHints.slice();
+		hintMoveIndex=0;
+	}
 }
 function reviewHints(){
 
@@ -314,7 +373,10 @@ function reviewHints(){
 function closeModal() {
 
 	userHints=[];
+	hintMoveIndex=0;
 	copyUserHints = [];
+	$("#nextHint").prop("disabled",false);
+	$("#reviewHints").prop("disabled",true);
 	board = duplicateBoard.copyOf(board);
 	render_board(board);
 	var modal = document.getElementById("myModal");
@@ -330,3 +392,26 @@ function undoMove()
 	board = lastState.copyOf(board);
 	render_board(board);
 }
+function showArrow(from_id, to_id)
+{
+	if(from_id > to_id)
+	{
+
+	}
+	else
+	{
+
+	}
+}
+
+/*
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+*/
