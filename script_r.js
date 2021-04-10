@@ -14,7 +14,7 @@
 		var quitGame = false;
 
 		var board =  new Board(true, false);
-		
+		var newBoard = new Board(true, false);
 		/*
 		board.board[3][2] = 0;
 		board.board[4][3] = 1;
@@ -22,19 +22,23 @@
 		board.board[6][5] = 0;
 		board.board[7][6] = -1;
 		board.board[1][2] = 0;
+		
 		board.board[1][4] = 0;
-		//board.board[1][6] = 0;
+		board.board[1][6] = 0;
 		board.board[1][8] = 0;
+		
 		board.board[2][1] = 0;
 		board.board[2][3] = 0;
+		
 		board.board[2][5] = 0;
 		board.board[2][7] = 0;
+		
 		board.board[3][4] = 0;
 		board.board[3][6] = 0;
-		//board.board[3][8] = 0;
-		
-		//board.board[5][4] = -1;
+		board.board[3][8] = 0;
 		*/
+		//board.board[5][4] = -1;
+		
 		
 		
 		board.print_board();
@@ -244,8 +248,8 @@
 			{
 				
 				//!ai_turn implies its black turn
-				console.log("++++++++++++++\n")
-				console.log(board.is_game_finished());
+				//console.log("++++++++++++++\n")
+				//console.log(board.is_game_finished());
 				console.log("++++++++++++++\n")
 				if(board.is_game_finished())
 				{
@@ -273,7 +277,7 @@
 							
 							displaypossibleMove(PossibleMove);
 							render_board(board);
-							console.log("red-1");
+							//console.log("red-1");
 
 						}
 						else if(board.board[i][j] == 2)
@@ -286,7 +290,7 @@
 							displaypossibleMove(PossibleMove);
 							render_board(board);							
 							//displayMessage();
-							console.log("redKingPiece-1");
+							//console.log("redKingPiece-1");
 
 						}	 
 
@@ -319,7 +323,7 @@
 					{
 						//prevPossibleMove =0;
 						//currentpossibleMove=0;
-						console.log("else_Start*********");
+						//console.log("else_Start*********");
 						prevClick = thisClick;
 						prevPossibleMove = currentCapturesAndMoves;
 						thisClick = this;
@@ -336,8 +340,8 @@
 							if (board.board[curr_i][curr_j] == 1)
 							{
 							
-								console.log("!!!!!prevClick!!!!!! "+prevClick.id);
-								console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+								//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+								//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
 
 								hidePrevPossibleMove(prevPossibleMove);
 								render_board(board);
@@ -356,9 +360,9 @@
 							
 							else if(board.board[curr_i][curr_j] == 2)
 							{
-								console.log("redKingPiece-2");
-								console.log("!!!!!prevClick!!!!!! "+prevClick.id);
-								console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+								//console.log("redKingPiece-2");
+								//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+								//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
 
 								hidePrevPossibleMove(prevPossibleMove);
 								render_board(board);
@@ -377,11 +381,32 @@
 							else if(PossibleMove.includes( parseInt(this.id,10)))
 							{
 							
-								console.log("#######242#######\n\n");
-								console.log("!!!!!prevClick!!!!!! "+prevClick.id);
-								console.log("!!!!!thisClick!!!!!!"+thisClick.id);
-
+								//console.log("#######242#######\n\n");
+								//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+								//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+								var temp_captures=[];
+								for (var i = 0; i < currentCapturesAndMoves.length; i++)
+								{
+									if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) 
+									{
+										temp_captures = currentCapturesAndMoves[i].captures;
+									}
+								}
+									
+								//hideMoves(currentPossibleMoves);
+								//makeMove(this.id, prevClick.id, currentCapturesAndMoves);
+								
 								hidePrevPossibleMove(prevPossibleMove);
+								move ={from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:temp_captures};
+								
+								newBoard.reset_board(board.board);
+								//console.log(newBoard.board);
+								board.make_move(move);
+								board.user_moved(move,newBoard.board);
+								//console.log("after make_move");
+								//console.log(newBoard.board);
+								
+								/*
 								if(curr_i == 8 && board.board[prev_i][prev_j] == 1)
 								{
 									board.board[curr_i][curr_j]=2;
@@ -405,38 +430,31 @@
 
 								}
 							
-
-								var captures=[];
-								for (var i = 0; i < currentCapturesAndMoves.length; i++)
-								{
-									if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) 
-									{
-										captures = currentCapturesAndMoves[i].captures;
-									}
-								}
-								hideCapturedPiece(captures);
+								*/
+								hideCapturedPiece(temp_captures);
 							
 								render_board(board);
+								
 								if(PossibleMove.includes( parseInt(this.id,10)))	
 								{	
 
-									console.log("#######241#######\n\n");
-									console.log("!!!!!prevClick!!!!!! "+prevClick.id);
-									console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+									//console.log("#######241#######\n\n");
+									//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+									//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
 									render_board(board);
 									ai_turn = true;
 								
 
 									if(!AutoAI)
 									{ 
-										console.log("helo");
+										//console.log("helo");
 										
 										setTimeout(() => {  handle_ai_turn(); }, 1000);
 										//ai_turn = true; 
 									}
 									else
 									{
-										console.log("Hiii")
+										//console.log("Hiii")
 										
 
 										setTimeout(() => {  handle_ai_turn(); }, 1000);
@@ -449,7 +467,7 @@
 
 							else if (board.board[curr_i][curr_j] == -1) 
 							{
-								console.log("black when red-2");
+								//console.log("black when red-2");
 								if(prevPossibleMove != currentCapturesAndMoves)
 								{
 									hidePrevPossibleMove(prevPossibleMove);
@@ -459,7 +477,7 @@
 							}
 							else if( board.board[curr_i][curr_j] == -2)
 							{
-								console.log("blackKing when red-2");
+								//console.log("blackKing when red-2");
 
 								if(prevPossibleMove != currentCapturesAndMoves)
 								{
@@ -470,7 +488,7 @@
 							}
 							else if (board.board[curr_i][curr_j] == 0)
 							{
-								console.log("noPiece when red-2");
+								//console.log("noPiece when red-2");
 								if(prevPossibleMove != currentCapturesAndMoves)
 								{
 									hidePrevPossibleMove(prevPossibleMove);
@@ -480,7 +498,7 @@
 							}
 							else if(board.board[curr_i][curr_j] == 3)
 							{
-								console.log("blankPiece when red-2");
+								//console.log("blankPiece when red-2");
 								if(prevPossibleMove != currentCapturesAndMoves)
 								{
 									hidePrevPossibleMove(prevPossibleMove);
@@ -515,7 +533,6 @@
 
 function displayMessage()
 {
-	console.log("pata nahi g 2");
 	if(board.is_game_finished())
 	{
 		syncWait(100);
@@ -525,23 +542,21 @@ function displayMessage()
 		{
 
 			console.log("someone WOn");
-			if(!alert("AI has won!!"))
-			{	
-				console.log("AI Won");
-				window.location.reload();
-				
-			}
+			$("#win").text("AI Won!");
+			var modal = document.getElementById("winMessageModal");
+			//$("#winMessageModal").css("background-color","#40cfc5");
+			modal.style.display = "block";
 		}
 			
 		else if(board.has_lost())
 		{	
 			console.log("You Won");
-			if(!alert("You won!!"))
-				window.location.reload();
+			$("#win").text("You Won!");
+			var modal = document.getElementById("winMessageModal");
+			modal.style.display = "block";
 		}
 		
 	}
-	
 };
 
 

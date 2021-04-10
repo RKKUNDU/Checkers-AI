@@ -38,10 +38,10 @@
   background-color:#cf0505;
   border: 3px solid white;
   border-radius: 20px;
-  -webkit-transition: 0.5s ease-in-out;
-  -moz-transition: 0.5s ease-in-out;
-  -o-transition: 0.5s ease-in-out;
-  transition: 0.5s ease-in-out;
+  -webkit-transition: 0.3s ease-in-out;
+  -moz-transition: 0.3s ease-in-out;
+  -o-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
 
 /* */
@@ -533,6 +533,7 @@ a{
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  color:black;
 }
 
 /* Modal Content */
@@ -579,7 +580,8 @@ a{
 .modal-header {
   padding: 2px 4px;
   background-color: #e7cc53;
-  color: white;
+  color:black;
+  font-size: 19px;
   text-align: center;
 }
 
@@ -594,4 +596,39 @@ a{
 #reviewHints, #nextHint, #closeModal{
   display:inline-block;
 
+}
+
+#analyse, #closeWinMessage{
+  display:inline-block;
+}
+
+.winModal{
+  display: none;  /*Hidden by default */
+  position:fixed; 
+  z-index: 1; /* Sit on top */
+ padding-top: 10px;  /*Location of the box */
+  
+  text-align: center;
+  width: 40%; 
+  height: 20%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(252, 228, 123, 0.952); /* Black w/ opacity */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  border-radius: 10px;
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s 
+}
+#closeAnalyse, #next_mistake,#review_mistake,#best_move{
+  display:inline-block;
+}
+#win{
+  font-size: 30px;
+  font-weight: bold;
+}
+#mistake_id{
+font-size: 30px;
+  font-weight: bold;
 }

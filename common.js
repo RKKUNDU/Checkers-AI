@@ -7,8 +7,8 @@ function displaypossibleMove(curr)
 		var id; 
 		for(i=0;i<curr.length;i++)
 		{ 
-			console.log("insisde displaypossibleMove");
-			console.log(curr[i]);
+			//console.log("insisde displaypossibleMove");
+			//console.log(curr[i]);
 			id  = curr[i];
 			$("#"+id).children("p").removeClass("noPiece");
 			$("#"+id).children("p").addClass("possibleMove");
@@ -46,10 +46,7 @@ function hidePrevPossibleMove(prev)
 		for(i=0;i<prev.length;i++)
 		{ 
 			
-			console.log("insisde hideprevpossibleMove");
-			//console.log(prev[i]);
 			id = parseInt([prev[i].to_row]*10,10) + parseInt([prev[i].to_col],10);
-			console.log(id);
 			$("#"+id).children("p").removeClass("possibleMove");
 			$("#"+id).children("p").addClass("noPiece");	
 			
@@ -81,7 +78,7 @@ function hideCapturedPiece(possibleCaptures)
 			{ 
 			
 				ID = possibleCaptures[i][0]*10 + possibleCaptures[i][1];
-				$("#"+ID).fadeOut(800);
+				$("#"+ID).fadeOut(500);
 				$("#"+ID).fadeIn();
 				
 				board.board[(possibleCaptures[i][0])][(possibleCaptures[i][1])]=0;

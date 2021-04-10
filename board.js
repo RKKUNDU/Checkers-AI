@@ -1198,17 +1198,18 @@ class Board {
                 move (dictionary): user's move
                 board (arr[9][9]): board state before the user moved
         */
-
-        // Store previous board states for Undo button
-        if (this.prev_boards.length >= 5){
-            this.prev_boards.shift()
-            this.prev_boards.push(this.board);
-        } else{
-            this.prev_boards.push(this.board);
-        }
-
         var board_copy = new Board();
         board_copy.reset_board(board);
+        // Store previous board states for Undo button
+        
+        if (this.prev_boards.length >= 5){
+            this.prev_boards.shift();
+            this.prev_boards.push(board_copy.board);
+        } else{
+            this.prev_boards.push(board_copy.board);
+        }
+        //console.log(this.board);
+        
 
         // find the maximum gain if the user had not made the move
         var best_move_sequence = this.show_gains_of_pieces(board_copy, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
@@ -1282,8 +1283,8 @@ class Board {
     }
 }
 
-var board  = new Board(true, false);
-board.test();
+//var board  = new Board(true, false);
+//board.test();
 
 
 function get_path(from_row, from_col, captures_array, captures_index) {
