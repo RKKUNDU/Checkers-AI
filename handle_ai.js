@@ -1,7 +1,7 @@
 	function handle_ai_turn()
 	{
-		console.log("understanding_mode");
-		console.log("AutoAI");
+		//console.log("understanding_mode");
+		//console.log("AutoAI");
 		if(understanding_mode && !AutoAI)
 		{
 			console.log("press AI-move button to proceed");
@@ -64,17 +64,15 @@
 		//Shouldn't it be from_row and from_col
 		if(board.is_king_piece(move.to_row,move.to_col))
 		{
-			console.log("blackKingPiece to noPiece")
+			
 			board.board[(move.from_row)][(move.from_col)]=0;
-			console.log("noPiece to blackKingPiece")	
 			board.board[(move.to_row)][(move.to_col)]=-2;
 			render_board(board);
 		}
 		else
 		{
-			console.log("black to no piece");
+			
 			board.board[(move.from_row)][(move.from_col)]=0;
-			console.log("no piece to black");	
 			board.board[(move.to_row)][(move.to_col)]=-1;
 			render_board(board);
 			
@@ -156,9 +154,6 @@
 				ID = intermediate[i];
 				$("#"+ID).fadeOut(1500);
 				$("#"+ID).fadeIn();
-					//$("#"+ID).children("p").addClass("noPiece");
-					console.log("shsbab");
-					//$("#"+ID).toggleClass("noPiece");
 			}
 
 		}
@@ -175,7 +170,7 @@
 			{
 				ID = intermediate[i];
 				$("#"+ID).toggleClass("showPath");
-					//$("#"+ID).children("p").addClass("noPiece");
+					
 			}
 		}
 	};

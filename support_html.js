@@ -224,11 +224,15 @@ function showPoints() {
 
 
 }
-
-var hintMoveIndex = 0;
+/* ========================== Some vars============*/
 var duplicateBoard = new Board(true, false);
+
 var userHints = [];
-var copyUserHints=[];
+var copyUserHints = [];
+var hintMoveIndex = 0;
+
+/*================================ show Hint modal ===================== */
+
 function showHint() {
 	//make a copy of original board and make changes in cloned board
 	var modal = document.getElementById("myModal");
@@ -241,13 +245,13 @@ function showHint() {
 
 	modal.style.display = "block";
 	$("#reviewHints").prop("disabled", true);
-	$("#prevHint").prop("disabled",true);
-	duplicateBoard = board.copyOf(duplicateBoard);
+	$("#prevHint").prop("disabled", true);
+	//duplicateBoard = board.copyOf(duplicateBoard);
+	duplicateBoard.reset_board(board.board);
 }
 
 function nextHintMove() {
-	if (hintMoveIndex < userHints.length) 
-	{
+	if (hintMoveIndex < userHints.length) {
 		var hints = userHints[hintMoveIndex];
 		//userHints.shift();
 		hintMoveIndex++;
@@ -255,26 +259,25 @@ function nextHintMove() {
 		var toId = hints.to_row * 10 + hints.to_col;
 		var captures = hints.captures;
 		//make copy of board object
-		
 
-		
-		if(board.is_red_piece(hints.from_row,hints.from_col))
-		{
-			if(board.is_king_piece(hints.from_row,hints.from_col))
+
+
+		if (board.is_red_piece(hints.from_row, hints.from_col)) {
+			if (board.is_king_piece(hints.from_row, hints.from_col))
 				board.board[hints.to_row][hints.to_col] = 2;
 			else
 				board.board[hints.to_row][hints.to_col] = 1;
 		}
-		else if(board.is_black_piece(hints.from_row,hints.from_col))
-		{
-			if(board.is_king_piece(hints.from_row,hints.from_col))
+		else if (board.is_black_piece(hints.from_row, hints.from_col)) {
+			if (board.is_king_piece(hints.from_row, hints.from_col))
 				board.board[hints.to_row][hints.to_col] = -2;
 			else
 				board.board[hints.to_row][hints.to_col] = -1;
 		}
-		
+
 		board.board[hints.from_row][hints.from_col] = 0;
 		var i;
+
 		for (i = 0; i < captures.length; i++) {
 			board.board[captures[i][0]][captures[i][1]] = 0;
 		}
@@ -285,85 +288,30 @@ function nextHintMove() {
 		$("#modalBody").append(modalBoard);
 		$("#modalBoard").addClass("tableClass");
 
-		$("#prevHint").prop("disabled",false);
+		$("#prevHint").prop("disabled", false);
 		// reset original board of sec2 div
-		
+
 	}
 	if (userHints.length == hintMoveIndex) {
 		//disable nextMove button
-		$("#reviewHints").prop("disabled",false);
-		$("#nextHint").prop("disabled",true);
-		
+		$("#reviewHints").prop("disabled", false);
+		$("#nextHint").prop("disabled", true);
+
 		//reInitialize userHints
-		board = duplicateBoard.copyOf(board);
+		board.reset_board(duplicateBoard.board);
 		render_board(board);
 		//userHints = copyUserHints.slice();
-		hintMoveIndex=0;
+		hintMoveIndex = 0;
 	}
 
 }
-function prevHintMove()
-{
-	if (hintMoveIndex >1) 
-	{
-		console.log("inside prevHint");
-		hintMoveIndex -=2;
-		var hints = userHints[hintMoveIndex];
-		//userHints.shift();
-		
-		var fromId = hints.from_row * 10 + hints.from_col;
-		var toId = hints.to_row * 10 + hints.to_col;
-		var captures = hints.captures;
-		//make copy of board object
-		
 
-		
-		if(board.is_red_piece(hints.from_row,hints.from_col))
-		{
-			if(board.is_king_piece(hints.from_row,hints.from_col))
-				board.board[hints.to_row][hints.to_col] = 2;
-			else
-				board.board[hints.to_row][hints.to_col] = 1;
-		}
-		else if(board.is_black_piece(hints.from_row,hints.from_col))
-		{
-			if(board.is_king_piece(hints.from_row,hints.from_col))
-				board.board[hints.to_row][hints.to_col] = -2;
-			else
-				board.board[hints.to_row][hints.to_col] = -1;
-		}
-		
-		board.board[hints.from_row][hints.from_col] = 0;
-		var i;
-		for (i = 0; i < captures.length; i++) {
-			board.board[captures[i][0]][captures[i][1]] = 0;
-		}
+function reviewHints() {
 
-		render_board(board);
-		$("#modalBody").empty();
-		var modalBoard = $("#checkers").clone();
-		$("#modalBody").append(modalBoard);
-		$("#modalBoard").addClass("tableClass");
-		
-	}
-	if (hintMoveIndex ==0) {
-		//disable nextMove button
-		//$("#reviewHints").prop("disabled",true);
-		$("#nextHint").prop("disabled",false);
-		$("#prevHint").prop("disabled",true);
-		//reInitialize userHints
-		board = duplicateBoard.copyOf(board);
-		render_board(board);
-		//userHints = copyUserHints.slice();
-		hintMoveIndex=0;
-	}
-}
-function reviewHints(){
+	$("#nextHint").prop("disabled", false);
+	$("#reviewHints").prop("disabled", true);
 
-	$("#nextHint").prop("disabled",false);
-	$("#reviewHints").prop("disabled",true);
-	
-	
+
 	$("#modalBody").empty();
 	var modalBoard = $("#checkers").clone();
 	$("#modalBody").append(modalBoard);
@@ -372,46 +320,216 @@ function reviewHints(){
 }
 function closeModal() {
 
-	userHints=[];
-	hintMoveIndex=0;
+	userHints = [];
+	hintMoveIndex = 0;
 	copyUserHints = [];
-	$("#nextHint").prop("disabled",false);
-	$("#reviewHints").prop("disabled",true);
+	$("#nextHint").prop("disabled", false);
+	$("#reviewHints").prop("disabled", true);
 	board = duplicateBoard.copyOf(board);
 	render_board(board);
 	var modal = document.getElementById("myModal");
 	modal.style.display = "none";
 }
+/*================ undo button ========================= */
+function undoMove() {
 
-function undoMove()
-{
-	//board.save_boards;
-	//console.log(board.save_boards);
-	var lastState = board.save_boards.pop();
-	lastState.print_board();
-	board = lastState.copyOf(board);
-	render_board(board);
+	if (board.prev_boards.length > 0) {
+		var lastState = board.prev_boards.pop();
+		board.reset_board(lastState);
+		render_board(board);
+	}
+	else {
+		console.log("that't it!!!");
+	}
 }
-function showArrow(from_id, to_id)
-{
-	if(from_id > to_id)
-	{
+/*================ win Message Modal ==================== */
+function closeWinMessage() {
+	/*
+	var newBoard = new Board(true, false);
+	newBoard.copyOf(board);
+	render_board(board);
+	var modal = document.getElementById("winMessageModal");
+	modal.style.display = "none";
+	*/
+	window.location.reload();
+}
+/*============================== Analyse modal =================== */
+var mistakeList = [];
+var mistakeListId = -1;
+var best_id = 0;
+function analyseGame() {
 
+	mistakeList = board.get_mistakes();
+	console.log(mistakeList.length);
+	console.log(mistakeList);
+	if (mistakeList.length == 0) {
+		console.log("nothing to review. You played well!");
+		//var modal1 = document.getElementById("analyseModal");
+		//modal1.style.display = "none";
+		$("#win").text("Nothing to review. You played well!");
+		var modal = document.getElementById("winMessageModal");
+		$("#analyse").hide();
+		modal.style.display = "block";
+	}
+	else{
+		var modal = document.getElementById("winMessageModal");
+		modal.style.display = "none";
+		var modal1 = document.getElementById("analyseModal");
+		modal1.style.display = "block";
+		// disable buttons
+		$("#prev_mistake").prop("disabled", true);
+		$("#review_mistake").prop("disabled", true);
+
+		$("#analyseBody").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#analyseBody").append(modalBoard);
+	}
+}
+
+
+
+function closeAnalyseModal() {
+	/*
+	var modal1 = document.getElementById("analyseModal");
+	modal1.style.display = "none";
+	var newBoard = new Board(true, false);
+	board= newBoard.copyOf(board);
+	render_board(board);
+	*/
+	window.location.reload();
+}
+/*
+function prevMistake(){
+	mistakeListId--;
+	if(mistakeListId>=0 && mistakeListId < mistakeList.length)
+	{
+		if(mistakeListId>0)
+		{
+			var move = mistakeList[mistakeListId-1];
+			var from_id = move.from_row * 10 + move.from_col;
+			var to_id = move.to_row * 10 + move.to_col;
+
+			resetCell(from_id, to_id,best_id);
+
+		}
+		var currMistake = mistakeList[mistakeListId];
+		var move = currMistake.move;
+		// show move
+		var from_id = move.from_row * 10 + move.from_col;
+		var to_id = move.to_row * 10 + move.to_col;
+		board.reset_board(currMistake.board);
+		render_board(board);
+
+		var to_gain = currMistake.gain_lost;
+		var Hints = board.show_user_hint();
+		console.log("hints list");
+		var best_gain = Hints[0].gain;
+		best_id = Hints[0].to_row*10 + Hints[0].to_col;
+		
+		displayCell(from_id, to_id, best_id, to_gain, best_gain);
+
+		$("#analyseBody").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#analyseBody").append(modalBoard);
 	}
 	else
 	{
-
+		mistakeListId=-1;
+		var currMistake = mistakeList[0];
+		var move = currMistake.move;
+		// show move
+		var from_id = move.from_row * 10 + move.from_col;
+		var to_id = move.to_row * 10 + move.to_col;
+		board.reset_board(currMistake.board);
+		render_board(board);
+		//console.log(from_id);
+		//console.log(to_id);
+		resetCell(from_id, to_id, best_id);
+		$("#analyseBody").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#analyseBody").append(modalBoard);
 	}
 }
-
-/*
-// Get the modal
-var modal = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
 */
+function nextMistake() {
+	mistakeListId++;
+	if (mistakeListId < mistakeList.length) {
+		if (mistakeListId > 0) 
+		{
+			//reset board
+			var move = mistakeList[mistakeListId - 1];
+			var from_id = move.from_row * 10 + move.from_col;
+			var to_id = move.to_row * 10 + move.to_col;
+
+			resetCell(from_id, to_id, best_id);
+
+		}
+		var currMistake = mistakeList[mistakeListId];
+		var move = currMistake.move;
+		// show move
+		var from_id = move.from_row * 10 + move.from_col;
+		var to_id = move.to_row * 10 + move.to_col;
+		board.reset_board(currMistake.board);
+		render_board(board);
+
+		var to_gain = currMistake.gain_lost;
+		var Hints = board.show_user_hint();
+		var best_gain = Hints[0].gain;
+		best_id = Hints[0].to_row * 10 + Hints[0].to_col;
+
+		displayCell(from_id, to_id, best_id, to_gain, best_gain);
+
+		$("#analyseBody").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#analyseBody").append(modalBoard);
+		$("#mistake_id").text("Analyzing mistake "+(mistakeListId+1));
+	}
+	if (mistakeListId == mistakeList.length - 1)
+	{
+		mistakeListId = -1;
+		$("#next_mistake").prop("disabled", true);
+		$("#review_mistake").prop("disabled", false);
+		
+	}
+}
+function reviewMistakes() {
+	$("#mistake_id").text("Analyze Your Mistakes");
+	var currMistake = mistakeList[0];
+	var move = currMistake.move;
+	// show move
+	var from_id = move.from_row * 10 + move.from_col;
+	var to_id = move.to_row * 10 + move.to_col;
+	board.reset_board(currMistake.board);
+	render_board(board);
+	resetCell(from_id, to_id, best_id);
+
+	$("#analyseBody").empty();
+	var modalBoard = $("#checkers").clone();
+	$("#analyseBody").append(modalBoard);
+	$("#next_mistake").prop("disabled", false);
+	$("#review_mistake").prop("disabled", true);
+
+}
+function resetCell(from_id, to_id, best_id) {
+	$("#" + from_id).css("background", "black");
+	$("#" + to_id).css("background", "black");
+	$("#" + best_id).css("background", "black");
+	$("#" + to_id).text(" ");
+	$("#" + best_id).text(" ");
+	console.log("from_id: " + from_id);
+	console.log("to_id: " + to_id);
+	console.log("best_id: " + best_id);
+}
+
+function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
+	console.log("from_id: " + from_id);
+	console.log("to_id: " + to_id);
+	console.log("best_id: " + best_id);
+	$("#" + from_id).css("background", "#7dfae5");
+	$("#" + to_id).css("background", "#807e0b");
+	$("#" + best_id).css("background", "#f5f233");
+	$("#" + to_id).text("gain:\n" + to_gain);
+	$("#" + best_id).text("gain:\n" + best_gain);
+}
+
+

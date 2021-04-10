@@ -7,8 +7,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="board.js"></script>
 	<title>Checkers</title>
-	<script src="script_r.js"> </script>
 	<script src="common.js"> </script>
+	<script src="script_r.js"> </script>
+	
 	<script src="handle_ai.js"> </script>
 	<script src="support_html.js"> </script>
 </head>
@@ -250,8 +251,9 @@
 
 		<!-- This modal will display "win Message"-->
 		<div id="winMessageModal" class="winModal">
-			<h2>AI has won!!</h2>
-			<button class="button button1" id="analyse" onclick="analyzeGame()">Analyse Mistakes</button>
+			<div id="win"><h2>AI won!!</h2></div>
+			
+			<button class="button button1" id="analyse" onclick="analyseGame()">Analyze Mistakes</button>
 			<button class="button button1" id="closeWinMessage" onclick="closeWinMessage()">Close</button>
 		</div>
 
@@ -261,10 +263,11 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<span class="close">&times;</span>
-					<h3>Analyzing mistake 1</h3>
-					<button class="button button1" id="closeAnalyze" onclick="closeAnalyseModal()">Close</button>
-					<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev Move</button>
-					<button class="button button1" id="next_mistake" onclick="nextMistake()">Next Move</button>
+					<div id="mistake_id">Analyze Your Mistakes</div>
+					<button class="button button1" id="closeAnalyse" onclick="closeAnalyseModal()">Close</button>
+					<!--<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev</button>-->
+					<button class="button button1" id="next_mistake" onclick="nextMistake()">Next</button>
+					<!--<button class="button button1" id="right_move" onclick="rightMove()">Right Move</button> -->
 					<button class="button button1" id="review_mistake" onclick="reviewMistakes()">Review</button>
 				</div>
 
