@@ -806,9 +806,10 @@ class Board {
             return true;
 
         // opponent has no move
-        if (this.opponent_has_no_move())
-            return true;  // TODO: confirm this is according to rule
+        // if (this.opponent_has_no_move())
+        //     return true;  // TODO: confirm this is according to rule
 
+        return false;
         // TODO: check if there is more ways to win
     }
 
@@ -821,6 +822,7 @@ class Board {
         if (this.has_no_move()) 
             return true; // TODO: confirm this is according to rule
 
+        return false;
         // TODO: check if there is more ways to lose
     }
 
