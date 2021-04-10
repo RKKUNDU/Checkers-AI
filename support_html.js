@@ -357,6 +357,9 @@ function closeWinMessage() {
 var mistakeList = [];
 var mistakeListId = -1;
 var best_id = 0;
+var analyseHint = 0;
+var analyseHintList = [];
+var firstBestClick =true;
 function analyseGame() {
 
 	mistakeList = board.get_mistakes();
@@ -371,14 +374,15 @@ function analyseGame() {
 		$("#analyse").hide();
 		modal.style.display = "block";
 	}
-	else{
+	else {
 		var modal = document.getElementById("winMessageModal");
 		modal.style.display = "none";
 		var modal1 = document.getElementById("analyseModal");
 		modal1.style.display = "block";
 		// disable buttons
-		$("#prev_mistake").prop("disabled", true);
+		//$("#prev_mistake").prop("disabled", true);
 		$("#review_mistake").prop("disabled", true);
+		$("#best_move").prop("disabled", true);
 
 		$("#analyseBody").empty();
 		var modalBoard = $("#checkers").clone();
@@ -454,16 +458,17 @@ function prevMistake(){
 function nextMistake() {
 	mistakeListId++;
 	if (mistakeListId < mistakeList.length) {
-		if (mistakeListId > 0) 
-		{
+		$("#best_move").prop("disabled", false);
+		if (mistakeListId > 0) {
 			//reset board
-			var move = mistakeList[mistakeListId - 1];
+			var move = mistakeList[mistakeListId - 1].move;
 			var from_id = move.from_row * 10 + move.from_col;
 			var to_id = move.to_row * 10 + move.to_col;
 
 			resetCell(from_id, to_id, best_id);
 
 		}
+		firstBestClick =true;
 		var currMistake = mistakeList[mistakeListId];
 		var move = currMistake.move;
 		// show move
@@ -474,6 +479,8 @@ function nextMistake() {
 
 		var to_gain = currMistake.gain_lost;
 		var Hints = board.show_user_hint();
+		analyseHintList = board.show_user_hint();
+		analyseHint = 0;
 		var best_gain = Hints[0].gain;
 		best_id = Hints[0].to_row * 10 + Hints[0].to_col;
 
@@ -482,14 +489,99 @@ function nextMistake() {
 		$("#analyseBody").empty();
 		var modalBoard = $("#checkers").clone();
 		$("#analyseBody").append(modalBoard);
-		$("#mistake_id").text("Analyzing mistake "+(mistakeListId+1));
+		$("#mistake_id").text("Analyzing mistake " + (mistakeListId + 1));
 	}
-	if (mistakeListId == mistakeList.length - 1)
-	{
+	if (mistakeListId == mistakeList.length - 1) {
 		mistakeListId = -1;
 		$("#next_mistake").prop("disabled", true);
 		$("#review_mistake").prop("disabled", false);
+
+	}
+}
+//var analyseHint=0;
+//var analyseHintList=[];
+function bestMove() {
+	if (firstBestClick) {
+		var currMistake ;
+		if (mistakeListId > 0) {
+			//reset board
+			var move = mistakeList[mistakeListId].move;
+			var from_id = move.from_row * 10 + move.from_col;
+			var to_id = move.to_row * 10 + move.to_col;
+
+			resetCell(from_id, to_id, best_id);
+
+		}
+		if(mistakeListId==-1)
+		{
+			var move = mistakeList[mistakeList.length-1].move;
+			var from_id = move.from_row * 10 + move.from_col;
+			var to_id = move.to_row * 10 + move.to_col;
+			resetCell(from_id, to_id, best_id);
+			currMistake = mistakeList[mistakeList.length-1];
+		}
+		else
+		{ currMistake = mistakeList[mistakeListId];}
+		 
+		//var from_id = move.from_row * 10 + move.from_col;
+		//var to_id = move.to_row * 10 + move.to_col;
+
+		//resetCell(from_id, to_id, best_id);
+		firstBestClick =false;
 		
+		board.reset_board(currMistake.board);
+		render_board(board);
+		currMistake =null;
+	}
+	if (analyseHint < analyseHintList.length) {
+		
+		var hints = analyseHintList[analyseHint];
+		//userHints.shift();
+		analyseHint++;
+		var fromId = hints.from_row * 10 + hints.from_col;
+		var toId = hints.to_row * 10 + hints.to_col;
+		var captures = hints.captures;
+		//make copy of board object
+
+		if (board.is_red_piece(hints.from_row, hints.from_col)) {
+			if (board.is_king_piece(hints.from_row, hints.from_col) || (toId<=88 && toId >=81))
+				board.board[hints.to_row][hints.to_col] = 2;
+			else
+				board.board[hints.to_row][hints.to_col] = 1;
+		}
+		else if (board.is_black_piece(hints.from_row, hints.from_col)) {
+			if (board.is_king_piece(hints.from_row, hints.from_col) || (toId<=18 && toId >=11))
+				board.board[hints.to_row][hints.to_col] = -2;
+			else
+				board.board[hints.to_row][hints.to_col] = -1;
+		}
+
+		board.board[hints.from_row][hints.from_col] = 0;
+		var i;
+
+		for (i = 0; i < captures.length; i++) {
+			board.board[captures[i][0]][captures[i][1]] = 0;
+		}
+		board.print_board();
+		render_board(board);
+		$("#analyseBody").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#analyseBody").append(modalBoard);
+
+	}
+	if (analyseHintList.length == analyseHint) {
+		//disable nextMove button
+		//$("#reviewHints").prop("disabled", false);
+		$("#best_move").prop("disabled", true);
+		var currMistake = mistakeList[mistakeListId];
+		board.reset_board(currMistake.board);
+		render_board(board);
+		//reInitialize userHints
+		//board.reset_board(duplicateBoard.board);
+		//render_board(board);
+		//userHints = copyUserHints.slice();
+		analyseHint = 0;
+		firstBestClick =true;
 	}
 }
 function reviewMistakes() {

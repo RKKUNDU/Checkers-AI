@@ -15,7 +15,7 @@
 
 		var board =  new Board(true, false);
 		var newBoard = new Board(true, false);
-		
+		/*
 		board.board[3][2] = 0;
 		board.board[4][3] = 1;
 		board.board[5][4] = -1;
@@ -36,7 +36,7 @@
 		board.board[3][4] = 0;
 		board.board[3][6] = 0;
 		board.board[3][8] = 0;
-		
+		*/
 		//board.board[5][4] = -1;
 		
 		
