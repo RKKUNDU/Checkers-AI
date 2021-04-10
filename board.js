@@ -885,6 +885,14 @@ class Board {
         return best_move_sequence;
     }
 
+    show_move_sequence_with_max_gain_with_custom_depth(depth) {
+        var move = this.show_max_gain_util();
+        var move_sequence = this.show_gains_of_piece_with_custom_depth_util(move.from_row, move.from_col, depth, true);
+        move = null;
+
+        return move_sequence[0];
+    }
+
     show_max_gain_util() {
         /*
             Returns the piece with maximum gain
@@ -964,7 +972,29 @@ class Board {
         return this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col, only_best);
     }
     
-    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col, only_best) {
+    show_gains_of_piece_with_custom_depth_util(row, col, depth, only_best) {
+        /*
+            Arguments:
+                row : should be present
+                col : should be present
+                depth: should be present
+                only_best (boolean)  : for showing only the best move (with value of gain)
+
+            Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
+            starts from the (row, col)). Each move is a dictionary with following keys:
+                    from_row : int
+                    from_col : int
+                    to_row : int
+                    to_col : int
+                    captures : array of captured cells [row, col]
+                    gain : int
+                    val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
+
+        */
+        return this.show_gains_of_pieces(this, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col, only_best, true, depth);
+    }
+    
+    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col, only_best, use_custom_max_depth, max_depth) {
         // alpha_beta() function reused
         
         /*
@@ -980,6 +1010,10 @@ class Board {
                 row : should be present if for_single_piece is true
                 col : should be present if for_single_piece is true
                 only_best (boolean)  
+                use_custom_max_depth (boolean)
+                max_depth : should be present if use_custom_max_depth is true
+
+    
 
             show gains of all the moves of the piece (row, col)      if for_single_piece is true
             show gains of the best move of all the pieces            if only_best is true
@@ -1065,7 +1099,7 @@ class Board {
                     this_move_sequence = this_move_sequence.concat(next_move_sequence)
 
 
-                    if (depth == board.MAX_DEPTH && !only_best) {
+                    if (((!use_custom_max_depth && depth == board.MAX_DEPTH) || (use_custom_max_depth && depth == max_depth)) && !only_best) {
                         store_gains = store_gains.concat([this_move_sequence]);
                     }
 
@@ -1107,16 +1141,17 @@ class Board {
                         break;
                 }
 
-                if (depth == board.MAX_DEPTH && only_best) {
+                if (((!use_custom_max_depth && depth == board.MAX_DEPTH) || (use_custom_max_depth && depth == max_depth)) && only_best) {
                     var best_move_sequence = [loop_best_move];
                     best_move_sequence = best_move_sequence.concat(loop_best_next_move_sequence);
                     store_gains = store_gains.concat([best_move_sequence]);
+                    console.log(depth, best_move_sequence)
                 }
             }
 
             moves = null;
             
-            if (depth != board.MAX_DEPTH) {
+            if (((!use_custom_max_depth && depth != board.MAX_DEPTH) || (use_custom_max_depth && depth != max_depth))) {
                 var best_move_sequence = [best_move];
                 best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
                 return best_move_sequence;
@@ -1199,6 +1234,7 @@ class Board {
                 board (arr[9][9]): board state before the user moved
         */
         var board_copy = new Board();
+        this.copyOf(board_copy);
         board_copy.reset_board(board);
         // Store previous board states for Undo button
         
@@ -1210,19 +1246,32 @@ class Board {
         }
         //console.log(this.board);
         
+        // make the user the AI
+        board_copy.is_ai_red = !board_copy.is_ai_red;
 
         // find the maximum gain if the user had not made the move
-        var best_move_sequence = this.show_gains_of_pieces(board_copy, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        var best_move_sequence = board_copy.show_move_sequence_with_max_gain_with_custom_depth(board_copy.DEPTH_FOR_USER_HINT);
         var max_gain = best_move_sequence[0].val - board_copy.evaluate_board();
         
         // find the maximum gain considering user's move (i.e. find the best move sequence following the user move)
         this.is_ai_red = !this.is_ai_red;
-        var best_move_sequence_after_user_move = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT-1, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        var best_move_sequence_after_user_move = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT-1);
         var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board();
         this.is_ai_red = !this.is_ai_red;
 
-        if (max_gain > max_gain_after_user_move)
+        // AI's gain means User's lose
+        max_gain_after_user_move = (-1) * max_gain_after_user_move;
+
+        // revert back the USER from AI
+        board_copy.is_ai_red = !board_copy.is_ai_red;
+
+
+        
+        if (max_gain > max_gain_after_user_move) {
             this.mistakes.push({'move': move, 'board': board, 'gain_lost': max_gain-max_gain_after_user_move});
+            console.log("======================");
+            console.log(this.mistakes[this.mistakes.length-1])
+        }
 
         if (this.mistakes.length > 5) {
             this.mistakes.sort(function(a, b) {return b.gain_lost - a.gain_lost}); // descending order
