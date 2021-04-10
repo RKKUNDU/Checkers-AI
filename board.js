@@ -92,12 +92,12 @@ class Board {
 
     evaluate_board() {
         if (this.is_ai_red) 
-            return this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_black_pieces(), this.count_black_king_pieces());
+            return this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces(), this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces());
         else
-            return this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_red_pieces(), this.count_red_king_pieces());          
+            return this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces(), this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces());          
     }
 
-    heuristic_function(my_pieces, my_king_pieces, opp_pieces, opp_king_pieces) {
+    heuristic_function(my_pieces, my_king_pieces, my_corner_pieces, opp_pieces, opp_king_pieces, opp_corner_pieces) {
         // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
 
         if (this.heuristic == 1)
@@ -111,9 +111,9 @@ class Board {
         else if (this.heuristic == 5)
             return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1 * (my_king_pieces - opp_king_pieces);
         else if (this.heuristic == 6)
-            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.25 * (my_king_pieces - opp_king_pieces);
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces) + 0.2 * (my_corner_pieces - opp_corner_pieces);
         else if (this.heuristic == 7)
-            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.5 * (my_king_pieces - opp_king_pieces);
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces) + 0.4 * (my_corner_pieces - opp_corner_pieces);
         }
 
     count_black_pieces() {
@@ -156,6 +156,26 @@ class Board {
         return cnt;
     }
 
+    count_red_corner_pieces() {
+        var cnt = 0;
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++)
+                if (this.is_corner_piece(i, j) && this.is_red_piece(i, j))
+                    cnt++;
+
+        return cnt;
+    }
+
+    count_black_corner_pieces() {
+        var cnt = 0;
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++)
+                if (this.is_corner_piece(i, j) && this.is_black_piece(i, j))
+                    cnt++;
+
+        return cnt;
+    }
+
     is_king_piece(row, col) {
         if (row < 1 || col < 1 || row > 8 || col > 8)
             return false;
@@ -182,6 +202,13 @@ class Board {
             return false;
 
         return this.is_piece(row, col) && this.board[row][col] < 0;
+    }
+
+    is_corner_piece(row, col) {
+        if (row == 1 || row == 8 || col == 1 || col == 8)
+            return true;
+        
+        return false;
     }
 
     is_empty_cell(row, col) {
