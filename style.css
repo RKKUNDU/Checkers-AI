@@ -633,7 +633,7 @@ font-size: 30px;
   font-weight: bold;
 }
 
-#nextMoveSeq, #reviewMoveSeq, #closeMoveSeq {
+#prevMoveOfSeq, #nextMoveOfSeq, #reviewMoveSeq, #closeMoveSeq {
   display:inline-block;
 }
 
