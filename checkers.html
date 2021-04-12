@@ -249,6 +249,32 @@
 
 		</div>
 
+		<!-- Modal class for Move sequences (Understanding Mode)-->
+		<div id="modalMoveSeq" class="modal">
+
+			<!-- Modal content -->
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close">&times;</span>
+					
+					<button class="button button1" id="closeMoveSeq" onclick="closeModalMoveSeq()">Close</button>
+					<!-- <button class="button button1" id="prevHint" onclick="prevHintMove()">Prev Move</button> -->
+					<button class="button button1" id="nextMoveSeq" onclick="nextMoveMoveSeq()">Move Sequence</button>
+					<button class="button button1" id="reviewMoveSeq" onclick="reviewMoveSeq()">Review</button>
+				</div>
+				<div class="modal-body" id="modalBodyMoveSeq">
+
+				</div>
+				
+				<div class="modal-footer">
+					<h1>Press "Next move" button to animate</h1>
+				</div>
+				
+			</div>
+
+		</div>
+
+
 		<!-- This modal will display "win Message"-->
 		<div id="winMessageModal" class="winModal">
 			<div id="win"><h2>AI won!!</h2></div>

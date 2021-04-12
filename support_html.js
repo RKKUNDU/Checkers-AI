@@ -219,7 +219,7 @@ function showPoints() {
 		var from_id = values[i].from_row.toString() + values[i].from_col.toString()
 		//var to_id=values[i].from_row.toString()+values[i].to_col.toString()
 		var gain = values[i].gain.toString()
-		tables.innerHTML += "<tr><td class='show_points'>" + from_id + "</td><td class='show_points'>" + gain + "</td></tr>"
+		tables.innerHTML += "<tr><td class='show_points'><button class='showMoveSequenceButton' onclick='showMoveSequence("+from_id+")'>" + from_id + "</button></td><td class='show_points'>" + gain + "</td></tr>";
 	}
 
 
@@ -227,11 +227,120 @@ function showPoints() {
 /* ========================== Some vars============*/
 var duplicateBoard = new Board(true, false);
 
+
+
+/*================================ show Move Sequence modal (Understanding Mode) ===================== */
+var moveSeq = []
+var moveSeqIndex = 0;
+
+function showMoveSequence(id) {
+
+
+	var modal = document.getElementById("modalMoveSeq");
+	moveSeq = board.show_gains_of_piece_util(Math.floor(id/10), id%10, true)[0];
+	moveSeq.pop();
+	console.log(moveSeq);
+	// copyUserHints = userHints.slice();
+	$("#modalBodyMoveSeq").empty();
+	var modalBoard = $("#checkers").clone();
+	$("#modalBodyMoveSeq").append(modalBoard);
+
+	modal.style.display = "block";
+	$("#reviewMoveSeq").prop("disabled", true);
+	//duplicateBoard = board.copyOf(duplicateBoard);
+	duplicateBoard.reset_board(board.board);
+
+}
+
+function nextMoveMoveSeq() {
+	if (moveSeqIndex < moveSeq.length) {
+		var hints = moveSeq[moveSeqIndex];
+		console.log("Move ----------------------")
+		console.log(moveSeq)
+		console.log(hints)
+		//userHints.shift();
+		moveSeqIndex++;
+		var fromId = hints.from_row * 10 + hints.from_col;
+		var toId = hints.to_row * 10 + hints.to_col;
+		var captures = hints.captures;
+		//make copy of board object
+
+		if (board.is_red_piece(hints.from_row, hints.from_col)) {
+			if (board.is_king_piece(hints.from_row, hints.from_col))
+				board.board[hints.to_row][hints.to_col] = 2;
+			else
+				board.board[hints.to_row][hints.to_col] = 1;
+		}
+		else if (board.is_black_piece(hints.from_row, hints.from_col)) {
+			if (board.is_king_piece(hints.from_row, hints.from_col))
+				board.board[hints.to_row][hints.to_col] = -2;
+			else
+				board.board[hints.to_row][hints.to_col] = -1;
+		}
+
+		if (fromId != toId )
+			board.board[hints.from_row][hints.from_col] = 0;
+		
+		var i;
+
+		for (i = 0; i < captures.length; i++) {
+			board.board[captures[i][0]][captures[i][1]] = 0;
+		}
+
+		render_board(board);
+		$("#modalBodyMoveSeq").empty();
+		var modalBoard = $("#checkers").clone();
+		$("#modalBodyMoveSeq").append(modalBoard);
+
+		// $("#prevHint").prop("disabled", false);
+		// reset original board of sec2 div
+
+	}
+	if (moveSeq.length == moveSeqIndex) {
+		//disable nextMove button
+		$("#reviewMoveSeq").prop("disabled", false);
+		$("#nextMoveSeq").prop("disabled", true);
+
+		//reInitialize userHints
+		board.clear_board();
+		board.print_board();
+		render_board(board);
+		board.reset_board(duplicateBoard.board);
+		render_board(board);
+		//userHints = copyUserHints.slice();
+		moveSeqIndex = 0;
+	}
+
+}
+
+function reviewMoveSeq() {
+	$("#nextMoveSeq").prop("disabled", false);
+	$("#reviewMoveSeq").prop("disabled", true);
+
+	$("#modalBodyMoveSeq").empty();
+	var modalBoard = $("#checkers").clone();
+	$("#modalBodyMoveSeq").append(modalBoard);
+}
+function closeModalMoveSeq() {
+
+	moveSeq = [];
+	moveSeqIndex = 0;
+	$("#nextMoveSeq").prop("disabled", false);
+	$("#reviewMoveSeq").prop("disabled", true);
+	board.clear_board();
+	// board = duplicateBoard.copyOf(board);
+	render_board(board);
+	board.reset_board(duplicateBoard.board);
+	render_board(board);
+	var modal = document.getElementById("modalMoveSeq");
+	modal.style.display = "none";
+}
+
+/*================================ show Hint modal ===================== */
+
 var userHints = [];
 var copyUserHints = [];
 var hintMoveIndex = 0;
-
-/*================================ show Hint modal ===================== */
 
 function showHint() {
 	//make a copy of original board and make changes in cloned board
@@ -275,7 +384,9 @@ function nextHintMove() {
 				board.board[hints.to_row][hints.to_col] = -1;
 		}
 
-		board.board[hints.from_row][hints.from_col] = 0;
+		if (fromId != toId )
+			board.board[hints.from_row][hints.from_col] = 0;
+		
 		var i;
 
 		for (i = 0; i < captures.length; i++) {

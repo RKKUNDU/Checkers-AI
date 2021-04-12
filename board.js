@@ -93,10 +93,6 @@ class Board {
         }
     }
 
-    game_finished() {
-        return false;
-    }
-
     evaluate_board() {
         if (this.is_ai_red) 
             return this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces(), this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces());
@@ -1278,7 +1274,7 @@ class Board {
         
         // find the maximum gain considering AI's move (i.e. find the best move sequence following the user move)
         var best_move_sequence_after_user_move = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT-1);
-        console.log("xxxxxxx====");
+
         // revert back the USER from AI
         board_copy.is_ai_red = !board_copy.is_ai_red;
 
