@@ -379,109 +379,24 @@ function closeModalMoveSeq() {
 
 /*================================ show Hint modal ===================== */
 
-var userHints = [];
-var copyUserHints = [];
-var hintMoveIndex = 0;
-
 function showHint() {
-	//make a copy of original board and make changes in cloned board
-	var modal = document.getElementById("myModal");
-	userHints = board.show_user_hint();
-	copyUserHints = userHints.slice();
-	$("#modalBody").empty();
-	var modalBoard = $("#checkers").clone();
-	$("#modalBody").append(modalBoard);
-	$("#modalBoard").addClass("tableClass");
+	// make a copy of original board and make changes in the cloned board
 
+	var modal = document.getElementById("modalMoveSeq");
+	moveSeq = board.show_user_hint();
+
+	$("#modalBodyMoveSeq").empty();
+	var modalBoard = $("#checkers").clone();
+	$("#modalBodyMoveSeq").append(modalBoard);
 	modal.style.display = "block";
-	$("#reviewHints").prop("disabled", true);
-	$("#prevHint").prop("disabled", true);
-	//duplicateBoard = board.copyOf(duplicateBoard);
+
+	$("#reviewMoveSeq").prop("disabled", true);
+	$("#prevMoveOfSeq").prop("disabled", true);
+	$("#nextMoveOfSeq").prop("disabled", false);
+	
 	duplicateBoard.reset_board(board.board);
 }
 
-function nextHintMove() {
-	if (hintMoveIndex < userHints.length) {
-		var hints = userHints[hintMoveIndex];
-		//userHints.shift();
-		hintMoveIndex++;
-		var fromId = hints.from_row * 10 + hints.from_col;
-		var toId = hints.to_row * 10 + hints.to_col;
-		var captures = hints.captures;
-		//make copy of board object
-
-
-
-		if (board.is_red_piece(hints.from_row, hints.from_col)) {
-			if (board.is_king_piece(hints.from_row, hints.from_col))
-				board.board[hints.to_row][hints.to_col] = 2;
-			else
-				board.board[hints.to_row][hints.to_col] = 1;
-		}
-		else if (board.is_black_piece(hints.from_row, hints.from_col)) {
-			if (board.is_king_piece(hints.from_row, hints.from_col))
-				board.board[hints.to_row][hints.to_col] = -2;
-			else
-				board.board[hints.to_row][hints.to_col] = -1;
-		}
-
-		if (fromId != toId )
-			board.board[hints.from_row][hints.from_col] = 0;
-		
-		var i;
-
-		for (i = 0; i < captures.length; i++) {
-			board.board[captures[i][0]][captures[i][1]] = 0;
-		}
-
-		render_board(board);
-		$("#modalBody").empty();
-		var modalBoard = $("#checkers").clone();
-		$("#modalBody").append(modalBoard);
-		$("#modalBoard").addClass("tableClass");
-
-		$("#prevHint").prop("disabled", false);
-		// reset original board of sec2 div
-
-	}
-	if (userHints.length == hintMoveIndex) {
-		//disable nextMove button
-		$("#reviewHints").prop("disabled", false);
-		$("#nextHint").prop("disabled", true);
-
-		//reInitialize userHints
-		board.reset_board(duplicateBoard.board);
-		render_board(board);
-		//userHints = copyUserHints.slice();
-		hintMoveIndex = 0;
-	}
-
-}
-
-function reviewHints() {
-
-	$("#nextHint").prop("disabled", false);
-	$("#reviewHints").prop("disabled", true);
-
-
-	$("#modalBody").empty();
-	var modalBoard = $("#checkers").clone();
-	$("#modalBody").append(modalBoard);
-	$("#modalBoard").addClass("tableClass");
-
-}
-function closeModal() {
-
-	userHints = [];
-	hintMoveIndex = 0;
-	copyUserHints = [];
-	$("#nextHint").prop("disabled", false);
-	$("#reviewHints").prop("disabled", true);
-	board = duplicateBoard.copyOf(board);
-	render_board(board);
-	var modal = document.getElementById("myModal");
-	modal.style.display = "none";
-}
 /*================ undo button ========================= */
 function undoMove() {
 
