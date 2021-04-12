@@ -762,7 +762,15 @@ class Board {
         var captures = move['captures'];
         
         this.board[to_row][to_col] = this.board[from_row][from_col];
-        // Make the cell empty
+
+        // piece comes back to it's last position due to diamond shape jump
+        // don't make the previous cell (cell from where piece startd move) empty
+        //                      .
+        //                    b x b  
+        //                  R x   x . 
+        //                    b x b
+        //                      .
+        if (!(from_col == to_col && from_row == to_row))
         this.board[from_row][from_col] = 0;
 
         for (var i=0; i < captures.length; i++) {
@@ -1013,14 +1021,7 @@ class Board {
                 use_custom_max_depth (boolean)
                 max_depth : should be present if use_custom_max_depth is true
 
-    
-
-            show gains of all the moves of the piece (row, col)      if for_single_piece is true
-            show gains of the best move of all the pieces            if only_best is true
-            show gain of the best move of the piece (row, col)       if for_single_piece and only_best are true            
-            show gains of all the moves of all the pieces            otherwise 
-
-
+            Returns:
             Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
             starts from the (row, col)). Each move is a dictionary with following keys:
                     from_row : int
@@ -1030,6 +1031,16 @@ class Board {
                     captures : array of captured cells [row, col]
                     gain : int
                     val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
+
+            Description:
+                show gains of all the moves of the piece (row, col)      if for_single_piece is true
+                show gains of the best move of all the pieces            if only_best is true
+                show gain of the best move of the piece (row, col)       if for_single_piece and only_best are true            
+                show gains of all the moves of all the pieces            otherwise 
+                
+                all the moves of a piece?
+                --> if a piece has 3 choices in the "first" move, then 3 move sequence will be returned for that piece
+
         */
 
         if (depth == 0 || board.is_game_finished()) {
@@ -1084,7 +1095,7 @@ class Board {
                     };
                     
                     board_copy.make_move(move);
-                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, false);
+                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, false, false, 0, 0, false, use_custom_max_depth, max_depth);
                     var val = next_move_sequence[0].val;
 
                     this_move.from_row = move['from_row'];
@@ -1180,7 +1191,7 @@ class Board {
                     };
     
                     board_copy.make_move(move);
-                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, true); 
+                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, true, false, 0, 0, false, use_custom_max_depth, max_depth); 
                     var val = next_move_sequence[0].val;
 
                     if (val < min_val) {
@@ -1244,7 +1255,6 @@ class Board {
         } else{
             this.prev_boards.push(board_copy.board);
         }
-        //console.log(this.board);
         
         // make the user the AI
         board_copy.is_ai_red = !board_copy.is_ai_red;
@@ -1259,9 +1269,6 @@ class Board {
         var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board();
         this.is_ai_red = !this.is_ai_red;
 
-        // AI's gain means User's lose
-        max_gain_after_user_move = (-1) * max_gain_after_user_move;
-
         // revert back the USER from AI
         board_copy.is_ai_red = !board_copy.is_ai_red;
 
@@ -1270,7 +1277,9 @@ class Board {
         if (max_gain > max_gain_after_user_move) {
             this.mistakes.push({'move': move, 'board': board, 'gain_lost': max_gain-max_gain_after_user_move});
             console.log("======================");
+            console.log("Mistakes:")
             console.log(this.mistakes[this.mistakes.length-1])
+            console.log("======================");
         }
 
         if (this.mistakes.length > 5) {
