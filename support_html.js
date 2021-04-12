@@ -335,6 +335,8 @@ function undoMove() {
 
 	if (board.prev_boards.length > 0) {
 		var lastState = board.prev_boards.pop();
+		board.clear_board();
+		render_board(board);
 		board.reset_board(lastState);
 		render_board(board);
 	}
@@ -474,8 +476,14 @@ function nextMistake() {
 		// show move
 		var from_id = move.from_row * 10 + move.from_col;
 		var to_id = move.to_row * 10 + move.to_col;
+
+		board.clear_board();
+		render_board(board);
+		console.log("clear_board");
+
 		board.reset_board(currMistake.board);
 		render_board(board);
+		board.print_board();
 
 		var to_gain = currMistake.gain_lost;
 		var Hints = board.show_user_hint();
@@ -485,11 +493,14 @@ function nextMistake() {
 		best_id = Hints[0].to_row * 10 + Hints[0].to_col;
 
 		displayCell(from_id, to_id, best_id, to_gain, best_gain);
-
+		
 		$("#analyseBody").empty();
 		var modalBoard = $("#checkers").clone();
 		$("#analyseBody").append(modalBoard);
 		$("#mistake_id").text("Analyzing mistake " + (mistakeListId + 1));
+		
+		// var modal1 = document.getElementById("analyseModal");
+		// modal1.style.display = "none";
 	}
 	if (mistakeListId == mistakeList.length - 1) {
 		mistakeListId = -1;
@@ -528,7 +539,9 @@ function bestMove() {
 
 		//resetCell(from_id, to_id, best_id);
 		firstBestClick =false;
-		
+		// board.clear_board();
+		// render_board(board);
+		// console.log("clear_board")
 		board.reset_board(currMistake.board);
 		render_board(board);
 		currMistake =null;
@@ -564,6 +577,7 @@ function bestMove() {
 		}
 		board.print_board();
 		render_board(board);
+
 		$("#analyseBody").empty();
 		var modalBoard = $("#checkers").clone();
 		$("#analyseBody").append(modalBoard);
@@ -604,24 +618,28 @@ function reviewMistakes() {
 }
 function resetCell(from_id, to_id, best_id) {
 	$("#" + from_id).css("background", "black");
-	$("#" + to_id).css("background", "black");
-	$("#" + best_id).css("background", "black");
-	$("#" + to_id).text(" ");
-	$("#" + best_id).text(" ");
-	console.log("from_id: " + from_id);
-	console.log("to_id: " + to_id);
-	console.log("best_id: " + best_id);
+	// $("#" + to_id).css("background", "black");
+	// $("#" + best_id).css("background", "black");
+
+	$("#" + to_id).children("p").text(" ");
+	$("#" + best_id).children("p").text(" ");
+
+	// console.log("from_id: " + from_id);
+	// console.log("to_id: " + to_id);
+	// console.log("best_id: " + best_id);
 }
 
 function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
-	console.log("from_id: " + from_id);
-	console.log("to_id: " + to_id);
-	console.log("best_id: " + best_id);
+	// console.log("from_id: " + from_id);
+	// console.log("to_id: " + to_id);
+	// console.log("best_id: " + best_id);
+	
 	$("#" + from_id).css("background", "#7dfae5");
-	$("#" + to_id).css("background", "#807e0b");
-	$("#" + best_id).css("background", "#f5f233");
-	$("#" + to_id).text("gain:\n" + to_gain);
-	$("#" + best_id).text("gain:\n" + best_gain);
+	// $("#" + to_id).css("background", "#807e0b");
+	// $("#" + best_id).css("background", "#f5f233");
+
+	$("#" + to_id).children("p").text("Your Move");
+	$("#" + best_id).children("p").text("Best Move");
 }
 
 

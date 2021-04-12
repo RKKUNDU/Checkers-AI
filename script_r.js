@@ -15,28 +15,30 @@
 
 		var board =  new Board(true, false);
 		var newBoard = new Board(true, false);
-		/*
-		board.board[3][2] = 0;
-		board.board[4][3] = 1;
-		board.board[5][4] = -1;
-		board.board[6][5] = 0;
-		board.board[7][6] = -1;
-		board.board[1][2] = 0;
 		
-		board.board[1][4] = 0;
-		board.board[1][6] = 0;
-		board.board[1][8] = 0;
 		
-		board.board[2][1] = 0;
-		board.board[2][3] = 0;
+		// board.board[4][3] = 1;
+		// board.board[5][4] = -1;
+		// board.board[6][5] = 0;
+		// board.board[7][6] = -1;
+
+		// board.board[1][2] = 0;
+		// board.board[1][4] = 0;
+		// board.board[1][6] = 0;
+		// board.board[1][8] = 0;
 		
-		board.board[2][5] = 0;
-		board.board[2][7] = 0;
+		// board.board[2][1] = 0;
+		// board.board[2][3] = 0;
+		// board.board[2][5] = 0;
+		// board.board[2][7] = 0;
 		
-		board.board[3][4] = 0;
-		board.board[3][6] = 0;
-		board.board[3][8] = 0;
-		*/
+		// board.board[3][2] = 0;
+		// board.board[3][4] = 0;
+		// board.board[3][6] = 0;
+		// board.board[3][8] = 0;
+		
+		// board.board[8][7] =0;
+
 		//board.board[5][4] = -1;
 		
 		
@@ -400,9 +402,12 @@
 								move ={from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:temp_captures};
 								
 								newBoard.reset_board(board.board);
+								//board.copyOf(newBoard);
+								// var newBoard = board.board.slice();
 								//console.log(newBoard.board);
 								board.make_move(move);
-								board.user_moved(move,newBoard.board);
+								
+								// newBoard = null;
 								//console.log("after make_move");
 								//console.log(newBoard.board);
 								
@@ -434,7 +439,7 @@
 								hideCapturedPiece(temp_captures);
 							
 								render_board(board);
-								
+								board.user_moved(move,newBoard.board);
 								if(PossibleMove.includes( parseInt(this.id,10)))	
 								{	
 
@@ -444,12 +449,12 @@
 									render_board(board);
 									ai_turn = true;
 								
-
+									
 									if(!AutoAI)
 									{ 
 										//console.log("helo");
 										
-										setTimeout(() => {  handle_ai_turn(); }, 1000);
+										setTimeout(() => {  handle_ai_turn(); },1000);
 										//ai_turn = true; 
 									}
 									else
@@ -457,9 +462,11 @@
 										//console.log("Hiii")
 										
 
-										setTimeout(() => {  handle_ai_turn(); }, 1000);
+										setTimeout(() => {  handle_ai_turn();  },1000);
 									}
-
+									
+									//board.user_moved(move,newBoard.board);
+									
 								}
 								else
 									ai_turn = false;
