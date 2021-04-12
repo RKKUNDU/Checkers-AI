@@ -821,6 +821,14 @@ class Board {
         // TODO: check if there is more ways to win
     }
 
+    has_opponent_won() {
+        // There is no opponent piece
+        if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
+            return true;
+        
+        return false;
+    }
+
     has_lost() {
         // There is no opponent piece
         if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
@@ -839,8 +847,9 @@ class Board {
         return false;
     }
 
-    is_game_finished() {
-        return this.has_won() || this.has_lost() || this.has_drawn();
+    is_game_finished(ai_turn) {
+        // TODO: Check game finish conditions
+        return this.has_drawn() || (ai_turn && (this.has_won() || this.has_no_move()) || (!ai_turn && (this.has_opponent_won() || this.opponent_has_no_move())));
     }
 
     copyOf(obj) {
@@ -1042,8 +1051,7 @@ class Board {
                 --> if a piece has 3 choices in the "first" move, then 3 move sequence will be returned for that piece
 
         */
-
-        if (depth == 0 || board.is_game_finished()) {
+        if (depth == 0 || board.is_game_finished(maximizer)) {
             // NO MOVE depicted by (-1, -1) to (-1, -1)
             var best_next_move = {};
             best_next_move.from_row = -1;
@@ -1156,7 +1164,6 @@ class Board {
                     var best_move_sequence = [loop_best_move];
                     best_move_sequence = best_move_sequence.concat(loop_best_next_move_sequence);
                     store_gains = store_gains.concat([best_move_sequence]);
-                    console.log(depth, best_move_sequence)
                 }
             }
 
@@ -1167,7 +1174,6 @@ class Board {
                 best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
                 return best_move_sequence;
             } else {
-                console.log("this");
                 return store_gains;
             }
 
@@ -1247,8 +1253,8 @@ class Board {
         var board_copy = new Board();
         this.copyOf(board_copy);
         board_copy.reset_board(board);
+
         // Store previous board states for Undo button
-        
         if (this.prev_boards.length >= 5){
             this.prev_boards.shift();
             this.prev_boards.push(board_copy.board);
@@ -1263,19 +1269,18 @@ class Board {
         var best_move_sequence = board_copy.show_move_sequence_with_max_gain_with_custom_depth(board_copy.DEPTH_FOR_USER_HINT);
         var max_gain = best_move_sequence[0].val - board_copy.evaluate_board();
         
-        // find the maximum gain considering user's move (i.e. find the best move sequence following the user move)
-        this.is_ai_red = !this.is_ai_red;
+        // find the maximum gain considering AI's move (i.e. find the best move sequence following the user move)
         var best_move_sequence_after_user_move = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT-1);
-        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board();
-        this.is_ai_red = !this.is_ai_red;
 
         // revert back the USER from AI
         board_copy.is_ai_red = !board_copy.is_ai_red;
 
 
-        
+        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board(); // evaluate wrt. the AI
+        max_gain_after_user_move = (-1) * max_gain_after_user_move; // evaluate wrt. the User
+
         if (max_gain > max_gain_after_user_move) {
-            this.mistakes.push({'move': move, 'board': board, 'gain_lost': max_gain-max_gain_after_user_move});
+            this.mistakes.push({'move': move, 'board': board_copy.board, 'gain_lost': max_gain-max_gain_after_user_move});
             console.log("======================");
             console.log("Mistakes:")
             console.log(this.mistakes[this.mistakes.length-1])
@@ -1387,7 +1392,8 @@ function get_path(from_row, from_col, captures_array, captures_index) {
 
 
 function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
-    if (depth == 0 || board.is_game_finished())
+    
+    if (depth == 0 || board.is_game_finished(maximizer)) 
         return board.evaluate_board();
 
     if (maximizer) {
