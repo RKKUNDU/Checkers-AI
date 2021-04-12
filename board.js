@@ -1426,6 +1426,14 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                     best_move.captures = move['captures'];
                 }
 
+                if (val == max_val && move.captures.length > best_move.captures.length) {
+                    best_move.from_row = move['from_row'];
+                    best_move.from_col = move['from_col'];
+                    best_move.to_row = move['to_row'];
+                    best_move.to_col = move['to_col'];
+                    best_move.captures = move['captures'];
+                }
+
                 board_copy = null;
                 move = null;
 
