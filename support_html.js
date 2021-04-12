@@ -252,38 +252,18 @@ function nextMoveOfSeq() {
 	moveSeqIndex++;
 	if (moveSeqIndex < moveSeq.length) {
 		var move = moveSeq[moveSeqIndex];
-		console.log("Next Move index", moveSeqIndex)
-		
-		var from_row = move.from_row;	
-		var from_col = move.from_col;
-		var to_row = move.to_row;
-		var to_col = move.to_col;
 		var captures = move.captures;
+		console.log("Next Move index", moveSeqIndex)
 
-		var fromId = from_row * 10 + from_col;
-		var toId = to_row * 10 + to_col;
+		moveSeq[moveSeqIndex].piece_val = board.board[move.from_row][move.from_col]; // store the piece for prev button (since piece can become king piece)
 
-		if (board.is_red_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = 2;
-			else
-				board.board[to_row][to_col] = 1;
-		} else if (board.is_black_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = -2;
-			else
-				board.board[to_row][to_col] = -1;
-		}
-
-		if (fromId != toId )
-			board.board[from_row][from_col] = 0;
-		
 		for (var i = 0; i < captures.length; i++) {
 			moveSeq[moveSeqIndex].captures[i][2] = board.board[captures[i][0]][captures[i][1]]; // store the piece for prev button
-			board.board[captures[i][0]][captures[i][1]] = 0;
 		}
 
+		board.make_move(move);
 		render_board(board);
+
 		$("#modalBodyMoveSeq").empty();
 		var modalBoard = $("#checkers").clone();
 		$("#modalBodyMoveSeq").append(modalBoard);
@@ -301,30 +281,16 @@ function prevMoveOfSeq() {
 		var move = moveSeq[moveSeqIndex];
 		console.log("Prev Move index", moveSeqIndex)
 
-		// since doing undo. `to` becomes `from`
-		var from_row = move.to_row;	
-		var from_col = move.to_col;
+		// since doing undo. `from` becomes `to`
 		var to_row = move.from_row;
 		var to_col = move.from_col;
+		var from_row = move.to_row;
+		var from_col = move.to_col;
+		var piece_val = move.piece_val;
 		var captures = move.captures;
 
-		var fromId = from_row * 10 + from_col;
-		var toId = to_row * 10 + to_col;
-		
-		if (board.is_red_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = 2;
-			else
-				board.board[to_row][to_col] = 1;
-		} else if (board.is_black_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = -2;
-			else
-				board.board[to_row][to_col] = -1;
-		}
-
-		if (fromId != toId )
-			board.board[from_row][from_col] = 0;
+		board.board[to_row][to_col] = piece_val;
+		board.board[from_row][from_col] = 0;
 
 		for (var i = 0; i < captures.length; i++) {
 			board.board[captures[i][0]][captures[i][1]] = captures[i][2]; // restore the captured piece
@@ -491,38 +457,18 @@ function nextMoveFromAnalysis() {
 	
 	if (moveSeqIndex < moveSeq.length) {
 		var move = moveSeq[moveSeqIndex];
-		console.log("Next Move index", moveSeqIndex)
-		
-		var from_row = move.from_row;	
-		var from_col = move.from_col;
-		var to_row = move.to_row;
-		var to_col = move.to_col;
 		var captures = move.captures;
-
-		var fromId = from_row * 10 + from_col;
-		var toId = to_row * 10 + to_col;
-
-		if (board.is_red_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = 2;
-			else
-				board.board[to_row][to_col] = 1;
-		} else if (board.is_black_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = -2;
-			else
-				board.board[to_row][to_col] = -1;
-		}
-
-		if (fromId != toId )
-			board.board[from_row][from_col] = 0;
+		console.log("Next Move index", moveSeqIndex);
 		
+		moveSeq[moveSeqIndex].piece_val = board.board[move.from_row][move.from_col]; // store the piece for prev button (since piece can become king piece)
+
 		for (var i = 0; i < captures.length; i++) {
 			moveSeq[moveSeqIndex].captures[i][2] = board.board[captures[i][0]][captures[i][1]]; // store the piece for prev button
-			board.board[captures[i][0]][captures[i][1]] = 0;
 		}
 
+		board.make_move(move);	
 		render_board(board);
+
 		$("#analyseBody").empty();
 		var modalBoard = $("#checkers").clone();
 		$("#analyseBody").append(modalBoard);
@@ -540,30 +486,16 @@ function prevMoveFromAnalysis() {
 		var move = moveSeq[moveSeqIndex];
 		console.log("Prev Move index", moveSeqIndex)
 
-		// since doing undo. `to` becomes `from`
-		var from_row = move.to_row;	
-		var from_col = move.to_col;
+		// since doing undo. `from` becomes `to`
 		var to_row = move.from_row;
 		var to_col = move.from_col;
+		var from_row = move.to_row;
+		var from_col = move.to_col;
+		var piece_val = move.piece_val;
 		var captures = move.captures;
 
-		var fromId = from_row * 10 + from_col;
-		var toId = to_row * 10 + to_col;
-		
-		if (board.is_red_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = 2;
-			else
-				board.board[to_row][to_col] = 1;
-		} else if (board.is_black_piece(from_row, from_col)) {
-			if (board.is_king_piece(from_row, from_col))
-				board.board[to_row][to_col] = -2;
-			else
-				board.board[to_row][to_col] = -1;
-		}
-
-		if (fromId != toId )
-			board.board[from_row][from_col] = 0;
+		board.board[to_row][to_col] = piece_val;
+		board.board[from_row][from_col] = 0;
 
 		for (var i = 0; i < captures.length; i++) {
 			board.board[captures[i][0]][captures[i][1]] = captures[i][2]; // restore the captured piece
@@ -725,6 +657,7 @@ function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
 	// console.log("to_id: " + to_id);
 	// console.log("best_id: " + best_id);
 	
+	// TODO: add color
 	$("#" + from_id).css("background", "#7dfae5");
 	// $("#" + to_id).css("background", "#807e0b");
 	// $("#" + best_id).css("background", "#f5f233");
