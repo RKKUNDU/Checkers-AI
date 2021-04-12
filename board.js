@@ -21,7 +21,7 @@ class Board {
         this.is_ai_red = is_ai_red;
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
         this.MAX_DEPTH = 5;
-        this.DEPTH_FOR_USER_HINT = 6;
+        this.DEPTH_FOR_USER_HINT = 4;
         this.mistakes = new Array(); // store only 5 top mistakes
         this.prev_boards = new Array(); // store only 5 previous board states
 
@@ -61,6 +61,13 @@ class Board {
             }
         }
     }
+
+    clear_board() {
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++) 
+                if (this.board[i][j] != 3)
+                    this.board[i][j] = 0;
+    } 
 
     print_board() {
         for (var i = 1; i <= 8; i++) {
