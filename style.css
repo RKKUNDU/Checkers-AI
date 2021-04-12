@@ -617,7 +617,7 @@ a{
   animation-name: animatetop;
   animation-duration: 0.4s 
 }
-#closeAnalyse, #next_mistake,#review_mistake,#best_move{
+#closeAnalyse, #prev_mistake, #next_mistake, #review_mistake, #prev_move, #next_move {
   display:inline-block;
 }
 #win{

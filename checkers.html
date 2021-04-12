@@ -222,7 +222,7 @@
 				<li>There is no limit to how many king pieces a player may have.</li>	
 			</div>
 		</div>
-		
+
 		<!-- Modal class for Move Sequences (Understanding Mode)-->
 		<div id="modalMoveSeq" class="modal">
 
@@ -265,10 +265,11 @@
 					<span class="close">&times;</span>
 					<div id="mistake_id">Analyze Your Mistakes</div>
 					<button class="button button1" id="closeAnalyse" onclick="closeAnalyseModal()">Close</button>
-					<!--<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev</button>-->
+					<button class="button button1" id="prev_move" onclick="prevMoveFromAnalysis()">Prev Move</button> 
+					<button class="button button1" id="next_move" onclick="nextMoveFromAnalysis()">Next Move</button> 
+					<button class="button button1" id="review_mistake" onclick="reviewMistake()">Review</button>
+					<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev Mistake</button>
 					<button class="button button1" id="next_mistake" onclick="nextMistake()">Next Mistake</button>
-					<button class="button button1" id="best_move" onclick="bestMove()">Move Sequence</button> 
-					<button class="button button1" id="review_mistake" onclick="reviewMistakes()">Review</button>
 				</div>
 
 				<div class="modal-body" id="analyseBody">
