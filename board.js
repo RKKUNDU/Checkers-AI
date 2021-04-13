@@ -1,3 +1,8 @@
+const WIN_GAIN = 100;
+const LOSE_GAIN = (-1) * WIN_GAIN;
+const DRAW_GAIN = 0;
+const AI_TURN = true;
+
 class Board {
     constructor(is_red_top, is_ai_red) {
         /*
@@ -93,11 +98,24 @@ class Board {
         }
     }
 
-    evaluate_board() {
+    evaluate_board(ai_turn=true) {
+        var gain = 0;
+
+        if (ai_turn && this.has_no_piece())
+            gain = LOSE_GAIN;
+        else if (ai_turn && this.has_no_move())
+            gain = LOSE_GAIN;
+        else if (!ai_turn && this.opponent_has_no_piece())
+            gain = WIN_GAIN;
+        else if (!ai_turn && this.opponent_has_no_move())
+            gain = WIN_GAIN;
+        else if (this.has_drawn()) 
+            gain = DRAW_GAIN;
+
         if (this.is_ai_red) 
-            return this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces(), this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces());
+            return gain + this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces(), this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces());
         else
-            return this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces(), this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces());          
+            return gain + this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces(), this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces());          
     }
 
     heuristic_function(my_pieces, my_king_pieces, my_corner_pieces, opp_pieces, opp_king_pieces, opp_corner_pieces) {
@@ -938,7 +956,7 @@ class Board {
         var max_gain = Number.NEGATIVE_INFINITY;
 
         for (var i = 0; i < gains.length; i++) {
-            var gain = gains[i][0].val - this.evaluate_board(); 
+            var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
             if (gain > max_gain) {
                 max_gain_move = gains[i];
                 max_gain = gain;
@@ -967,7 +985,7 @@ class Board {
         var gains = this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, null, null, true);
         var arr = [];
         for (var i = 0; i < gains.length; i++) {
-            var gain = gains[i][0].val - this.evaluate_board(); 
+            var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
             var from_row =  gains[i][0].from_row;
             var from_col =  gains[i][0].from_col;
 
@@ -1074,7 +1092,7 @@ class Board {
             best_next_move.to_col = -1;
             best_next_move.captures = [];
             best_next_move.gain = 0;
-            best_next_move.val = board.evaluate_board();
+            best_next_move.val = board.evaluate_board(maximizer);
             return [best_next_move];
         }
     
@@ -1125,7 +1143,7 @@ class Board {
                     this_move.to_row = move['to_row'];
                     this_move.to_col = move['to_col'];
                     this_move.captures = move['captures'];
-                    this_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                    this_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                     this_move.val = val;
 
                     var this_move_sequence = [this_move];
@@ -1143,7 +1161,7 @@ class Board {
                         best_move.to_row = move['to_row'];
                         best_move.to_col = move['to_col'];
                         best_move.captures = move['captures'];
-                        best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        best_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                         best_move.val = val;
 
                         best_next_move_sequence = next_move_sequence;
@@ -1156,7 +1174,7 @@ class Board {
                         loop_best_move.to_row = move['to_row'];
                         loop_best_move.to_col = move['to_col'];
                         loop_best_move.captures = move['captures'];
-                        loop_best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        loop_best_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                         loop_best_move.val = val;
 
                         loop_best_next_move_sequence = next_move_sequence;
@@ -1222,7 +1240,7 @@ class Board {
                         best_move.to_row = move['to_row'];
                         best_move.to_col = move['to_col'];
                         best_move.captures = move['captures'];
-                        best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        best_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                         best_move.val = val;
 
                         best_next_move_sequence = next_move_sequence;
@@ -1281,7 +1299,7 @@ class Board {
 
         // find the maximum gain if the user had not made the move
         var best_move_sequence = board_copy.show_move_sequence_with_max_gain_with_custom_depth(board_copy.DEPTH_FOR_USER_HINT);
-        var max_gain = best_move_sequence[0].val - board_copy.evaluate_board();
+        var max_gain = best_move_sequence[0].val - board_copy.evaluate_board(AI_TURN);
         
         // find the maximum gain considering AI's move (i.e. find the best move sequence following the user move)
         var best_move_sequence_after_user_move = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT-1);
@@ -1290,9 +1308,10 @@ class Board {
         board_copy.is_ai_red = !board_copy.is_ai_red;
 
 
-        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board(); // evaluate wrt. the AI
+        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board(AI_TURN); // evaluate wrt. the AI
         max_gain_after_user_move = (-1) * max_gain_after_user_move; // evaluate wrt. the User
 
+        console.log("User gain: " + max_gain_after_user_move + ", Max Gain: ", max_gain);
         if (max_gain > max_gain_after_user_move) {
             this.mistakes.push({'move': move, 'board': board_copy.board, 'gain_lost': max_gain-max_gain_after_user_move});
             console.log("======================");
@@ -1408,7 +1427,7 @@ function get_path(from_row, from_col, captures_array, captures_index) {
 function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
     
     if (depth == 0 || board.is_game_finished(maximizer)) 
-        return board.evaluate_board();
+        return board.evaluate_board(maximizer);
 
     if (maximizer) {
         var max_val = Number.NEGATIVE_INFINITY;

@@ -40,11 +40,11 @@
 		board.board[3][8] = 0;
 		
 		board.board[8][7] =0;
-		board.board[3][6] =1;
-		board.board[5][8] =1;
-		board.board[6][7] =0;
-		board.board[1][2] =1;
-		board.board[1][4] =1;
+		// board.board[3][6] =1;
+		// board.board[5][8] =1;
+		// board.board[6][7] =0;
+		// board.board[1][2] =1;
+		// board.board[1][4] =1;
 
 		//board.board[5][4] = -1;
 		
@@ -312,9 +312,8 @@ function clickable() {
 				
 				hideCapturedPiece(temp_captures);
 				render_board(board);
-				// board.user_moved(move,newBoard.board);
+				board.user_moved(move,newBoard.board);
 
-				// TODO: user_moved is not called before stopping the game
 				if (board.is_game_finished_after_making_move(ai_turn)) {
 					displayMessage(AFTER_MAKING_MOVE); 
 					return;
@@ -343,10 +342,6 @@ function displayMessage(after_making_move) {
 	if (after_making_move && board.is_game_finished_after_making_move(ai_turn)) {
 		syncWait(100);
 		var text = "";
-
-
-		console.log(ai_turn);
-		console.log(board.has_drawn(), (ai_turn && (board.opponent_has_no_move() || board.opponent_has_no_piece())), (!ai_turn && (board.has_no_move() || board.has_no_piece())));
 		
 		if (board.has_drawn()) {
 			// TODO: draw game
