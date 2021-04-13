@@ -2,6 +2,11 @@ const WIN_GAIN = 100;
 const LOSE_GAIN = (-1) * WIN_GAIN;
 const DRAW_GAIN = 0;
 const AI_TURN = true;
+const FOR_SINGLE_PIECE = true;
+const DUMMY_ROW = 0;
+const DUMMY_COL = 0;
+const ONLY_BEST = true;
+const USE_CUSTOM_MAX_DEPTH = true;
 
 class Board {
     constructor(is_red_top, is_ai_red) {
@@ -829,40 +834,6 @@ class Board {
             
     }
 
-    // has_won() {
-    //     // There is no opponent piece
-    //     if ((this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0))
-    //         return true;
-
-    //     // opponent has no move
-    //     // if (this.opponent_has_no_move())
-    //     //     return true;  // TODO: confirm this is according to rule
-
-    //     return false;
-    //     // TODO: check if there is more ways to win
-    // }
-
-    // has_opponent_won() {
-    //     // There is no opponent piece
-    //     if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
-    //         return true;
-        
-    //     return false;
-    // }
-
-    // has_lost() {
-    //     // There is no opponent piece
-    //     if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
-    //         return true;
-
-    //     // there is no move for the player
-    //     if (this.has_no_move()) 
-    //         return true; // TODO: confirm this is according to rule
-
-    //     return false;
-    //     // TODO: check if there is more ways to lose
-    // }
-
     has_drawn() {
         // TODO: Add Conditions
         return false;
@@ -935,11 +906,22 @@ class Board {
     }
 
     show_move_sequence_with_max_gain_with_custom_depth(depth) {
-        var move = this.show_max_gain_util();
-        var move_sequence = this.show_gains_of_piece_with_custom_depth_util(move.from_row, move.from_col, depth, true);
-        move = null;
+        /*
+            Returns the move sequence with maximum gain
+        */
+        var gains = this.show_gains_of_pieces(this, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, !FOR_SINGLE_PIECE, DUMMY_ROW, DUMMY_COL, ONLY_BEST, USE_CUSTOM_MAX_DEPTH, depth);
+        var max_gain_move_sequence;
+        var max_gain = Number.NEGATIVE_INFINITY;
 
-        return move_sequence[0];
+        for (var i = 0; i < gains.length; i++) {
+            var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
+            if (gain > max_gain) {
+                max_gain_move_sequence = gains[i];
+                max_gain = gain;
+            }
+        }
+        
+        return max_gain_move_sequence;
     }
 
     show_max_gain_util() {
@@ -1452,19 +1434,17 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
 
                 if (val > max_val) {
                     max_val = val;
-                    best_move.from_row = move['from_row'];
-                    best_move.from_col = move['from_col'];
-                    best_move.to_row = move['to_row'];
-                    best_move.to_col = move['to_col'];
-                    best_move.captures = move['captures'];
+                    best_move = JSON.parse(JSON.stringify(move));
                 }
 
-                if (val == max_val && move.captures.length > best_move.captures.length) {
-                    best_move.from_row = move['from_row'];
-                    best_move.from_col = move['from_col'];
-                    best_move.to_row = move['to_row'];
-                    best_move.to_col = move['to_col'];
-                    best_move.captures = move['captures'];
+                if (val == max_val && move.captures.length > best_move.captures.length)
+                    best_move = JSON.parse(JSON.stringify(move));
+
+                if (val == max_val && move.captures.length == best_move.captures.length) {
+                    var toss = Math.round(Math.random());
+                    if (toss == 1) {
+                        best_move = JSON.parse(JSON.stringify(move));
+                    }
                 }
 
                 board_copy = null;
