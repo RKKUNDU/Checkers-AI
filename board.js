@@ -101,7 +101,7 @@ class Board {
     }
 
     heuristic_function(my_pieces, my_king_pieces, my_corner_pieces, opp_pieces, opp_king_pieces, opp_corner_pieces) {
-        // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
+        // default: 1; Possible heuristics: {1, 2, 3, 4, 5, 6, 7}
 
         if (this.heuristic == 1)
             return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2 * (my_king_pieces - opp_king_pieces);
@@ -811,53 +811,64 @@ class Board {
             
     }
 
-    has_won() {
-        // There is no opponent piece
-        if ((this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0))
-            return true;
+    // has_won() {
+    //     // There is no opponent piece
+    //     if ((this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0))
+    //         return true;
 
-        // opponent has no move
-        // if (this.opponent_has_no_move())
-        //     return true;  // TODO: confirm this is according to rule
+    //     // opponent has no move
+    //     // if (this.opponent_has_no_move())
+    //     //     return true;  // TODO: confirm this is according to rule
 
-        return false;
-        // TODO: check if there is more ways to win
-    }
+    //     return false;
+    //     // TODO: check if there is more ways to win
+    // }
 
-    has_opponent_won() {
-        // There is no opponent piece
-        if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
-            return true;
+    // has_opponent_won() {
+    //     // There is no opponent piece
+    //     if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
+    //         return true;
         
-        return false;
-    }
+    //     return false;
+    // }
 
-    has_lost() {
-        // There is no opponent piece
-        if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
-            return true;
+    // has_lost() {
+    //     // There is no opponent piece
+    //     if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
+    //         return true;
 
-        // there is no move for the player
-        if (this.has_no_move()) 
-            return true; // TODO: confirm this is according to rule
+    //     // there is no move for the player
+    //     if (this.has_no_move()) 
+    //         return true; // TODO: confirm this is according to rule
 
-        return false;
-        // TODO: check if there is more ways to lose
-    }
+    //     return false;
+    //     // TODO: check if there is more ways to lose
+    // }
 
     has_drawn() {
-        // TODO: check rules
+        // TODO: Add Conditions
         return false;
+    }
+
+    has_no_piece() {
+        return (this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0);
+    }
+
+    opponent_has_no_piece() {
+        return (this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0);
     }
 
     is_game_finished(ai_turn) {
-        // TODO: Check game finish conditions
-        return this.has_drawn() || (ai_turn && (this.has_won() || this.has_no_move()) || (!ai_turn && (this.has_opponent_won() || this.opponent_has_no_move())));
+        return this.has_drawn() || (ai_turn && (this.has_no_piece() || this.has_no_move()) || (!ai_turn && (this.opponent_has_no_piece() || this.opponent_has_no_move())));
+    }
+
+    is_game_finished_after_making_move(ai_turn) {
+        return this.has_drawn() || (ai_turn && (this.opponent_has_no_move() || this.opponent_has_no_piece())) || (!ai_turn && (this.has_no_move() || this.has_no_piece()));
     }
 
     copyOf(obj) {
         /*
-            Create copy of this object to `obj`
+            Create copy of `this` board object to `obj`
         */
         for (var i = 1; i <= 8; i++)
             for (var j = 1; j <= 8; j++) 

@@ -1,25 +1,30 @@
 	function handle_ai_turn()
 	{
-		//console.log("understanding_mode");
-		//console.log("AutoAI");
-		if(understanding_mode && !AutoAI)
-		{
+		if(board.is_game_finished(ai_turn)) {
+			displayMessage(BEFORE_MAKING_MOVE);
+			return;
+		}
+		
+		if(understanding_mode && !AutoAI) {
 			console.log("press AI-move button to proceed");
 			showPoints();
-		}
-		else
-		{
+		} else {
 			console.log("AI's turn");
 			blacksMove = alpha_beta(board, board.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY,true, true);
 			AImove(blacksMove);
+
+			ai_turn = true; // FIXME: ai_turn was becoming false . So this hack
+			if (board.is_game_finished_after_making_move(ai_turn)) {
+				displayMessage(AFTER_MAKING_MOVE); 
+				return;
+			}
+			
 			ai_turn = false;
-			//this display Message might be important
-			//displayMessage();
 			
 			$("#RedTurn").css("opacity","1.0");
 			$("#BlackTurn").css("opacity","0.5");
-
 		}
+
 		ai_turn = false;
 	}
 	function MakeAIMove()
@@ -117,7 +122,7 @@
 		}
 		else
 		{
-			ai_turn = false;
+			ai_turn = false;  // FIXME: this should not be present?
 			//setTimeout(() => {  displayMessage(); }, 1000);
 		}
 		return captures;
