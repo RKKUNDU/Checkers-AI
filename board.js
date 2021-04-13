@@ -7,6 +7,7 @@ const DUMMY_ROW = 0;
 const DUMMY_COL = 0;
 const ONLY_BEST = true;
 const USE_CUSTOM_MAX_DEPTH = true;
+const THRESHOLD_NO_OF_MOVES_FOR_DRAW = 20;
 
 class Board {
     constructor(is_red_top, is_ai_red) {
@@ -34,6 +35,7 @@ class Board {
         this.DEPTH_FOR_USER_HINT = 4;
         this.mistakes = new Array(); // store only 5 top mistakes
         this.prev_boards = new Array(); // store only 5 previous board states
+        this.no_of_moves_since_both_have_only_one_king_piece = 0;
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -765,7 +767,6 @@ class Board {
 
                 }
             }
-            // TODO: check rules for king pieces
         }
         return moves_lst;
     }
@@ -797,7 +798,7 @@ class Board {
         //                    b x b
         //                      .
         if (!(from_col == to_col && from_row == to_row))
-        this.board[from_row][from_col] = 0;
+            this.board[from_row][from_col] = 0;
 
         for (var i=0; i < captures.length; i++) {
             var row = captures[i][0];
@@ -832,10 +833,25 @@ class Board {
         if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 1)
             this.board[to_row][to_col] = 2; // red king piece
             
+        // keeping count for draw condition
+        if (this.both_have_only_one_king_piece()) {
+            this.no_of_moves_since_both_have_only_one_king_piece++;
+        }
+
+        // just for sanity
+        if (!this.both_have_only_one_king_piece() && this.no_of_moves_since_both_have_only_one_king_piece > 0)
+            this.no_of_moves_since_both_have_only_one_king_piece = 0;
+        
     }
 
+    both_have_only_one_king_piece() {
+        return this.count_black_pieces() == 1 && this.count_black_king_pieces() == 1 && this.count_red_pieces() == 1 && this.count_red_king_pieces() == 1;
+    }
+ 
     has_drawn() {
-        // TODO: Add Conditions
+        if (this.both_have_only_one_king_piece() && this.no_of_moves_since_both_have_only_one_king_piece > THRESHOLD_NO_OF_MOVES_FOR_DRAW)
+            return true;
+
         return false;
     }
 
@@ -874,7 +890,8 @@ class Board {
         obj.MAX_DEPTH = this.MAX_DEPTH;
         obj.heuristic = this.heuristic;
         obj.DEPTH_FOR_USER_HINT = this.DEPTH_FOR_USER_HINT;
-        
+        obj.no_of_moves_since_both_have_only_one_king_piece = this.no_of_moves_since_both_have_only_one_king_piece;
+
         return obj;
     }
 
@@ -912,6 +929,11 @@ class Board {
         var gains = this.show_gains_of_pieces(this, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, !FOR_SINGLE_PIECE, DUMMY_ROW, DUMMY_COL, ONLY_BEST, USE_CUSTOM_MAX_DEPTH, depth);
         var max_gain_move_sequence;
         var max_gain = Number.NEGATIVE_INFINITY;
+
+        // Since, `gains` can be an array not (array of array) due to the base condition
+        if (!Array.isArray(gains[0])) {
+            return gains;
+        }
 
         for (var i = 0; i < gains.length; i++) {
             var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
@@ -1282,13 +1304,12 @@ class Board {
         // find the maximum gain if the user had not made the move
         var best_move_sequence = board_copy.show_move_sequence_with_max_gain_with_custom_depth(board_copy.DEPTH_FOR_USER_HINT);
         var max_gain = best_move_sequence[0].val - board_copy.evaluate_board(AI_TURN);
-        
+
         // find the maximum gain considering AI's move (i.e. find the best move sequence following the user move)
         var best_move_sequence_after_user_move = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT-1);
 
         // revert back the USER from AI
         board_copy.is_ai_red = !board_copy.is_ai_red;
-
 
         var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board(AI_TURN); // evaluate wrt. the AI
         max_gain_after_user_move = (-1) * max_gain_after_user_move; // evaluate wrt. the User
@@ -1399,8 +1420,6 @@ function get_path(from_row, from_col, captures_array, captures_index) {
     else if ((from_row - 1) == row && (from_col - 1) == col)
         next_cell = [from_row - 2, from_col - 2];
     
-    // FIXME: sometimes next_cell is undefined
-
     var arr = get_path(next_cell[0], next_cell[1], captures_array, captures_index - 1);
     return [next_cell].concat(arr);
 }

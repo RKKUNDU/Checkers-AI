@@ -343,10 +343,9 @@ function displayMessage(after_making_move) {
 		syncWait(100);
 		var text = "";
 		
-		if (board.has_drawn()) {
-			// TODO: draw game
+		if (board.has_drawn())
 			text = "Game Drawn!";
-		} else {
+		else {
 			if (ai_turn)
 				text = "AI Won!";
 			else 
@@ -361,12 +360,11 @@ function displayMessage(after_making_move) {
 		syncWait(100);
 
 		var text = "";
-		if (board.has_drawn()) {
-			// TODO: draw game
-			text = "Game Drawn!"
-		} else if (ai_turn && board.has_no_move()) { // board.has_no_piece() will never arise
+		if (board.has_drawn()) 
+			text = "Game Drawn!";
+		else if (ai_turn && board.has_no_move()) // board.has_no_piece() will never arise
 			text = "You Won!";
-		} else if (!ai_turn && board.opponent_has_no_move()) // board.opponent_has_no_piece() will never arise
+		else if (!ai_turn && board.opponent_has_no_move()) // board.opponent_has_no_piece() will never arise
 		  	text = "AI Won!";
 	
 		console.log(text + " before making move");
