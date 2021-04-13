@@ -286,16 +286,7 @@ function clickable() {
 			var prev_j = prevClick.id%10;
 			var move = {from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:0};
 				
-			if (board.is_red_piece(curr_i, curr_j)) {
-				hidePrevPossibleMove(prevPossibleMove);
-				render_board(board);
-				
-				currentCapturesAndMoves = board.get_moves_of_piece(curr_i, curr_j);
-				PossibleMove = decodeMoves(currentCapturesAndMoves);
-			
-				displaypossibleMove(PossibleMove);
-				render_board(board);
-			} else if(PossibleMove.includes( parseInt(this.id,10))) {
+			if(PossibleMove.includes( parseInt(this.id,10))) {
 				var temp_captures=[];
 				for (var i = 0; i < currentCapturesAndMoves.length; i++) {
 					if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) {
@@ -307,6 +298,7 @@ function clickable() {
 				hidePrevPossibleMove(prevPossibleMove);
 				move = {from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:temp_captures};
 				
+				PossibleMove = [];
 				newBoard.reset_board(board.board);
 				board.make_move(move);
 				
@@ -322,6 +314,15 @@ function clickable() {
 				ai_turn = true;
 				// setTimeout(() => {  handle_ai_turn(); board.user_moved(move,newBoard.board);},1000);
 				setTimeout(() => {  handle_ai_turn();},1000);
+			} else if (board.is_red_piece(curr_i, curr_j)) {
+				hidePrevPossibleMove(prevPossibleMove);
+				render_board(board);
+				
+				currentCapturesAndMoves = board.get_moves_of_piece(curr_i, curr_j);
+				PossibleMove = decodeMoves(currentCapturesAndMoves);
+			
+				displaypossibleMove(PossibleMove);
+				render_board(board);
 			} else if (!board.is_red_piece(curr_i,curr_j)) {
 				hidePrevPossibleMove(prevPossibleMove);
 				render_board(board);
