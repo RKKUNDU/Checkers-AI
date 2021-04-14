@@ -290,8 +290,8 @@ function clickable() {
 				var temp_captures=[];
 				for (var i = 0; i < currentCapturesAndMoves.length; i++) {
 					if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) {
-						temp_captures = currentCapturesAndMoves[i].captures;
-						break;
+						if (temp_captures.length < currentCapturesAndMoves[i].captures.length)
+							temp_captures = currentCapturesAndMoves[i].captures;
 					}
 				}
 				
@@ -326,6 +326,7 @@ function clickable() {
 			} else if (!board.is_red_piece(curr_i,curr_j)) {
 				hidePrevPossibleMove(prevPossibleMove);
 				render_board(board);
+				PossibleMove = [];
 			}
 			
 			if(ai_turn) {	
