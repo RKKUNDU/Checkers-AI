@@ -57,11 +57,18 @@ function hideTable(id1) {
 }
 function hidePlay(id) {
 	document.getElementById(id).disabled = false;
+	document.body.style.background = "#494440";
+	document.body.style.overflow = "visible";
+	// TODO: More changes required because of tree visualization
 }
 
 function hideUnderstand(id) {
 	document.getElementById(id).disabled = false;
 	understanding_mode = false;
+	document.body.style.background = "#494440 url('bg5.jpg') repeat cover";
+	document.body.style.height = "100%";
+	document.body.style.overflow = "hidden";
+	// TODO: More changes required because of tree visualization (also for Learn Mode)
 }
 
 function disableModes(id1, id2, id3) {
