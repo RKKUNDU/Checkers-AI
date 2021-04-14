@@ -41,7 +41,7 @@
 					<option value="Hard" id="Hard" >Hard</option>
 				</select>
 
-				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
+				<button class="button button1" id="Play_p" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
 				<button class="button button1" id="stop" onclick="GameStopped();disableModes('play','understand','learn')"> Quit</button>
 				<button class="button button1" id="showRules" onclick="showRules('sec3_play','showRules')">Display Rules</button>
 				<button class="button button1" id="showHint" onclick="showHint()">Show Hint</button>
@@ -67,34 +67,26 @@
 					<option value="Medium" id="Medium" >Medium</option>
 					<option value="Hard" id="Hard" >Hard</option>
 				</select>
-				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
+				<button class="button button1" id="Play_u" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
 				
-				<form class="modes">
-					
-					<label class="container">
-						<input type="checkbox" id="AIvsAI" onclick="disableAImoveBtnAA(this,'AIMove');showAIBlueBtn(this);">AI-vs-AI 
-						<span class="checkmark"></span>
-					</label><br>
-					
-					<!--input type="radio" id="AI-vs-AI" name="mode" value="AIWithAI" onclick="showAA('AA');hideHA('HA');">
-					<label for="play">AI-vs-AI</label><br>
-					
-					<--input type="radio" id="Human-vs-AI" name="mode" value="HumanWithAI" onclick="showHA('HA');hideAA('AA');">
-					<--label for="understand">Human-vs-AI</label-->
-
-				</form>	
+				
 
 				
 				<button class="button button1 box1" id="RedAIMove"  onclick = "changeAItoRed();MakeAIMove();">AI(R)-Move</button>
 
 					
-				<button class="button button1" id="AIMove" onclick = "changeAItoBlue();MakeAIMove();">AI-Move</button>
+				<button class="button button1" id="AIMove" onclick = "changeAItoBlue();MakeAIMove();">AI(B)-Move</button>
 
 				<form class="modes">
+					
 					<label class="container">
 						<input type="checkbox" id="AIAutoMove" onclick="disableAImoveBtn(this)">AI-AutoMove
 						<span class="checkmark"></span>
 					</label><br>
+					<label class="container">
+						<input type="checkbox" id="AIvsAI" onclick="disableAImoveBtnAA(this);showAIBlueBtn(this);">AI-vs-AI 
+						<span class="checkmark"></span>
+					</label><br>	
 					<label class="container">
 						<input type="checkbox" onclick="cellVisibility(this)">Show Cell IDs
 						<span class="checkmark"></span>
@@ -223,20 +215,21 @@
 			</div>
 		</div>
 
-		<!-- Modal class for Move Sequences (Understanding Mode)-->
-		<div id="modalMoveSeq" class="modal">
+
+		<!-- Modal class for showing hints-->
+		<div id="myModal" class="modal">
 
 			<!-- Modal content -->
 			<div class="modal-content">
 				<div class="modal-header">
 					<span class="close">&times;</span>
 					
-					<button class="button button1" id="closeMoveSeq" onclick="closeModalMoveSeq()">Close</button>
-					<button class="button button1" id="prevMoveOfSeq" onclick="prevMoveOfSeq()">Prev Move</button>
-					<button class="button button1" id="nextMoveOfSeq" onclick="nextMoveOfSeq()">Next Move</button>
-					<button class="button button1" id="reviewMoveSeq" onclick="reviewMoveSeq()">Review</button>
+					<button class="button button1" id="closeModal" onclick="closeModal()">Close</button>
+					<!-- <button class="button button1" id="prevHint" onclick="prevHintMove()">Prev Move</button> -->
+					<button class="button button1" id="nextHint" onclick="nextHintMove()">Next Move</button>
+					<button class="button button1" id="reviewHints" onclick="reviewHints()">Review</button>
 				</div>
-				<div class="modal-body" id="modalBodyMoveSeq">
+				<div class="modal-body" id="modalBody">
 
 				</div>
 				
@@ -247,7 +240,6 @@
 			</div>
 
 		</div>
-
 
 		<!-- This modal will display "win Message"-->
 		<div id="winMessageModal" class="winModal">
@@ -265,11 +257,10 @@
 					<span class="close">&times;</span>
 					<div id="mistake_id">Analyze Your Mistakes</div>
 					<button class="button button1" id="closeAnalyse" onclick="closeAnalyseModal()">Close</button>
-					<button class="button button1" id="prev_move" onclick="prevMoveFromAnalysis()">Prev Move</button> 
-					<button class="button button1" id="next_move" onclick="nextMoveFromAnalysis()">Next Move</button> 
-					<button class="button button1" id="review_mistake" onclick="reviewMistake()">Review</button>
-					<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev Mistake</button>
+					<!--<button class="button button1" id="prev_mistake" onclick="prevMistake()">Prev</button>-->
 					<button class="button button1" id="next_mistake" onclick="nextMistake()">Next Mistake</button>
+					<button class="button button1" id="best_move" onclick="bestMove()">Move Sequence</button> 
+					<button class="button button1" id="review_mistake" onclick="reviewMistakes()">Review</button>
 				</div>
 
 				<div class="modal-body" id="analyseBody">

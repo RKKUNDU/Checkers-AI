@@ -9,43 +9,42 @@
 		var capture=[];
 		var move =[];
 		var AutoAI = false;
+		var AIvsAI = false;
 		var understanding_mode = false;
 		var startGame = false;
 		var quitGame = false;
-		const BEFORE_MAKING_MOVE = false;
-		const AFTER_MAKING_MOVE = true;
 
 		var board =  new Board(true, false);
 		var newBoard = new Board(true, false);
-		
-		
+		/*
+		board.board[3][2] = 0;
 		board.board[4][3] = 1;
 		board.board[5][4] = -1;
 		board.board[6][5] = 0;
 		board.board[7][6] = -1;
-
 		board.board[1][2] = 0;
 		board.board[1][4] = 0;
 		board.board[1][6] = 0;
 		board.board[1][8] = 0;
-		
 		board.board[2][1] = 0;
 		board.board[2][3] = 0;
 		board.board[2][5] = 0;
 		board.board[2][7] = 0;
-		
-		board.board[3][2] = 0;
 		board.board[3][4] = 0;
 		board.board[3][6] = 0;
 		board.board[3][8] = 0;
-		
-		board.board[8][7] =0;
-		// board.board[3][6] =1;
-		// board.board[5][8] =1;
-		// board.board[6][7] =0;
-		// board.board[1][2] =1;
-		// board.board[1][4] =1;
-
+		/*
+		board.board[6][1] = 0;
+		board.board[6][3] = 1;
+		board.board[7][4] = -1;
+		board.board[7][2] = 0;
+		board.board[7][6] = -1;
+		board.board[7][8] = 0;
+		board.board[8][1] = 0;
+		board.board[8][3] = 0;
+		board.board[8][5] = 0;
+		board.board[8][7] = 0;
+		*/
 		//board.board[5][4] = -1;
 		
 		
@@ -253,128 +252,314 @@
 				}
 			};
 			
-function clickable() {
-	// ai_turn=false implies its user's turn
-
-	if(board.is_game_finished(ai_turn)) {
-		displayMessage(BEFORE_MAKING_MOVE);
-		return;
-	} else if(startGame && !ai_turn) {	
-		
-		prevPossibleMove =0;
-		
-		if(thisClick == 0)
-		{	
-			thisClick= this;
-			var i = Math.floor(thisClick.id / 10);
-			var j = thisClick.id%10;
-
-			if (board.is_red_piece(i, j)) {
-				currentCapturesAndMoves = board.get_moves_of_piece(i, j);
-				PossibleMove = decodeMoves(currentCapturesAndMoves);
+			function clickable()
+			{
 				
-				displaypossibleMove(PossibleMove);
-				render_board(board);
-			} 
-		} else {
-			prevClick = thisClick;
-			prevPossibleMove = currentCapturesAndMoves;
-			thisClick = this;
-			var curr_i = Math.floor(thisClick.id / 10);
-			var curr_j = thisClick.id%10;
-			var prev_i = Math.floor(prevClick.id / 10);
-			var prev_j = prevClick.id%10;
-			var move = {from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:0};
-				
-			if(PossibleMove.includes( parseInt(this.id,10))) {
-				var temp_captures=[];
-				for (var i = 0; i < currentCapturesAndMoves.length; i++) {
-					if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) {
-						if (temp_captures.length < currentCapturesAndMoves[i].captures.length)
-							temp_captures = currentCapturesAndMoves[i].captures;
+				//!ai_turn implies its black turn
+				//console.log("++++++++++++++\n")
+				//console.log(board.is_game_finished());
+				console.log("++++++++++++++\n")
+				if(board.is_game_finished())
+				{
+					displayMessage();
+				}
+				if(startGame && !ai_turn)
+				{	
+					
+					prevPossibleMove =0;
+					
+					if(thisClick == 0)
+					{	
+						
+						console.log("its User Turn")
+						thisClick= this;
+						var i = Math.floor(thisClick.id / 10);
+						var j = thisClick.id%10;
+						//currentpossibleMove = board.get_moves_of_piece(i, j);
+
+						if (board.board[i][j] == 1)
+						{
+							//currentpossibleMove = board.get_moves_of_piece(i, j);
+							currentCapturesAndMoves = board.get_moves_of_piece(i, j);
+							PossibleMove = decodeMoves(currentCapturesAndMoves);
+							
+							displaypossibleMove(PossibleMove);
+							render_board(board);
+							//console.log("red-1");
+
+						}
+						else if(board.board[i][j] == 2)
+						{
+							
+							//currentpossibleMove = board.get_moves_of_piece(i, j);
+							currentCapturesAndMoves = board.get_moves_of_piece(i, j);
+							PossibleMove = decodeMoves(currentCapturesAndMoves);
+							
+							displaypossibleMove(PossibleMove);
+							render_board(board);							
+							//displayMessage();
+							//console.log("redKingPiece-1");
+
+						}	 
+
+						else if (board.board[i][j] == -1) 
+						{
+							
+							
+							console.log("black when red-1");
+						}
+						else if( board.board[i][j] == -2)
+						{
+							
+							console.log("blackKing when red-1");
+						}
+						else if (board.board[i][j] == 0)
+						{
+							
+							console.log("noPiece when red-1");
+						}
+						else
+						{
+							
+							console.log("blankPiece-1");
+						}
+
+					}	
+
+					
+					else
+					{
+						//prevPossibleMove =0;
+						//currentpossibleMove=0;
+						//console.log("else_Start*********");
+						prevClick = thisClick;
+						prevPossibleMove = currentCapturesAndMoves;
+						thisClick = this;
+						var curr_i = Math.floor(thisClick.id / 10);
+						var curr_j = thisClick.id%10;
+						var prev_i = Math.floor(prevClick.id / 10);
+						var prev_j = prevClick.id%10;
+						move ={from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:0};
+						is_even = (curr_i + curr_j)%2;
+
+							
+							
+							
+							if (board.board[curr_i][curr_j] == 1)
+							{
+							
+								//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+								//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+
+								hidePrevPossibleMove(prevPossibleMove);
+								render_board(board);
+								//board.print_board();
+								//currentpossibleMove = board.get_moves_of_piece(curr_i, curr_j);
+								currentCapturesAndMoves = board.get_moves_of_piece(curr_i, curr_j);
+								PossibleMove = decodeMoves(currentCapturesAndMoves);
+							
+								displaypossibleMove(PossibleMove);
+
+								render_board(board);
+								//displayMessage();
+								console.log("redPiece-2");
+
+							}
+							
+							else if(board.board[curr_i][curr_j] == 2)
+							{
+								//console.log("redKingPiece-2");
+								//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+								//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+
+								hidePrevPossibleMove(prevPossibleMove);
+								render_board(board);
+								
+								//currentpossibleMove = board.get_moves_of_piece(curr_i, curr_j);
+								currentCapturesAndMoves = board.get_moves_of_piece(curr_i, curr_j);
+								PossibleMove = decodeMoves(currentCapturesAndMoves);
+							
+								displaypossibleMove(PossibleMove);
+
+								render_board(board);
+								//displayMessage();
+							
+
+							}	 
+							else if(PossibleMove.includes( parseInt(this.id,10)))
+							{
+							
+								//console.log("#######242#######\n\n");
+								//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+								//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+								var temp_captures=[];
+								for (var i = 0; i < currentCapturesAndMoves.length; i++)
+								{
+									if (currentCapturesAndMoves[i]['to_row'] == curr_i && currentCapturesAndMoves[i]['to_col'] == curr_j) 
+									{
+										temp_captures = currentCapturesAndMoves[i].captures;
+									}
+								}
+									
+								//hideMoves(currentPossibleMoves);
+								//makeMove(this.id, prevClick.id, currentCapturesAndMoves);
+								
+								hidePrevPossibleMove(prevPossibleMove);
+								move ={from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:temp_captures};
+								
+								newBoard.reset_board(board.board);
+								//console.log(newBoard.board);
+								board.make_move(move);
+								board.user_moved(move,newBoard.board);
+								//console.log("after make_move");
+								//console.log(newBoard.board);
+								
+								/*
+								if(curr_i == 8 && board.board[prev_i][prev_j] == 1)
+								{
+									board.board[curr_i][curr_j]=2;
+									board.board[prev_i][prev_j] = 0;
+								}	
+
+								else if(curr_i!=prev_i && curr_j != prev_j)
+								{
+									//possibility of bug
+									if(board.board[prev_i][prev_j] == 2)
+									{
+										board.board[curr_i][curr_j] = 2;
+										board.board[prev_i][prev_j] = 0;
+									}
+									if(board.board[prev_i][prev_j] == 1)
+									{
+										board.board[curr_i][curr_j] = 1;
+										board.board[prev_i][prev_j] = 0;
+
+									}
+
+								}
+							
+								*/
+								hideCapturedPiece(temp_captures);
+							
+								render_board(board);
+								
+								if(PossibleMove.includes( parseInt(this.id,10)))	
+								{	
+
+									//console.log("#######241#######\n\n");
+									//console.log("!!!!!prevClick!!!!!! "+prevClick.id);
+									//console.log("!!!!!thisClick!!!!!!"+thisClick.id);
+									render_board(board);
+									ai_turn = true;
+								
+
+										//console.log("helo");
+										
+										setTimeout(() => {  handle_ai_turn(); }, 1000);
+										//ai_turn = true; 
+										//console.log("Hiii")
+										
+
+										//setTimeout(() => {  handle_ai_turn(); }, 1000);
+									
+								}
+								else
+									ai_turn = false;
+							}	 
+
+							else if (board.board[curr_i][curr_j] == -1) 
+							{
+								//console.log("black when red-2");
+								if(prevPossibleMove != currentCapturesAndMoves)
+								{
+									hidePrevPossibleMove(prevPossibleMove);
+									render_board(board);
+								}
+
+							}
+							else if( board.board[curr_i][curr_j] == -2)
+							{
+								//console.log("blackKing when red-2");
+
+								if(prevPossibleMove != currentCapturesAndMoves)
+								{
+									hidePrevPossibleMove(prevPossibleMove);
+									render_board(board);
+								}
+
+							}
+							else if (board.board[curr_i][curr_j] == 0)
+							{
+								//console.log("noPiece when red-2");
+								if(prevPossibleMove != currentCapturesAndMoves)
+								{
+									hidePrevPossibleMove(prevPossibleMove);
+									render_board(board);
+								}
+
+							}
+							else if(board.board[curr_i][curr_j] == 3)
+							{
+								//console.log("blankPiece when red-2");
+								if(prevPossibleMove != currentCapturesAndMoves)
+								{
+									hidePrevPossibleMove(prevPossibleMove);
+									render_board(board);
+								}
+
+							}
+
+							if(ai_turn)
+							{	
+								$("#RedTurn").css("opacity",".5");
+								$("#BlackTurn").css("opacity","1.0");
+							}
+
+												
+
 					}
+
 				}
-				
-				hidePrevPossibleMove(prevPossibleMove);
-				move = {from_row:prev_i,from_col:prev_j,to_row:curr_i,to_col:curr_j ,captures:temp_captures};
-				
-				PossibleMove = [];
-				newBoard.reset_board(board.board);
-				board.make_move(move);
-				
-				hideCapturedPiece(temp_captures);
-				render_board(board);
-				board.user_moved(move,newBoard.board);
 
-				if (board.is_game_finished_after_making_move(ai_turn)) {
-					displayMessage(AFTER_MAKING_MOVE); 
-					return;
+				else if(!startGame)
+				{	
+					alert("Press \"Play\" button to start the game ");
+
 				}
-				
-				ai_turn = true;
-				// setTimeout(() => {  handle_ai_turn(); board.user_moved(move,newBoard.board);},1000);
-				setTimeout(() => {  handle_ai_turn();},1000);
-			} else if (board.is_red_piece(curr_i, curr_j)) {
-				hidePrevPossibleMove(prevPossibleMove);
-				render_board(board);
-				
-				currentCapturesAndMoves = board.get_moves_of_piece(curr_i, curr_j);
-				PossibleMove = decodeMoves(currentCapturesAndMoves);
-			
-				displaypossibleMove(PossibleMove);
-				render_board(board);
-			} else if (!board.is_red_piece(curr_i,curr_j)) {
-				hidePrevPossibleMove(prevPossibleMove);
-				render_board(board);
-				PossibleMove = [];
-			}
-			
-			if(ai_turn) {	
-				$("#RedTurn").css("opacity",".5");
-				$("#BlackTurn").css("opacity","1.0");
-			}				
-		}
-	} else if(!startGame) {	
-		alert("Press \"Play\" button to start the game ");
-	}				
-}
 
-function displayMessage(after_making_move) {
+					
+				
+				
+				
+		};		
 
-	if (after_making_move && board.is_game_finished_after_making_move(ai_turn)) {
+function displayMessage()
+{
+	if(board.is_game_finished())
+	{
 		syncWait(100);
-		var text = "";
+		console.log("inside if");
 		
-		if (board.has_drawn())
-			text = "Game Drawn!";
-		else {
-			if (ai_turn)
-				text = "AI Won!";
-			else 
-				text = "You Won!";
+		if(board.has_won())
+		{
+
+			console.log("someone WOn");
+			$("#win").text("AI Won!");
+			var modal = document.getElementById("winMessageModal");
+			//$("#winMessageModal").css("background-color","#40cfc5");
+			modal.style.display = "block";
 		}
-
-		console.log(text + " after making move");
-		$("#win").text(text);
-		var modal = document.getElementById("winMessageModal");
-		modal.style.display = "block";
-	} else if (!after_making_move && board.is_game_finished(ai_turn)) {
-		syncWait(100);
-
-		var text = "";
-		if (board.has_drawn()) 
-			text = "Game Drawn!";
-		else if (ai_turn && board.has_no_move()) // board.has_no_piece() will never arise
-			text = "You Won!";
-		else if (!ai_turn && board.opponent_has_no_move()) // board.opponent_has_no_piece() will never arise
-		  	text = "AI Won!";
-	
-		console.log(text + " before making move");
-		$("#win").text(text);
-		var modal = document.getElementById("winMessageModal");
-		modal.style.display = "block";
+			
+		else if(board.has_lost())
+		{	
+			console.log("You Won");
+			$("#win").text("You Won!");
+			var modal = document.getElementById("winMessageModal");
+			modal.style.display = "block";
+		}
+		
 	}
-}
+};
 
 
 			
