@@ -607,28 +607,67 @@ a{
   position:fixed; 
   z-index: 1; /* Sit on top */
  padding-top: 10px;  /*Location of the box */
-  
+  margin: auto;
   text-align: center;
+   left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 40%; 
-  height: 20%;
+  height: 40%;
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(252, 228, 123, 0.952); /* Black w/ opacity */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
   border-radius: 10px;
-  -webkit-animation-name: animatetop;
+  /*-webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
   animation-name: animatetop;
-  animation-duration: 0.4s 
+  animation-duration: 0.4s */
 }
-#closeAnalyse, #next_mistake,#review_mistake,#best_move{
+#closeAnalyse, #prev_mistake, #next_mistake, #review_mistake, #prev_move, #next_move {
   display:inline-block;
 }
 #win{
-  font-size: 30px;
+  font-size: 50px;
   font-weight: bold;
 }
 #mistake_id{
 font-size: 30px;
   font-weight: bold;
+}
+
+#prevMoveOfSeq, #nextMoveOfSeq, #reviewMoveSeq, #closeMoveSeq {
+  display:inline-block;
+}
+
+.showMoveSequenceButton {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  transition-duration: .4s;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 60px;
+
+  background-color: lightgrey; 
+  color: black; 
+  border: 2px solid black;
+  border-radius: 10px;
+  display: block;
+  padding: 10px;
+  margin-left: 30px;
+}
+
+.showMoveSequenceButton:hover {
+  background-color:black;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  display: block;
+
 }

@@ -1,3 +1,14 @@
+const WIN_GAIN = 100;
+const LOSE_GAIN = (-1) * WIN_GAIN;
+const DRAW_GAIN = 0;
+const AI_TURN = true;
+const FOR_SINGLE_PIECE = true;
+const DUMMY_ROW = 0;
+const DUMMY_COL = 0;
+const ONLY_BEST = true;
+const USE_CUSTOM_MAX_DEPTH = true;
+const THRESHOLD_NO_OF_MOVES_FOR_DRAW = 20;
+
 class Board {
     constructor(is_red_top, is_ai_red) {
         /*
@@ -21,9 +32,10 @@ class Board {
         this.is_ai_red = is_ai_red;
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
         this.MAX_DEPTH = 5;
-        this.DEPTH_FOR_USER_HINT = 6;
+        this.DEPTH_FOR_USER_HINT = 4;
         this.mistakes = new Array(); // store only 5 top mistakes
         this.prev_boards = new Array(); // store only 5 previous board states
+        this.no_of_moves_since_both_have_only_one_king_piece = 0;
 
         for (var i = 0; i < 9; i++) 
             this.board[i] = new Array(9);
@@ -62,6 +74,13 @@ class Board {
         }
     }
 
+    clear_board() {
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++) 
+                if (this.board[i][j] != 3)
+                    this.board[i][j] = 0;
+    } 
+
     print_board() {
         for (var i = 1; i <= 8; i++) {
             var x = "";
@@ -86,19 +105,28 @@ class Board {
         }
     }
 
-    game_finished() {
-        return false;
-    }
+    evaluate_board(ai_turn=true) {
+        var gain = 0;
 
-    evaluate_board() {
+        if (ai_turn && this.has_no_piece())
+            gain = LOSE_GAIN;
+        else if (ai_turn && this.has_no_move())
+            gain = LOSE_GAIN;
+        else if (!ai_turn && this.opponent_has_no_piece())
+            gain = WIN_GAIN;
+        else if (!ai_turn && this.opponent_has_no_move())
+            gain = WIN_GAIN;
+        else if (this.has_drawn()) 
+            gain = DRAW_GAIN;
+
         if (this.is_ai_red) 
-            return this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_black_pieces(), this.count_black_king_pieces());
+            return gain + this.heuristic_function(this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces(), this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces());
         else
-            return this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_red_pieces(), this.count_red_king_pieces());          
+            return gain + this.heuristic_function(this.count_black_pieces(), this.count_black_king_pieces(), this.count_black_corner_pieces(), this.count_red_pieces(), this.count_red_king_pieces(), this.count_red_corner_pieces());          
     }
 
-    heuristic_function(my_pieces, my_king_pieces, opp_pieces, opp_king_pieces) {
-        // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
+    heuristic_function(my_pieces, my_king_pieces, my_corner_pieces, opp_pieces, opp_king_pieces, opp_corner_pieces) {
+        // default: 1; Possible heuristics: {1, 2, 3, 4, 5, 6, 7}
 
         if (this.heuristic == 1)
             return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2 * (my_king_pieces - opp_king_pieces);
@@ -111,9 +139,9 @@ class Board {
         else if (this.heuristic == 5)
             return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1 * (my_king_pieces - opp_king_pieces);
         else if (this.heuristic == 6)
-            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.25 * (my_king_pieces - opp_king_pieces);
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces) + 0.2 * (my_corner_pieces - opp_corner_pieces);
         else if (this.heuristic == 7)
-            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.5 * (my_king_pieces - opp_king_pieces);
+            return (my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces) + 0.4 * (my_corner_pieces - opp_corner_pieces);
         }
 
     count_black_pieces() {
@@ -156,6 +184,26 @@ class Board {
         return cnt;
     }
 
+    count_red_corner_pieces() {
+        var cnt = 0;
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++)
+                if (this.is_corner_piece(i, j) && this.is_red_piece(i, j))
+                    cnt++;
+
+        return cnt;
+    }
+
+    count_black_corner_pieces() {
+        var cnt = 0;
+        for (var i = 1; i <= 8; i++)
+            for (var j = 1; j <= 8; j++)
+                if (this.is_corner_piece(i, j) && this.is_black_piece(i, j))
+                    cnt++;
+
+        return cnt;
+    }
+
     is_king_piece(row, col) {
         if (row < 1 || col < 1 || row > 8 || col > 8)
             return false;
@@ -182,6 +230,13 @@ class Board {
             return false;
 
         return this.is_piece(row, col) && this.board[row][col] < 0;
+    }
+
+    is_corner_piece(row, col) {
+        if (row == 1 || row == 8 || col == 1 || col == 8)
+            return true;
+        
+        return false;
     }
 
     is_empty_cell(row, col) {
@@ -712,7 +767,6 @@ class Board {
 
                 }
             }
-            // TODO: check rules for king pieces
         }
         return moves_lst;
     }
@@ -728,7 +782,6 @@ class Board {
                         captures : Array of Arrays. Each internal array has two elements [row, col] 
 
         */
-        //console.log("Mein chalega/////");
         var from_row = move['from_row'];
         var from_col = move['from_col'];
         var to_row = move['to_row'];
@@ -736,8 +789,16 @@ class Board {
         var captures = move['captures'];
         
         this.board[to_row][to_col] = this.board[from_row][from_col];
-        // Make the cell empty
-        this.board[from_row][from_col] = 0;
+
+        // piece comes back to it's last position due to diamond shape jump
+        // don't make the previous cell (cell from where piece startd move) empty
+        //                      .
+        //                    b x b  
+        //                  R x   x . 
+        //                    b x b
+        //                      .
+        if (!(from_col == to_col && from_row == to_row))
+            this.board[from_row][from_col] = 0;
 
         for (var i=0; i < captures.length; i++) {
             var row = captures[i][0];
@@ -772,44 +833,47 @@ class Board {
         if (!this.is_king_piece(to_row, to_col) && !this.is_red_top && this.is_red_piece(to_row, to_col) && to_row == 1)
             this.board[to_row][to_col] = 2; // red king piece
             
+        // keeping count for draw condition
+        if (this.both_have_only_one_king_piece()) {
+            this.no_of_moves_since_both_have_only_one_king_piece++;
+        }
+
+        // just for sanity
+        if (!this.both_have_only_one_king_piece() && this.no_of_moves_since_both_have_only_one_king_piece > 0)
+            this.no_of_moves_since_both_have_only_one_king_piece = 0;
+        
     }
 
-    has_won() {
-        // There is no opponent piece
-        if ((this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0))
-            return true;
-
-        // opponent has no move
-        if (this.opponent_has_no_move())
-            return true;  // TODO: confirm this is according to rule
-
-        // TODO: check if there is more ways to win
+    both_have_only_one_king_piece() {
+        return this.count_black_pieces() == 1 && this.count_black_king_pieces() == 1 && this.count_red_pieces() == 1 && this.count_red_king_pieces() == 1;
     }
-
-    has_lost() {
-        // There is no opponent piece
-        if ((this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0))
-            return true;
-
-        // there is no move for the player
-        if (this.has_no_move()) 
-            return true; // TODO: confirm this is according to rule
-
-        // TODO: check if there is more ways to lose
-    }
-
+ 
     has_drawn() {
-        // TODO: check rules
+        if (this.both_have_only_one_king_piece() && this.no_of_moves_since_both_have_only_one_king_piece > THRESHOLD_NO_OF_MOVES_FOR_DRAW)
+            return true;
+
         return false;
     }
 
-    is_game_finished() {
-        return this.has_won() || this.has_lost() || this.has_drawn();
+    has_no_piece() {
+        return (this.is_ai_red && this.count_red_pieces() == 0) || (!this.is_ai_red && this.count_black_pieces() == 0);
+    }
+
+    opponent_has_no_piece() {
+        return (this.is_ai_red && this.count_black_pieces() == 0) || (!this.is_ai_red && this.count_red_pieces() == 0);
+    }
+
+    is_game_finished(ai_turn) {
+        return this.has_drawn() || (ai_turn && (this.has_no_piece() || this.has_no_move()) || (!ai_turn && (this.opponent_has_no_piece() || this.opponent_has_no_move())));
+    }
+
+    is_game_finished_after_making_move(ai_turn) {
+        return this.has_drawn() || (ai_turn && (this.opponent_has_no_move() || this.opponent_has_no_piece())) || (!ai_turn && (this.has_no_move() || this.has_no_piece()));
     }
 
     copyOf(obj) {
         /*
-            Create copy of this object to `obj`
+            Create copy of `this` board object to `obj`
         */
         for (var i = 1; i <= 8; i++)
             for (var j = 1; j <= 8; j++) 
@@ -826,7 +890,7 @@ class Board {
         obj.MAX_DEPTH = this.MAX_DEPTH;
         obj.heuristic = this.heuristic;
         obj.DEPTH_FOR_USER_HINT = this.DEPTH_FOR_USER_HINT;
-        
+        obj.no_of_moves_since_both_have_only_one_king_piece = this.no_of_moves_since_both_have_only_one_king_piece;
 
         return obj;
     }
@@ -858,6 +922,30 @@ class Board {
         return best_move_sequence;
     }
 
+    show_move_sequence_with_max_gain_with_custom_depth(depth) {
+        /*
+            Returns the move sequence with maximum gain
+        */
+        var gains = this.show_gains_of_pieces(this, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, !FOR_SINGLE_PIECE, DUMMY_ROW, DUMMY_COL, ONLY_BEST, USE_CUSTOM_MAX_DEPTH, depth);
+        var max_gain_move_sequence;
+        var max_gain = Number.NEGATIVE_INFINITY;
+
+        // Since, `gains` can be an array not (array of array) due to the base condition
+        if (!Array.isArray(gains[0])) {
+            return gains;
+        }
+
+        for (var i = 0; i < gains.length; i++) {
+            var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
+            if (gain > max_gain) {
+                max_gain_move_sequence = gains[i];
+                max_gain = gain;
+            }
+        }
+        
+        return max_gain_move_sequence;
+    }
+
     show_max_gain_util() {
         /*
             Returns the piece with maximum gain
@@ -872,7 +960,7 @@ class Board {
         var max_gain = Number.NEGATIVE_INFINITY;
 
         for (var i = 0; i < gains.length; i++) {
-            var gain = gains[i][0].val - this.evaluate_board(); 
+            var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
             if (gain > max_gain) {
                 max_gain_move = gains[i];
                 max_gain = gain;
@@ -901,7 +989,7 @@ class Board {
         var gains = this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, null, null, true);
         var arr = [];
         for (var i = 0; i < gains.length; i++) {
-            var gain = gains[i][0].val - this.evaluate_board(); 
+            var gain = gains[i][0].val - this.evaluate_board(AI_TURN); 
             var from_row =  gains[i][0].from_row;
             var from_col =  gains[i][0].from_col;
 
@@ -937,7 +1025,29 @@ class Board {
         return this.show_gains_of_pieces(this, this.MAX_DEPTH, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col, only_best);
     }
     
-    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col, only_best) {
+    show_gains_of_piece_with_custom_depth_util(row, col, depth, only_best) {
+        /*
+            Arguments:
+                row : should be present
+                col : should be present
+                depth: should be present
+                only_best (boolean)  : for showing only the best move (with value of gain)
+
+            Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
+            starts from the (row, col)). Each move is a dictionary with following keys:
+                    from_row : int
+                    from_col : int
+                    to_row : int
+                    to_col : int
+                    captures : array of captured cells [row, col]
+                    gain : int
+                    val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
+
+        */
+        return this.show_gains_of_pieces(this, depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, true, row, col, only_best, true, depth);
+    }
+    
+    show_gains_of_pieces(board, depth, alpha, beta, maximizer, for_single_piece, row, col, only_best, use_custom_max_depth, max_depth) {
         // alpha_beta() function reused
         
         /*
@@ -953,13 +1063,10 @@ class Board {
                 row : should be present if for_single_piece is true
                 col : should be present if for_single_piece is true
                 only_best (boolean)  
+                use_custom_max_depth (boolean)
+                max_depth : should be present if use_custom_max_depth is true
 
-            show gains of all the moves of the piece (row, col)      if for_single_piece is true
-            show gains of the best move of all the pieces            if only_best is true
-            show gain of the best move of the piece (row, col)       if for_single_piece and only_best are true            
-            show gains of all the moves of all the pieces            otherwise 
-
-
+            Returns:
             Returns an array of move sequences. Each move sequence is an array of consecutive moves (first move 
             starts from the (row, col)). Each move is a dictionary with following keys:
                     from_row : int
@@ -969,9 +1076,18 @@ class Board {
                     captures : array of captured cells [row, col]
                     gain : int
                     val : board evaluation value after making MAX_DEPTH moves (AI & USER) 
-        */
 
-        if (depth == 0 || board.is_game_finished()) {
+            Description:
+                show gains of all the moves of the piece (row, col)      if for_single_piece is true
+                show gains of the best move of all the pieces            if only_best is true
+                show gain of the best move of the piece (row, col)       if for_single_piece and only_best are true            
+                show gains of all the moves of all the pieces            otherwise 
+                
+                all the moves of a piece?
+                --> if a piece has 3 choices in the "first" move, then 3 move sequence will be returned for that piece
+
+        */
+        if (depth == 0 || board.is_game_finished(maximizer)) {
             // NO MOVE depicted by (-1, -1) to (-1, -1)
             var best_next_move = {};
             best_next_move.from_row = -1;
@@ -980,7 +1096,7 @@ class Board {
             best_next_move.to_col = -1;
             best_next_move.captures = [];
             best_next_move.gain = 0;
-            best_next_move.val = board.evaluate_board();
+            best_next_move.val = board.evaluate_board(maximizer);
             return [best_next_move];
         }
     
@@ -1023,7 +1139,7 @@ class Board {
                     };
                     
                     board_copy.make_move(move);
-                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, false);
+                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, false, false, 0, 0, false, use_custom_max_depth, max_depth);
                     var val = next_move_sequence[0].val;
 
                     this_move.from_row = move['from_row'];
@@ -1031,14 +1147,14 @@ class Board {
                     this_move.to_row = move['to_row'];
                     this_move.to_col = move['to_col'];
                     this_move.captures = move['captures'];
-                    this_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                    this_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                     this_move.val = val;
 
                     var this_move_sequence = [this_move];
                     this_move_sequence = this_move_sequence.concat(next_move_sequence)
 
 
-                    if (depth == board.MAX_DEPTH && !only_best) {
+                    if (((!use_custom_max_depth && depth == board.MAX_DEPTH) || (use_custom_max_depth && depth == max_depth)) && !only_best) {
                         store_gains = store_gains.concat([this_move_sequence]);
                     }
 
@@ -1049,7 +1165,7 @@ class Board {
                         best_move.to_row = move['to_row'];
                         best_move.to_col = move['to_col'];
                         best_move.captures = move['captures'];
-                        best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        best_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                         best_move.val = val;
 
                         best_next_move_sequence = next_move_sequence;
@@ -1062,7 +1178,7 @@ class Board {
                         loop_best_move.to_row = move['to_row'];
                         loop_best_move.to_col = move['to_col'];
                         loop_best_move.captures = move['captures'];
-                        loop_best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        loop_best_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                         loop_best_move.val = val;
 
                         loop_best_next_move_sequence = next_move_sequence;
@@ -1080,7 +1196,7 @@ class Board {
                         break;
                 }
 
-                if (depth == board.MAX_DEPTH && only_best) {
+                if (((!use_custom_max_depth && depth == board.MAX_DEPTH) || (use_custom_max_depth && depth == max_depth)) && only_best) {
                     var best_move_sequence = [loop_best_move];
                     best_move_sequence = best_move_sequence.concat(loop_best_next_move_sequence);
                     store_gains = store_gains.concat([best_move_sequence]);
@@ -1089,12 +1205,11 @@ class Board {
 
             moves = null;
             
-            if (depth != board.MAX_DEPTH) {
+            if (((!use_custom_max_depth && depth != board.MAX_DEPTH) || (use_custom_max_depth && depth != max_depth))) {
                 var best_move_sequence = [best_move];
                 best_move_sequence = best_move_sequence.concat(best_next_move_sequence);
                 return best_move_sequence;
             } else {
-                console.log("this");
                 return store_gains;
             }
 
@@ -1118,7 +1233,7 @@ class Board {
                     };
     
                     board_copy.make_move(move);
-                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, true); 
+                    var next_move_sequence = this.show_gains_of_pieces(board_copy, depth-1, alpha, beta, true, false, 0, 0, false, use_custom_max_depth, max_depth); 
                     var val = next_move_sequence[0].val;
 
                     if (val < min_val) {
@@ -1129,7 +1244,7 @@ class Board {
                         best_move.to_row = move['to_row'];
                         best_move.to_col = move['to_col'];
                         best_move.captures = move['captures'];
-                        best_move.gain = board_copy.evaluate_board() - board.evaluate_board();
+                        best_move.gain = board_copy.evaluate_board(maximizer) - board.evaluate_board(!maximizer);
                         best_move.val = val;
 
                         best_next_move_sequence = next_move_sequence;
@@ -1172,30 +1287,41 @@ class Board {
                 board (arr[9][9]): board state before the user moved
         */
         var board_copy = new Board();
+        this.copyOf(board_copy);
         board_copy.reset_board(board);
+
         // Store previous board states for Undo button
-        
         if (this.prev_boards.length >= 5){
             this.prev_boards.shift();
             this.prev_boards.push(board_copy.board);
         } else{
             this.prev_boards.push(board_copy.board);
         }
-        //console.log(this.board);
         
+        // make the user the AI
+        board_copy.is_ai_red = !board_copy.is_ai_red;
 
         // find the maximum gain if the user had not made the move
-        var best_move_sequence = this.show_gains_of_pieces(board_copy, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
-        var max_gain = best_move_sequence[0].val - board_copy.evaluate_board();
-        
-        // find the maximum gain considering user's move (i.e. find the best move sequence following the user move)
-        this.is_ai_red = !this.is_ai_red;
-        var best_move_sequence_after_user_move = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT-1, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
-        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board();
-        this.is_ai_red = !this.is_ai_red;
+        var best_move_sequence = board_copy.show_move_sequence_with_max_gain_with_custom_depth(board_copy.DEPTH_FOR_USER_HINT);
+        var max_gain = best_move_sequence[0].val - board_copy.evaluate_board(AI_TURN);
 
-        if (max_gain > max_gain_after_user_move)
-            this.mistakes.push({'move': move, 'board': board, 'gain_lost': max_gain-max_gain_after_user_move});
+        // find the maximum gain considering AI's move (i.e. find the best move sequence following the user move)
+        var best_move_sequence_after_user_move = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT-1);
+
+        // revert back the USER from AI
+        board_copy.is_ai_red = !board_copy.is_ai_red;
+
+        var max_gain_after_user_move = best_move_sequence_after_user_move[0].val - board_copy.evaluate_board(AI_TURN); // evaluate wrt. the AI
+        max_gain_after_user_move = (-1) * max_gain_after_user_move; // evaluate wrt. the User
+
+        console.log("User gain: " + max_gain_after_user_move + ", Max Gain: ", max_gain);
+        if (max_gain > max_gain_after_user_move) {
+            this.mistakes.push({'move': move, 'board': board_copy.board, 'gain_lost': max_gain-max_gain_after_user_move});
+            console.log("======================");
+            console.log("Mistakes:")
+            console.log(this.mistakes[this.mistakes.length-1])
+            console.log("======================");
+        }
 
         if (this.mistakes.length > 5) {
             this.mistakes.sort(function(a, b) {return b.gain_lost - a.gain_lost}); // descending order
@@ -1294,16 +1420,15 @@ function get_path(from_row, from_col, captures_array, captures_index) {
     else if ((from_row - 1) == row && (from_col - 1) == col)
         next_cell = [from_row - 2, from_col - 2];
     
-    // FIXME: sometimes next_cell is undefined
-
     var arr = get_path(next_cell[0], next_cell[1], captures_array, captures_index - 1);
     return [next_cell].concat(arr);
 }
 
 
 function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
-    if (depth == 0 || board.is_game_finished())
-        return board.evaluate_board();
+    
+    if (depth == 0 || board.is_game_finished(maximizer)) 
+        return board.evaluate_board(maximizer);
 
     if (maximizer) {
         var max_val = Number.NEGATIVE_INFINITY;
@@ -1328,11 +1453,17 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
 
                 if (val > max_val) {
                     max_val = val;
-                    best_move.from_row = move['from_row'];
-                    best_move.from_col = move['from_col'];
-                    best_move.to_row = move['to_row'];
-                    best_move.to_col = move['to_col'];
-                    best_move.captures = move['captures'];
+                    best_move = JSON.parse(JSON.stringify(move));
+                }
+
+                if (val == max_val && move.captures.length > best_move.captures.length)
+                    best_move = JSON.parse(JSON.stringify(move));
+
+                if (val == max_val && move.captures.length == best_move.captures.length) {
+                    var toss = Math.round(Math.random());
+                    if (toss == 1) {
+                        best_move = JSON.parse(JSON.stringify(move));
+                    }
                 }
 
                 board_copy = null;

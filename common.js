@@ -78,7 +78,7 @@ function hideCapturedPiece(possibleCaptures)
 			{ 
 			
 				ID = possibleCaptures[i][0]*10 + possibleCaptures[i][1];
-				$("#"+ID).fadeOut(500);
+				$("#"+ID).fadeOut(10);
 				$("#"+ID).fadeIn();
 				
 				board.board[(possibleCaptures[i][0])][(possibleCaptures[i][1])]=0;
@@ -112,8 +112,8 @@ function GameStarted()
 {
 	startGame = true;
 
-	$("#Play_U").attr("disabled",true);
-	$("#Play").attr("disabled",true);
+	$("#Play_u").attr("disabled",true);
+	$("#Play_p").attr("disabled",true);
 			//$("#RedTurn").show();
 			$("#BlackTurn").css("opacity","0.5");
 };
