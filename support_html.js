@@ -648,7 +648,7 @@ function nextMistake() {
 	modal1.style.display = "block";
 	
 	mistakeIndex++;
-
+	$("#mistake_id").text("Analyze mistake "+(mistakeIndex+1));
 	$("#review_mistake").prop("disabled", true);
 	$("#prev_move").prop("disabled", true);
 	$("#next_move").prop("disabled", false);
@@ -697,12 +697,19 @@ function nextMistake() {
 
 function resetCell(from_id, to_id, best_id) {
 	$("#" + from_id).css("background", "black");
+	// $("#" + to_id).css("border-color", "black");
 	// $("#" + to_id).css("background", "black");
 	// $("#" + best_id).css("background", "black");
+	// //$("#" + to_id).children("p").css("background", "black");
+	// $("#" + best_id).children("p").css("background", "black");
+	// $("#" + to_id).children("p").css("border", "black");
+	// $("#" + best_id).children("p").css("border", "black");
 
 	$("#" + to_id).children("p").text(" ");
 	$("#" + best_id).children("p").text(" ");
 
+	$("#" + to_id).prop("title","");
+	$("#" + best_id).prop("title","");
 	// console.log("from_id: " + from_id);
 	// console.log("to_id: " + to_id);
 	// console.log("best_id: " + best_id);
@@ -715,11 +722,19 @@ function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
 	
 	// TODO: add color
 	$("#" + from_id).css("background", "#7dfae5");
-	// $("#" + to_id).css("background", "#807e0b");
-	// $("#" + best_id).css("background", "#f5f233");
 
-	$("#" + to_id).children("p").text(to_gain);
-	$("#" + best_id).children("p").text(best_gain);
+	// $("#" + to_id).css("border-color", "#807e0b");
+	// $("#" + best_id).css("border-color", "#f5f233");
+	// $("#" + to_id).children("p").css("background", "#807e0b");
+	// $("#" + best_id).children("p").css("background", "#f5f233");
+	// $("#" + to_id).children("p").css("border", "#807e0b");
+	// $("#" + best_id).children("p").css("border", "#f5f233");
+	
+	$("#" + to_id).children("p").text("Your move");
+	$("#" + best_id).children("p").text("Best move");
+	var text=""+
+	$("#" + to_id).prop("title","gain lost"+to_gain);
+	$("#" + best_id).prop("title","gain"+best_gain);
 }
 
 

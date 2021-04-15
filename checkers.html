@@ -242,10 +242,14 @@
 
 		<!-- This modal will display "win Message"-->
 		<div id="winMessageModal" class="winModal">
+			<!--<img src="win_img.png" width="200" height="200"> -->
+			<div id="winbody">
+			<div><h1>!! Game Over !!</h1></div>
 			<div id="win"><h2>AI won!!</h2></div>
 			
 			<button class="button button1" id="analyse" onclick="analyseGame()">Analyze Mistakes</button>
 			<button class="button button1" id="closeWinMessage" onclick="closeWinMessage()">Close</button>
+			</div>
 		</div>
 
 		<!-- This modal will show analysis of mistakes-->
@@ -267,7 +271,7 @@
 				</div>
 
 				<div class="modal-footer">
-					<h1>Use "Next" and "Prev" button to animate</h1>
+					<h2>Use "Next" and "Prev" button to animate. Hover over pieces to see the gain</h2>
 				</div>
 			</div>
 		</div>
