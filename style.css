@@ -124,8 +124,8 @@
   margin-right:auto;
   align-content: center;
   color:white;
-  border: 3px solid black;
-  border-radius: 1px;
+  /*border: 3px solid black;
+  border-radius: 1px;*/
   -webkit-transition: 0.5s ease-in-out;
   -moz-transition: 0.5s ease-in-out;
   -o-transition: 0.5s ease-in-out;
@@ -402,7 +402,7 @@ td{
 }
 p{
   font-weight: bold;
-
+  
 }
 
 table{
@@ -652,6 +652,7 @@ a{
 #win{
   font-size: 40px;
   font-weight: bold;
+   text-shadow: 3px 3px 3px #fac575;
 }
 #mistake_id{
 font-size: 30px;

@@ -441,7 +441,9 @@ function closeWinMessage() {
 	modal.style.display = "none";
 	*/
 	window.location.reload();
+	
 }
+
 /*============================== Analyse modal =================== */
 var mistakeList = [];
 var mistakeIndex = 0;
@@ -697,11 +699,20 @@ function nextMistake() {
 
 function resetCell(from_id, to_id, best_id) {
 	$("#" + from_id).css("background", "black");
-	// $("#" + to_id).css("border-color", "black");
+	
 	// $("#" + to_id).css("background", "black");
 	// $("#" + best_id).css("background", "black");
-	// //$("#" + to_id).children("p").css("background", "black");
+
+	// $("#" + to_id).children("p").css("background", "black");
 	// $("#" + best_id).children("p").css("background", "black");
+
+	$("#" + to_id).css("border", "2px solid black");
+	$("#" + best_id).css("border", "2px solid black");
+
+	// $("#" + to_id).css("border-color", "black");
+	// $("#" + best_id).css("border-color", "black");
+
+	// $("#" + to_id).css("border-color", "black");
 	// $("#" + to_id).children("p").css("border", "black");
 	// $("#" + best_id).children("p").css("border", "black");
 
@@ -721,18 +732,27 @@ function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
 	// console.log("best_id: " + best_id);
 	
 	// TODO: add color
-	$("#" + from_id).css("background", "#7dfae5");
+	//$("#" + from_id).css("background", "#7dfae5");
+	$("#" + from_id).css("background", "#6df736");
 
-	// $("#" + to_id).css("border-color", "#807e0b");
-	// $("#" + best_id).css("border-color", "#f5f233");
-	// $("#" + to_id).children("p").css("background", "#807e0b");
+	// $("#" + to_id).css("background", "#f25207");
+	// $("#" + best_id).css("background", "#f5f233");
+
+	// $("#" + to_id).children("p").css("background", "#f25207");
 	// $("#" + best_id).children("p").css("background", "#f5f233");
+
+	$("#" + to_id).css("border", "5px solid #f25207");
+	$("#" + best_id).css("border", "5px solid #f5f233");
+
+	// $("#" + to_id).css("border-color", "#f25207");
+	// $("#" + best_id).css("border-color", "#f5f233");
+
 	// $("#" + to_id).children("p").css("border", "#807e0b");
 	// $("#" + best_id).children("p").css("border", "#f5f233");
 	
 	$("#" + to_id).children("p").text("Your move");
 	$("#" + best_id).children("p").text("Best move");
-	var text=""+
+	//var text=""+
 	$("#" + to_id).prop("title","gain lost"+to_gain);
 	$("#" + best_id).prop("title","gain"+best_gain);
 }

@@ -383,6 +383,7 @@ function displayMessage(after_making_move) {
 		$("#win").text(text);
 		var modal = document.getElementById("winMessageModal");
 		modal.style.display = "block";
+		
 	} else if (!after_making_move && board.is_game_finished(ai_turn)) {
 		syncWait(100);
 
@@ -406,5 +407,6 @@ function displayMessage(after_making_move) {
 		$("#win").text(text);
 		var modal = document.getElementById("winMessageModal");
 		modal.style.display = "block";
+		
 	}
 }
