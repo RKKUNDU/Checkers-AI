@@ -20,27 +20,27 @@ var board = new Board(true, false);
 var newBoard = new Board(true, false);
 
 
-board.board[4][3] = 1;
-board.board[5][4] = -1;
-board.board[6][5] = 0;
-board.board[7][6] = -1;
+// board.board[4][3] = 1;
+// board.board[5][4] = -1;
+// board.board[6][5] = 0;
+// board.board[7][6] = -1;
 
-board.board[1][2] = 0;
-board.board[1][4] = 0;
-board.board[1][6] = 0;
-board.board[1][8] = 0;
+// board.board[1][2] = 0;
+// board.board[1][4] = 0;
+// board.board[1][6] = 0;
+// board.board[1][8] = 0;
 
-board.board[2][1] = 0;
-board.board[2][3] = 0;
-board.board[2][5] = 0;
-board.board[2][7] = 0;
+// board.board[2][1] = 0;
+// board.board[2][3] = 0;
+// board.board[2][5] = 0;
+// board.board[2][7] = 0;
 
-board.board[3][2] = 0;
-board.board[3][4] = 0;
-board.board[3][6] = 0;
-board.board[3][8] = 0;
+// board.board[3][2] = 0;
+// board.board[3][4] = 0;
+// board.board[3][6] = 0;
+// board.board[3][8] = 0;
 
-board.board[8][7] = 0;
+// board.board[8][7] = 0;
 
 // board.board[3][6] =1;
 // board.board[5][8] =1;
@@ -281,7 +281,7 @@ function clickable() {
 				PossibleMove = [];
 				newBoard.reset_board(board.board);
 				board.make_move(move);
-
+				
 				hideCapturedPiece(temp_captures);
 				render_board(board);
 				board.user_moved(move, newBoard.board);

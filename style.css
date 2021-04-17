@@ -276,10 +276,13 @@
   width: 100%;
   margin-top:0px;
   float: left;
-  background-color: lightgrey;
+  color:white;
+  text-align: center;
+  /*background-color: lightgrey;
   
   border-radius: 20px;
-  border: 5px solid black;
+  border: 5px solid black;*/
+  background-attachment: fixed;
 }
 .play_1 
 {
@@ -449,15 +452,17 @@ li{
 }
 .show_points{
 
-  padding: 20px;
+  color:black;
+  padding: 5px;
   font-size: 18px;
-  text-indent: 25px;
+  text-indent: 35px;
   text-align: justify;
   font-family: verdana;
   border: 1px solid black;
   background-color: white;
-  
-  border-radius: 6px;
+  width:150px;
+  height:5px;
+  border-radius: 4px;
   
   
 }
@@ -470,7 +475,6 @@ li{
   align-content: vertical;
   border: 10px solid lightgrey;
   background-color: black;
-  
   
 }
 a{
@@ -668,24 +672,25 @@ font-size: 30px;
 .showMoveSequenceButton {
   border: none;
   color: white;
-  padding: 16px 32px;
+  /*padding: 16px 32px;*/
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 20px;
-  margin: 4px 2px;
+  font-size: 14px;
+  /*margin: 4px 2px;*/
   transition-duration: .4s;
   cursor: pointer;
   margin-top: 10px;
   width: 60px;
+  height: 28px;
 
   background-color: lightgrey; 
   color: black; 
   border: 2px solid black;
   border-radius: 10px;
   display: block;
-  padding: 10px;
-  margin-left: 30px;
+  /*padding: 10px;*/
+  margin-left: 10px;
 }
 
 .showMoveSequenceButton:hover {
