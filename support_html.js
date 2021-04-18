@@ -11,7 +11,13 @@ function showRules(id1, id2) {
 	}
 };
 
-
+function hideRules(id1)
+{
+	var e = document.getElementById(id1);
+	var s = document.getElementById("showRules");
+	e.style.display = 'none';
+	s.innerHTML = "Display Rules"
+}
 function changeAItoRed() {
 
 	console.log("here AI can become Red");
@@ -269,16 +275,33 @@ function showPoints() {
 	console.log(values);
 	//Implement this
 	var tables = document.getElementById('show_table');
+	//tables.innerHTML = "<tr><td class ='show_points'><button class="button button1" id="refresh_gains" onclick="refreshGains()">Refresh</button></td></tr>";
 	tables.innerHTML = "<tr><td class='show_points'>From Cell</td><td class='show_points'>Gain</td></tr>";
+	
+	for (var i = 0; i < values.length; i++) {
+		var from_id = values[i].from_row.toString() + values[i].from_col.toString()
+		//var to_id=values[i].from_row.toString()+values[i].to_col.toString()
+		var gain = values[i].gain.toString()
+		tables.innerHTML += "<tr><td class='show_points'>"+from_id+"</td><td class='show_points'>" + gain + "</td></tr>";
+		//tables.innerHTML += "<tr><td class='show_points'><button class='showMoveSequenceButton' onclick='showMoveSeq("+from_id+")'>" + from_id + "</button></td><td class='show_points'>" + gain + "</td></tr>";
+	}
 
+
+}
+function refreshGains(){
+	var values = board.show_gains_util();
+	console.log(values);
+	//Implement this
+	var tables = document.getElementById('show_table');
+	//tables.innerHTML = "<tr><td class ='show_points'><button class="button button1" id="refresh_gains" onclick="refreshGains()">Refresh</button></td></tr>";
+	tables.innerHTML = "<tr><td class='show_points'>From Cell</td><td class='show_points'>Gain</td></tr>";
+	
 	for (var i = 0; i < values.length; i++) {
 		var from_id = values[i].from_row.toString() + values[i].from_col.toString()
 		//var to_id=values[i].from_row.toString()+values[i].to_col.toString()
 		var gain = values[i].gain.toString()
 		tables.innerHTML += "<tr><td class='show_points'><button class='showMoveSequenceButton' onclick='showMoveSeq("+from_id+")'>" + from_id + "</button></td><td class='show_points'>" + gain + "</td></tr>";
 	}
-
-
 }
 /* ========================== Some vars============*/
 var duplicateBoard = new Board(true, false);

@@ -23,11 +23,11 @@
 		<div class="class1" id="sec1">
 			<form class="modes">
 				
-				<input type="radio" id="play" name="mode" value="play" onclick="hideTable('sec3_understand');hideUnderstand('understand')">
+				<input type="radio" id="play" name="mode" value="play" onclick="hideTable('sec3_understand');hideUnderstand('understand'); hideRules('sec3_play');">
 				<label for="play">Play</label><br>
-				<input type="radio" id="understand" name="mode" value="understand" onclick="showTable('sec3_understand');showPoints();hidePlay('play');">
+				<input type="radio" id="understand" name="mode" value="understand" onclick="showTable('sec3_understand');showPoints();hidePlay('play'); hideRules('sec3_play');">
 				<label for="understand">Understand</label><br>
-				<input type="radio" id="learn" name="mode" value="learn" onclick="hideTable('sec3_understand');hidePlay('play');">
+				<input type="radio" id="learn" name="mode" value="learn" onclick="hideTable('sec3_understand');hidePlay('play');hideRules('sec3_play');">
 				<label for="Learn">Learn</label>
 
 
@@ -194,7 +194,7 @@
 			</table>
 		</div>
 		<div class="class3_play" id="sec3_play">
-			<div class="class3_1_play" id="rule">
+			<div class="class3_1_play" id="rule" style="font-size: 20px;">
 				<li>Pieces may only move one diagonal space forward (towards their opponents pieces) in the
 				beginning of the game</li>
 				<li>Pieces must stay on the black squares.</li>
@@ -277,10 +277,13 @@
 		</div>
 
 		<div class="class3_understand" id="sec3_understand">
+			
 			<div class="class3_1_understand" id="move">
 				<h3>Gain's of Black Pieces</h3>
 				<table id="show_table" ></table>
+				<button class="button button1" id="refresh_gains" onclick="refreshGains()">Refresh</button>
 			</div>
+			
 		</div>  
 		<script>
 			

@@ -279,10 +279,10 @@
   color:white;
   text-align: center;
   /*background-color: lightgrey;
-  
   border-radius: 20px;
   border: 5px solid black;*/
   background-attachment: fixed;
+  align-items: center;
 }
 .play_1 
 {
@@ -453,7 +453,7 @@ li{
 .show_points{
 
   color:black;
-  padding: 5px;
+  padding: 2px;
   font-size: 18px;
   text-indent: 35px;
   text-align: justify;
@@ -461,7 +461,7 @@ li{
   border: 1px solid black;
   background-color: white;
   width:150px;
-  height:5px;
+  height:3px;
   border-radius: 4px;
   
   
@@ -700,4 +700,10 @@ font-size: 30px;
   border-radius: 10px;
   display: block;
 
+}
+#refresh_gains{
+ text-align: center;
+   width: 160px;
+  height: 38px;
+   margin-left: 200px;
 }
