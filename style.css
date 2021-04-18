@@ -602,13 +602,16 @@ a{
 
 }
 
-#analyse, #closeWinMessage{
+#analyse, #win_undo, #closeWinMessage{
   display:inline-block;
   background-color: rgb(202, 173, 108);
   border-width: 5px;
   border-color: rgb(82, 49, 1);
-  width: 250px;
+  width: 150px;
 
+}
+#analyse{
+  width:200px;
 }
 
 .winModal{

@@ -1,7 +1,9 @@
 function handle_ai_turn() {
 	if (board.is_game_finished(ai_turn)) {
 		displayMessage(BEFORE_MAKING_MOVE);
-		return;
+		//return;
+		if(AutoAI)
+				return;
 	}
 
 	if (understanding_mode && !AutoAI) {
@@ -15,7 +17,9 @@ function handle_ai_turn() {
 		ai_turn = true; // FIXME: ai_turn was becoming false . So this hack
 		if (board.is_game_finished_after_making_move(ai_turn)) {
 			displayMessage(AFTER_MAKING_MOVE);
-			return;
+			//return;
+			if(AutoAI)
+				return;
 		}
 
 		ai_turn = false;
@@ -33,7 +37,9 @@ function MakeAIMove() {
 			console.log("before")
 			console.log(ai_turn)
 			displayMessage(BEFORE_MAKING_MOVE);
-			return;
+			//return;
+			if(AutoAI)
+				return;
 		}
 		console.log("AutoAI's turn");
 		if (board.is_ai_red) {
@@ -65,7 +71,8 @@ function MakeAIMove() {
 			console.log("after making move")
 			console.log(ai_turn)
 			displayMessage(AFTER_MAKING_MOVE);
-			return;
+			if(AutoAI)
+				return;
 		}
 		// ai_turn = board.is_ai_red;
 		$("#RedTurn").css("opacity", "1.0");

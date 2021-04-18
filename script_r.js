@@ -1,5 +1,5 @@
 //import Board  from "board.js";
-
+var life=3;
 var prevClicked;
 var prevClick;
 var PossibleMove = [];
@@ -20,27 +20,27 @@ var board = new Board(true, false);
 var newBoard = new Board(true, false);
 
 
-// board.board[4][3] = 1;
-// board.board[5][4] = -1;
-// board.board[6][5] = 0;
-// board.board[7][6] = -1;
+board.board[4][3] = 1;
+board.board[5][4] = -1;
+board.board[6][5] = 0;
+board.board[7][6] = -1;
 
-// board.board[1][2] = 0;
-// board.board[1][4] = 0;
-// board.board[1][6] = 0;
-// board.board[1][8] = 0;
+board.board[1][2] = 0;
+board.board[1][4] = 0;
+board.board[1][6] = 0;
+board.board[1][8] = 0;
 
-// board.board[2][1] = 0;
-// board.board[2][3] = 0;
-// board.board[2][5] = 0;
-// board.board[2][7] = 0;
+board.board[2][1] = 0;
+board.board[2][3] = 0;
+board.board[2][5] = 0;
+board.board[2][7] = 0;
 
-// board.board[3][2] = 0;
-// board.board[3][4] = 0;
-// board.board[3][6] = 0;
-// board.board[3][8] = 0;
+board.board[3][2] = 0;
+board.board[3][4] = 0;
+board.board[3][6] = 0;
+board.board[3][8] = 0;
 
-// board.board[8][7] = 0;
+board.board[8][7] = 0;
 
 // board.board[3][6] =1;
 // board.board[5][8] =1;
@@ -288,7 +288,7 @@ function clickable() {
 
 				if (board.is_game_finished_after_making_move(ai_turn)) {
 					displayMessage(AFTER_MAKING_MOVE);
-					return;
+					//return;
 				}
 
 				ai_turn = true;
@@ -381,6 +381,8 @@ function displayMessage(after_making_move) {
 
 		console.log(text + " after making move");
 		$("#win").text(text);
+		// if(!text.localeCompare("AI won!"))
+		// 	$("#win_undo").prop("disabled",false);
 		var modal = document.getElementById("winMessageModal");
 		modal.style.display = "block";
 		

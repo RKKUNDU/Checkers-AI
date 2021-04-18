@@ -466,7 +466,20 @@ function closeWinMessage() {
 	window.location.reload();
 	
 }
-
+function revertBack(){
+	if(life>0)
+	{
+		life--;
+		var modal = document.getElementById("winMessageModal");
+		modal.style.display = "none";
+	}
+	else{
+		$("#win").text("Oops! You are out of Lives :(");
+		$("#win_undo").prop("disabled",true);
+		var modal = document.getElementById("winMessageModal");
+		modal.style.display = "block";
+	}
+}
 /*============================== Analyse modal =================== */
 var mistakeList = [];
 var mistakeIndex = 0;
