@@ -253,7 +253,6 @@
   margin-top:0px;
   float: left;
   background-color: lightgrey;
-  
   border-radius: 20px;
   border: 5px solid black;
 }
@@ -445,7 +444,7 @@ li{
   margin-left: 10px;
   margin-top: 20px;
   margin-right: 10px;
-  font-size: 18px;
+  font-size: 17px;
   text-indent: 15px;
   text-align: justify;
   font-family: verdana;
@@ -583,13 +582,17 @@ a{
 
 .modal-header {
   padding: 2px 4px;
-  background-color: #cc9b3f;
+  background-color: #7e5421;
   color:white;
   font-size: 19px;
   text-align: center;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body {
+  padding: 2px 16px; 
+  background-image: url('win_7.jpg');
+  background-size: 850px 250px;
+}
 
 .modal-footer {
   padding: 2px 16px;
@@ -646,9 +649,9 @@ a{
   background-repeat: no-repeat;
  transition: all .7s ease-in-out;
   -webkit-animation-name: animatetop;
-  -webkit-animation-duration: 0.6s;
+  -webkit-animation-duration: 1s;
   animation-name: animatetop;
-  animation-duration: 0.6s 
+  animation-duration: 1s 
 }
 #closeAnalyse,  #review_mistake, #prev_move, #next_move,#prev_mistake, #next_mistake {
   display:inline-block;
@@ -710,3 +713,26 @@ font-size: 30px;
   height: 38px;
    margin-left: 200px;
 }
+.node {
+		cursor: pointer;
+	}
+
+	.node circle {
+		fill: #fff;
+		stroke: steelblue;
+		stroke-width: 3px;
+	}
+
+	.node text {
+		font: 30px sans-serif;
+		color: red;
+	}
+
+	.link {
+		fill: none;
+		stroke: #ccc;
+		stroke-width: 2px;
+	}
+	#clear_tree, #update_tree, #close_tree{
+    display:inline-block;
+  }

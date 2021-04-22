@@ -480,6 +480,12 @@ function revertBack(){
 		modal.style.display = "block";
 	}
 }
+function disableAll(){
+
+}
+function enableAll(){
+	
+}
 /*============================== Analyse modal =================== */
 var mistakeList = [];
 var mistakeIndex = 0;
@@ -777,8 +783,8 @@ function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
 	// $("#" + to_id).children("p").css("background", "#f25207");
 	// $("#" + best_id).children("p").css("background", "#f5f233");
 
-	$("#" + to_id).css("border", "5px solid #f25207");
-	$("#" + best_id).css("border", "5px solid #f5f233");
+	$("#" + to_id).css("border", "7px solid #f25207");
+	$("#" + best_id).css("border", "7px solid #f5f233");
 
 	// $("#" + to_id).css("border-color", "#f25207");
 	// $("#" + best_id).css("border-color", "#f5f233");

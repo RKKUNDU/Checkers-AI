@@ -8,7 +8,7 @@
 	<script src="board.js"></script>
 	<title>Checkers</title>
 	<script src="common.js"> </script>
-	<script src="script_r.js"> </script>
+	<script src="script.js"> </script>
 	
 	<script src="handle_ai.js"> </script>
 	<script src="support_html.js"> </script>
@@ -16,9 +16,9 @@
 <body>
 	<main>
 		<div class="turn">
-			<div id="RedTurn" >Your Turn  |</div>
-			<div id="BlackTurn" >|  AI's Turn</div>
-		</div>
+        	<div id="RedTurn">Your Turn |</div>
+        	<div id="BlackTurn">| AI's Turn</div>
+    	</div>
 
 		<div class="class1" id="sec1">
 			<form class="modes">
@@ -296,14 +296,15 @@
 			$("#modalBoard").addClass("tableClass");
 
 			var span = document.getElementsByClassName("close")[0];
-			var modal = document.getElementById("myModal");
-			/*
-			window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
-			}
-			}
-			*/
+			//var modal = document.getElementById("winbody");
+			
+			// window.onclick = function(event) {
+			// 	console.log(event.target)
+			// if (event.target != modal) {
+			// 	modal.style.display = "block";
+			// }
+			// }
+			
 		</script>
 		</main>
 			</body>
