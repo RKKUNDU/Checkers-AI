@@ -624,35 +624,41 @@ a{
   padding-top: 10px;  /*Location of the box */
   margin: auto;
   text-align: center;
-  left: 47%;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  
+  left: 50%;
+  top: 50%;
+  width:100%;
+  height:100%;
+  transform: translate(-50%, -50%); 
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   overflow: auto; /* Enable scroll if needed */
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
   color: rgb(88, 43, 0);
   
 }
+
 #winbody{
   position:relative;
-
+   left: 24%;
+  top: 10%;
   width: 850px; 
-  height: 250px;
+  height: 300px;
   border-radius: 20px;
   border: 5px solid black;
-
+  font-size: 18px;
   background-position: center;
   background-attachment: fixed;
   background-image: url('win_7.jpg');
-  background-size: 850px 250px; 
+  background-size: 850px 300px; 
  /*background-size: cover;*/
   background-repeat: no-repeat;
- transition: all .7s ease-in-out;
+ transition: all 1s ease-in-out;
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 1s;
   animation-name: animatetop;
   animation-duration: 1s 
 }
+
 #closeAnalyse,  #review_mistake, #prev_move, #next_move,#prev_mistake, #next_mistake {
   display:inline-block;
   /*background-color: rgb(253, 221, 160);*/
@@ -736,3 +742,8 @@ font-size: 30px;
 	#clear_tree, #update_tree, #close_tree{
     display:inline-block;
   }
+#checkers{
+  /*transition: 1s;*/
+	transform-style: preserve-3d;
+  position: relative;
+}

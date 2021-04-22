@@ -9,9 +9,9 @@
 	<title>Checkers</title>
 	<script src="common.js"> </script>
 	<script src="script.js"> </script>
-	
 	<script src="handle_ai.js"> </script>
 	<script src="support_html.js"> </script>
+	<script src="learn_mode.js"> </script>
 </head>
 <body>
 	<main>
@@ -23,11 +23,11 @@
 		<div class="class1" id="sec1">
 			<form class="modes">
 				
-				<input type="radio" id="play" name="mode" value="play" onclick="hideTable('sec3_understand');hideUnderstand('understand'); hideRules('sec3_play');">
+				<input type="radio" id="play" name="mode" value="play" onclick="originalBoard();hideTable('sec3_understand');hideUnderstand('understand'); hideRules('sec3_play');">
 				<label for="play">Play</label><br>
-				<input type="radio" id="understand" name="mode" value="understand" onclick="showTable('sec3_understand');showPoints();hidePlay('play'); hideRules('sec3_play');">
+				<input type="radio" id="understand" name="mode" value="understand" onclick="originalBoard();showTable('sec3_understand');showPoints();hidePlay('play'); hideRules('sec3_play');">
 				<label for="understand">Understand</label><br>
-				<input type="radio" id="learn" name="mode" value="learn" onclick="hideTable('sec3_understand');hidePlay('play');hideRules('sec3_play');">
+				<input type="radio" id="learn" name="mode" value="learn" onclick="learn_mode_board();hideTable('sec3_understand');hidePlay('play');hideRules('sec3_play');">
 				<label for="Learn">Learn</label>
 
 
@@ -98,13 +98,14 @@
         	
 			</div>
 			<div class="learn_1 box">
-				<select name="DifficultyLevel" id="level_u" class="button button1" onchange="difficultyLevel('level_u')">
+				<select name="DifficultyLevel" id="level_l" class="button button1" onchange="proficiencyLevel('level_l')">
 					<option>Proficiency Level</option>
 					<option value="Easy" id="Easy" >Easy</option>
 					<option value="Medium" id="Medium" >Medium</option>
 					<option value="Hard" id="Hard" >Hard</option>
 				</select>
-				<button class="button button1" id="Play" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
+				<button class="button button1" id="shuffle" onclick="shuffleBoard()"> Shuffle Board</button>
+				<button class="button button1" id="Play" onclick="learnModePlay()"> Play</button>
 				<button class="button button1" id="stop" onclick="GameStopped();disableModes('play','understand','learn')"> Quit</button>
 				<button class="button button1" id="showRules" onclick="showRules('sec3_play','showRules')">Display Rules</button>
 			</div>
@@ -241,17 +242,19 @@
 		</div>
 
 		<!-- This modal will display "win Message"-->
-		<div id="winMessageModal" class="winModal">
-			<!--<img src="win_img.png" width="200" height="200"> -->
-			<div id="winbody">
-			<div><h1>!! Game Over !!</h1></div>
-			<div id="win"><h2>AI won!!</h2></div>
-			
-			<button id="win_undo" class="button button1" onClick="revertBack();undoMove()">Use a Life</button>
-			<button class="button button1" id="analyse" onclick="analyseGame()">Analyze Mistakes</button>
-			<button class="button button1" id="closeWinMessage" onclick="closeWinMessage()">Close</button>
+		
+			<div id="winMessageModal" class="winModal">
+				<!--<img src="win_img.png" width="200" height="200"> -->
+				<div id="winbody">
+					<div><h1>!! Game Over !!</h1></div>
+					<div id="win"><h2>AI won!!</h2></div>
+					<p></p>
+					<button id="win_undo" class="button button1" onClick="revertBack();">Use a Life</button>
+					<button class="button button1" id="analyse" onclick="analyseGame()">Analyze Mistakes</button>
+					<button class="button button1" id="closeWinMessage" onclick="closeWinMessage()">Close</button>
+				</div>
 			</div>
-		</div>
+		
 
 		<!-- This modal will show analysis of mistakes-->
 		<div id="analyseModal" class="modal">
@@ -276,7 +279,7 @@
 				</div>
 			</div>
 		</div>
-
+		
 		<div class="class3_understand" id="sec3_understand">
 			
 			<div class="class3_1_understand" id="move">

@@ -20,27 +20,27 @@ var board = new Board(true, false);
 var newBoard = new Board(true, false);
 
 
-// board.board[4][3] = 1;
-// board.board[5][4] = -1;
-// board.board[6][5] = 0;
-// board.board[7][6] = -1;
+board.board[4][3] = 1;
+board.board[5][4] = -1;
+board.board[6][5] = 0;
+board.board[7][6] = -1;
 
-// board.board[1][2] = 0;
-// board.board[1][4] = 0;
-// board.board[1][6] = 0;
-// board.board[1][8] = 0;
+board.board[1][2] = 0;
+board.board[1][4] = 0;
+board.board[1][6] = 0;
+board.board[1][8] = 0;
 
-// board.board[2][1] = 0;
-// board.board[2][3] = 0;
-// board.board[2][5] = 0;
-// board.board[2][7] = 0;
+board.board[2][1] = 0;
+board.board[2][3] = 0;
+board.board[2][5] = 0;
+board.board[2][7] = 0;
 
-// board.board[3][2] = 0;
-// board.board[3][4] = 0;
-// board.board[3][6] = 0;
-// board.board[3][8] = 0;
+board.board[3][2] = 0;
+board.board[3][4] = 0;
+board.board[3][6] = 0;
+board.board[3][8] = 0;
 
-// board.board[8][7] = 0;
+board.board[8][7] = 0;
 
 // board.board[3][6] =1;
 // board.board[5][8] =1;
@@ -64,12 +64,13 @@ if (board.is_ai_red) {
 	ai_turn = true;
 }
 
-//to check the condition for game finished, is anyone won the meatch?
+//to check the condition for game finished, has anyone won the match?
 displayMessage();
 
 $(document).ready(function () {
 	render_board(board);
 	//below function to hide and show the options on a perticular mode
+	/*
 	$('input[type="radio"]').click(function () {
 		var inputValue = $(this).attr("value");
 		//console.log(inputValue);
@@ -79,6 +80,7 @@ $(document).ready(function () {
 		$(targetBox).show();
 	});
 	//to make the pieces clickable
+	*/
 	$("td").click(clickable);
 	//$("td").click(clickable);
 
@@ -191,41 +193,7 @@ function render_board(board) {
 						$("#" + cell).children("p").addClass("noPiece");
 
 					}
-					/*
-					else if(pieceClass ==  "possibleMove" || pieceClass ==  "noPiece possibleMove")
-					{	
-						$("#"+cell).children("p").removeClass("possibleMove");
-						$("#"+cell).children("p").addClass("noPiece");	
-					}
-					*/
-
 				}
-
-				//this condition checked for possible move pieces
-				/*
-				else if (PossibleMove.includes(parseInt(cell,10)))
-				{
-					
-					var pieceClass = $("#"+cell).children("p").attr('class');
-					//console.log("hey 4")
-					//console.log(pieceClass);
-					if(pieceClass == undefined || pieceClass == "noPiece")
-					{
-						if(pieceClass == "noPiece")
-							$("#"+cell).children("p").removeClass("noPiece");
-						$("#"+cell).children("p").addClass("possibleMove");
-
-					}
-					else if(pieceClass == "possibleMove")
-					{
-						$("#"+cell).children("p").removeClass("possibleMove");
-						$("#"+cell).children("p").addClass("noPiece");	
-					}
-
-
-
-				}
-				*/
 				else
 					continue;
 
@@ -284,7 +252,7 @@ function clickable() {
 				
 				hideCapturedPiece(temp_captures);
 				render_board(board);
-				board.user_moved(move, newBoard.board);
+				//board.user_moved(move, newBoard.board);
 
 				if (board.is_game_finished_after_making_move(ai_turn)) {
 					displayMessage(AFTER_MAKING_MOVE);
@@ -318,45 +286,7 @@ function clickable() {
 		alert("Press \"Play\" button to start the game ");
 	}
 }
-/*
-function displayMessage(after_making_move) {
 
-	if (after_making_move && board.is_game_finished_after_making_move(ai_turn)) {
-		syncWait(100);
-		var text = "";
-
-		if (board.has_drawn())
-			text = "Game Drawn!";
-		else {
-			if (ai_turn)
-				text = "AI Won!";
-			else
-				text = "You Won!";
-		}
-
-		console.log(text + " after making move");
-		$("#win").text(text);
-		var modal = document.getElementById("winMessageModal");
-		modal.style.display = "block";
-	} else if (!after_making_move && board.is_game_finished(ai_turn)) {
-		syncWait(100);
-
-		var text = "";
-		if (board.has_drawn())
-			text = "Game Drawn!";
-
-		else if (ai_turn && board.has_no_move()) // board.has_no_piece() will never arise
-			text = "You Won!";
-		else if (!ai_turn && board.opponent_has_no_move()) // board.opponent_has_no_piece() will never arise
-			text = "AI Won!";
-
-		console.log(text + " before making move");
-		$("#win").text(text);
-		var modal = document.getElementById("winMessageModal");
-		modal.style.display = "block";
-	}
-}
-*/
 function displayMessage(after_making_move) {
 
 	if (after_making_move && board.is_game_finished_after_making_move(ai_turn)) {

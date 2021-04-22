@@ -1,7 +1,10 @@
 function handle_ai_turn() {
 	if (board.is_game_finished(ai_turn)) {
+		if(learn_mode)
+			return
 		displayMessage(BEFORE_MAKING_MOVE);
 		//return;
+		
 		if(AutoAI)
 				return;
 	}
@@ -16,6 +19,8 @@ function handle_ai_turn() {
 
 		ai_turn = true; // FIXME: ai_turn was becoming false . So this hack
 		if (board.is_game_finished_after_making_move(ai_turn)) {
+			if(learn_mode)
+				return
 			displayMessage(AFTER_MAKING_MOVE);
 			//return;
 			if(AutoAI)

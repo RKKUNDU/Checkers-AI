@@ -10,7 +10,10 @@ var capture = [];
 var move = [];
 var AutoAI = false;
 var AIvsAI = false;
+
 var understanding_mode = false;
+var learn_mode = false;
+
 var startGame = false;
 var quitGame = false;
 const BEFORE_MAKING_MOVE = false;
@@ -20,27 +23,27 @@ var board = new Board(true, false);
 var newBoard = new Board(true, false);
 
 
-// board.board[4][3] = 1;
-// board.board[5][4] = -1;
-// board.board[6][5] = 0;
-// board.board[7][6] = -1;
+board.board[4][3] = 1;
+board.board[5][4] = -1;
+board.board[6][5] = 0;
+board.board[7][6] = -1;
 
-// board.board[1][2] = 0;
-// board.board[1][4] = 0;
-// board.board[1][6] = 0;
-// board.board[1][8] = 0;
+board.board[1][2] = 0;
+board.board[1][4] = 0;
+board.board[1][6] = 0;
+board.board[1][8] = 0;
 
-// board.board[2][1] = 0;
-// board.board[2][3] = 0;
-// board.board[2][5] = 0;
-// board.board[2][7] = 0;
+board.board[2][1] = 0;
+board.board[2][3] = 0;
+board.board[2][5] = 0;
+board.board[2][7] = 0;
 
-// board.board[3][2] = 0;
-// board.board[3][4] = 0;
-// board.board[3][6] = 0;
-// board.board[3][8] = 0;
+board.board[3][2] = 0;
+board.board[3][4] = 0;
+board.board[3][6] = 0;
+board.board[3][8] = 0;
 
-// board.board[8][7] = 0;
+board.board[8][7] = 0;
 
 // board.board[3][6] =1;
 // board.board[5][8] =1;
@@ -50,7 +53,7 @@ var newBoard = new Board(true, false);
 
 // board.board[5][4] = -1;
 
-
+board.copyOf(newBoard)
 
 board.print_board();
 
@@ -191,41 +194,7 @@ function render_board(board) {
 						$("#" + cell).children("p").addClass("noPiece");
 
 					}
-					/*
-					else if(pieceClass ==  "possibleMove" || pieceClass ==  "noPiece possibleMove")
-					{	
-						$("#"+cell).children("p").removeClass("possibleMove");
-						$("#"+cell).children("p").addClass("noPiece");	
-					}
-					*/
-
 				}
-
-				//this condition checked for possible move pieces
-				/*
-				else if (PossibleMove.includes(parseInt(cell,10)))
-				{
-					
-					var pieceClass = $("#"+cell).children("p").attr('class');
-					//console.log("hey 4")
-					//console.log(pieceClass);
-					if(pieceClass == undefined || pieceClass == "noPiece")
-					{
-						if(pieceClass == "noPiece")
-							$("#"+cell).children("p").removeClass("noPiece");
-						$("#"+cell).children("p").addClass("possibleMove");
-
-					}
-					else if(pieceClass == "possibleMove")
-					{
-						$("#"+cell).children("p").removeClass("possibleMove");
-						$("#"+cell).children("p").addClass("noPiece");	
-					}
-
-
-
-				}
-				*/
 				else
 					continue;
 
@@ -287,6 +256,13 @@ function clickable() {
 				board.user_moved(move, newBoard.board);
 
 				if (board.is_game_finished_after_making_move(ai_turn)) {
+					if(learn_mode)
+					{	
+						console.log("Coz it's learn mode....")
+						console.log(learn_mode)
+						reviewUserMove(thisClick.id, prevClick.id);
+						return;
+					}
 					displayMessage(AFTER_MAKING_MOVE);
 					//return;
 				}
@@ -313,6 +289,13 @@ function clickable() {
 				$("#RedTurn").css("opacity", ".5");
 				$("#BlackTurn").css("opacity", "1.0");
 			}
+			if(learn_mode)
+				{	
+					console.log("Coz it's learn mode....")
+					console.log(learn_mode)
+					reviewUserMove(thisClick.id, prevClick.id);
+					return;
+				}
 		}
 	} else if (!startGame) {
 		alert("Press \"Play\" button to start the game ");

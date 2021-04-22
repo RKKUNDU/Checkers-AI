@@ -82,6 +82,7 @@ function disableModes(id1, id2, id3) {
 	document.getElementById(id2).disabled = true;
 	document.getElementById(id3).disabled = true;
 }
+
 function disableAImoveBtn(id) 
 { 
 
@@ -222,7 +223,56 @@ function difficultyLevel(id) {
 	}
 	console.log(board.MAX_DEPTH);
 }
+//============================== Learn Mode functions ===============
+function proficiencyLevel(id){
+	var d = document.getElementById(id);
+	var id1 = d.options[d.selectedIndex].id;
+	//console.log(id1)
+	if (id1 == "Medium") {
+		proficiency = 2
+		console.log(proficiency);
+	}
+	else if (id1 == "Hard") {
+		proficiency = 3
+		console.log(proficiency);
+	}
+	else {
+		proficiency = 1
+		console.log(proficiency);
+	}
+	//console.log(proficiency);
+}
 
+function disableShuffle()
+{
+	$("#shuffle").prop("disabled",true);
+}
+function learn_mode_board()
+{
+	learn_mode = true;
+	board.clear_board();
+	render_board(board);
+}
+function learnModePlay()
+{
+	if(shuffled)
+	 { 
+		 alert("Remember: You will get only ONE move ");
+		 GameStarted();
+		 disableShuffle();
+		 disableModes('play','understand','learn')
+	 }
+	 else{
+		 alert("Shuffle the board at least one before starting the game ");
+	 }
+}
+function originalBoard()
+{
+	learn_mode = false;
+	board.reset_board(newBoard.board)
+	render_board(board);
+}
+//===========================================================================
 function setHeuristic(id) {
 	//MAX_DEPTH=1;
 	console.log("Hii Heuristic value updated");
@@ -469,9 +519,11 @@ function closeWinMessage() {
 function revertBack(){
 	if(life>0)
 	{
+		undoMove();
 		life--;
 		var modal = document.getElementById("winMessageModal");
 		modal.style.display = "none";
+		
 	}
 	else{
 		$("#win").text("Oops! You are out of Lives :(");
@@ -480,20 +532,18 @@ function revertBack(){
 		modal.style.display = "block";
 	}
 }
-function disableAll(){
 
-}
-function enableAll(){
-	
-}
 /*============================== Analyse modal =================== */
 var mistakeList = [];
 var mistakeIndex = 0;
 var from_id, to_id, best_id, best_gain, user_gain;
 
-function analyseGame() {
+function analyseGame(flag=0) {
 
-	mistakeList = board.get_mistakes();
+	
+	//if(!learn_mode)
+		mistakeList = board.get_mistakes();
+
 	console.log("No of mistakes", mistakeList.length);
 	if (mistakeList.length == 0) {
 		console.log("Nothing to Review. You played well!");
@@ -635,7 +685,8 @@ function reviewMistake() {
 	$("#analyseBody").append(modalBoard);
 }
 
-function prevMistake() {
+function prevMistake() 
+{
 	var modal1 = document.getElementById("analyseModal");
 	modal1.style.display = "block";
 	
@@ -742,56 +793,24 @@ function nextMistake() {
 function resetCell(from_id, to_id, best_id) {
 	$("#" + from_id).css("background", "black");
 	
-	// $("#" + to_id).css("background", "black");
-	// $("#" + best_id).css("background", "black");
-
-	// $("#" + to_id).children("p").css("background", "black");
-	// $("#" + best_id).children("p").css("background", "black");
-
 	$("#" + to_id).css("border", "2px solid black");
 	$("#" + best_id).css("border", "2px solid black");
-
-	// $("#" + to_id).css("border-color", "black");
-	// $("#" + best_id).css("border-color", "black");
-
-	// $("#" + to_id).css("border-color", "black");
-	// $("#" + to_id).children("p").css("border", "black");
-	// $("#" + best_id).children("p").css("border", "black");
 
 	$("#" + to_id).children("p").text(" ");
 	$("#" + best_id).children("p").text(" ");
 
 	$("#" + to_id).prop("title","");
 	$("#" + best_id).prop("title","");
-	// console.log("from_id: " + from_id);
-	// console.log("to_id: " + to_id);
-	// console.log("best_id: " + best_id);
+	
 }
 
 function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
-	// console.log("from_id: " + from_id);
-	// console.log("to_id: " + to_id);
-	// console.log("best_id: " + best_id);
 	
-	// TODO: add color
-	//$("#" + from_id).css("background", "#7dfae5");
 	$("#" + from_id).css("background", "#6df736");
-
-	// $("#" + to_id).css("background", "#f25207");
-	// $("#" + best_id).css("background", "#f5f233");
-
-	// $("#" + to_id).children("p").css("background", "#f25207");
-	// $("#" + best_id).children("p").css("background", "#f5f233");
 
 	$("#" + to_id).css("border", "7px solid #f25207");
 	$("#" + best_id).css("border", "7px solid #f5f233");
 
-	// $("#" + to_id).css("border-color", "#f25207");
-	// $("#" + best_id).css("border-color", "#f5f233");
-
-	// $("#" + to_id).children("p").css("border", "#807e0b");
-	// $("#" + best_id).children("p").css("border", "#f5f233");
-	
 	$("#" + to_id).children("p").text("Your move");
 	$("#" + best_id).children("p").text("Best move");
 	//var text=""+

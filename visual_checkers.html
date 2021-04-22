@@ -10,10 +10,10 @@
     <script src="board.js"></script>
     <title>Checkers</title>
     <script src="common.js"> </script>
-    <script src="script_visual.js"> </script>
+    <script src="visual_script.js"> </script>
     <script src = "tree_visualize.js"></script>
     <script src="handle_ai.js"> </script>
-    <script src="support_visual_html.js"> </script>
+    <script src="visual_support_html.js"> </script>
 </head>
 
 <body>
@@ -34,10 +34,8 @@
             <button class="button button1" id="stop" onclick="GameStopped();"> Quit</button>
             <button class="button button1" id="showRules" onclick="showRules('sec3_play','showRules')">Display
                 Rules</button>
-            <button class="button button1" id="showHint" onclick="showHint()">Show Hint</button>
             <button class="button button1" id="showVisualModal" onclick="showVisualization();">Tree Visualization</button>
-            <button id="undo" class="undo_button undo_button1" onClick="undoMove()" style="margin-top:420px;"><img width="90px"
-                    margin-right="10px" src="undo.png" /></button>
+            
             
 
         </div>
@@ -157,9 +155,7 @@
                 <h2>AI won!!</h2>
             </div>
 
-            <button id="win_undo" class="button button1" onClick="revertBack();undoMove()">Use a Life</button>
-            <button class="button button1" id="analyse" onclick="analyseGame()">Analyze Mistakes</button>
-            <button class="button button1" id="closeWinMessage" onclick="closeWinMessage()">Close</button>
+            <button class="button button1" id="closeWinMessage" onclick="closeWinMessage()" style="width:250px;">Close</button>
         </div>
     </div>
     <div id="visualModal" class="modal">
