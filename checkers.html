@@ -24,9 +24,9 @@
 			<form class="modes">
 				
 				<input type="radio" id="play" name="mode" value="play" onclick="originalBoard();hideTable('sec3_understand');hideUnderstand('understand'); hideRules('sec3_play');">
-				<label for="play">Play</label><br>
+				<label for="play">Play</label>
 				<input type="radio" id="understand" name="mode" value="understand" onclick="originalBoard();showTable('sec3_understand');showPoints();hidePlay('play'); hideRules('sec3_play');">
-				<label for="understand">Understand</label><br>
+				<label for="understand">Understand</label>
 				<input type="radio" id="learn" name="mode" value="learn" onclick="learn_mode_board();hideTable('sec3_understand');hidePlay('play');hideRules('sec3_play');">
 				<label for="Learn">Learn</label>
 
@@ -39,6 +39,13 @@
 					<option value="Easy" id="Easy" >Easy</option>
 					<option value="Medium" id="Medium" >Medium</option>
 					<option value="Hard" id="Hard" >Hard</option>
+				</select>
+
+				<select name="First Turn" id="turn_p" class="button button1" onchange="setTurn('turn_p')">
+					<option>First Turn</option>
+					<option value="You" id="You" >You</option>
+					<option value="AI" id="AI" >AI</option>
+					<option value="Random" id="Random" >Random</option>
 				</select>
 
 				<button class="button button1" id="Play_p" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
@@ -67,14 +74,14 @@
 					<option value="Medium" id="Medium" >Medium</option>
 					<option value="Hard" id="Hard" >Hard</option>
 				</select>
+				<select name="First Turn" id="turn_u" class="button button1" onchange="setTurn('turn_u')">
+					<option>First Turn</option>
+					<option value="You" id="You" >You</option>
+					<option value="AI" id="AI" >AI</option>
+					<option value="Random" id="Random" >Random</option>
+				</select>
 				<button class="button button1" id="Play_u" onclick="GameStarted();disableModes('play','understand','learn')"> Play</button>
-				
-				
-
-				
 				<button class="button button1 box1" id="RedAIMove"  onclick = "changeAItoRed();MakeAIMove();">AI(R)-Move</button>
-
-					
 				<button class="button button1" id="AIMove" onclick = "changeAItoBlue();MakeAIMove();">AI(B)-Move</button>
 
 				<form class="modes">

@@ -28,7 +28,7 @@ function handle_ai_turn() {
 		}
 
 		ai_turn = false;
-
+		startGame = true;
 		$("#RedTurn").css("opacity", "1.0");
 		$("#BlackTurn").css("opacity", "0.5");
 	}

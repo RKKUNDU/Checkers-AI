@@ -223,6 +223,39 @@ function difficultyLevel(id) {
 	}
 	console.log(board.MAX_DEPTH);
 }
+function setTurn(id){
+	var d = document.getElementById(id);
+	var id1 = d.options[d.selectedIndex].id;
+	console.log(id1)
+	if (id1 == "You") {
+		user_is_first = true;
+		ai_is_first = false;
+		console.log("Your turn");
+	}
+	else if (id1 == "AI") {
+		user_is_first = false;
+		ai_is_first = true;
+		console.log("AI's turn");
+	}
+	else if(id1 == "Random") {
+		setRandomTurn();
+	}
+	else{
+		console.log("Redundant option")
+		user_is_first = false
+		ai_is_first = false
+	}
+}
+function setRandomTurn(){
+		var turns = ['You','AI']
+		var val =turns[Math.floor(Math.random() * (turns.length))];
+		console.log("inside random turn")
+		console.log("====="+val)
+		if(val == "You")
+		{ user_is_first = true; ai_is_first = false; console.log("Your turn");}
+		else
+		{ user_is_first = false; ai_is_first = true; console.log("AI's turn"); }
+}
 //============================== Learn Mode functions ===============
 function proficiencyLevel(id){
 	var d = document.getElementById(id);

@@ -110,12 +110,18 @@ function disableAImoveBtn(id)
 
 function GameStarted()
 {
-	startGame = true;
+	if(!user_is_first && !ai_is_first)
+	{
+		setRandomTurn();
+	}
+	if(user_is_first)
+		startGame = true;	
+	else
+		handle_ai_turn();
 
 	$("#Play_u").attr("disabled",true);
 	$("#Play_p").attr("disabled",true);
-			//$("#RedTurn").show();
-			$("#BlackTurn").css("opacity","0.5");
+	$("#BlackTurn").css("opacity","0.5");
 };
 
 
