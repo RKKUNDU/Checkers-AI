@@ -19,8 +19,11 @@ var AIvsAI = false;
 var understanding_mode = false;
 var learn_mode = false;
 
+var use_monte_carlo = false;
+
 var startGame = false;
 var quitGame = false;
+
 const BEFORE_MAKING_MOVE = false;
 const AFTER_MAKING_MOVE = true;
 
@@ -28,27 +31,27 @@ var board = new Board(true, false);
 var newBoard = new Board(true, false);
 
 
-// board.board[4][3] = 1;
-// board.board[5][4] = -1;
-// board.board[6][5] = 0;
-// board.board[7][6] = -1;
+board.board[4][3] = 1;
+board.board[5][4] = -1;
+board.board[6][5] = 0;
+board.board[7][6] = -1;
 
-// board.board[1][2] = 0;
-// board.board[1][4] = 0;
-// board.board[1][6] = 0;
-// board.board[1][8] = 0;
+board.board[1][2] = 0;
+board.board[1][4] = 0;
+board.board[1][6] = 0;
+board.board[1][8] = 0;
 
-// board.board[2][1] = 0;
-// board.board[2][3] = 0;
-// board.board[2][5] = 0;
-// board.board[2][7] = 0;
+board.board[2][1] = 0;
+board.board[2][3] = 0;
+board.board[2][5] = 0;
+board.board[2][7] = 0;
 
-// board.board[3][2] = 0;
-// board.board[3][4] = 0;
-// board.board[3][6] = 0;
-// board.board[3][8] = 0;
+board.board[3][2] = 0;
+board.board[3][4] = 0;
+board.board[3][6] = 0;
+board.board[3][8] = 0;
 
-// board.board[8][7] = 0;
+board.board[8][7] = 0;
 
 // board.board[3][6] =1;
 // board.board[5][8] =1;
@@ -306,45 +309,7 @@ function clickable() {
 		alert("Press \"Play\" button to start the game ");
 	}
 }
-/*
-function displayMessage(after_making_move) {
 
-	if (after_making_move && board.is_game_finished_after_making_move(ai_turn)) {
-		syncWait(100);
-		var text = "";
-
-		if (board.has_drawn())
-			text = "Game Drawn!";
-		else {
-			if (ai_turn)
-				text = "AI Won!";
-			else
-				text = "You Won!";
-		}
-
-		console.log(text + " after making move");
-		$("#win").text(text);
-		var modal = document.getElementById("winMessageModal");
-		modal.style.display = "block";
-	} else if (!after_making_move && board.is_game_finished(ai_turn)) {
-		syncWait(100);
-
-		var text = "";
-		if (board.has_drawn())
-			text = "Game Drawn!";
-
-		else if (ai_turn && board.has_no_move()) // board.has_no_piece() will never arise
-			text = "You Won!";
-		else if (!ai_turn && board.opponent_has_no_move()) // board.opponent_has_no_piece() will never arise
-			text = "AI Won!";
-
-		console.log(text + " before making move");
-		$("#win").text(text);
-		var modal = document.getElementById("winMessageModal");
-		modal.style.display = "block";
-	}
-}
-*/
 function displayMessage(after_making_move) {
 
 	if (after_making_move && board.is_game_finished_after_making_move(ai_turn)) {

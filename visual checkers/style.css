@@ -590,8 +590,9 @@ a{
 
 .modal-body {
   padding: 2px 16px; 
-  background-image: url('win_7.jpg');
-  background-size: 850px 250px;
+  background-color: rgb(248, 181, 119);
+  /*background-size: 850px 250px;*/
+  /*background-repeat: no-repeat;*/
 }
 
 .modal-footer {
@@ -725,7 +726,7 @@ font-size: 30px;
 
 	.node circle {
 		fill: #fff;
-		stroke: steelblue;
+		stroke: rgb(247, 231, 3);
 		stroke-width: 3px;
 	}
 
@@ -736,7 +737,7 @@ font-size: 30px;
 
 	.link {
 		fill: none;
-		stroke: #ccc;
+		stroke: rgb(100, 24, 4);
 		stroke-width: 2px;
 	}
 	#clear_tree, #update_tree, #close_tree{

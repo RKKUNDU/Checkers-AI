@@ -314,11 +314,6 @@ function setHeuristic(id) {
 	id1 = d.options[d.selectedIndex].id;
 	var a = document.getElementById("heuristic_id");
 	console.log(a)
-	if(id1=="M1")
-		{ use_monte_carlo = true; console.log("heuristic set to monte carlo"); }
-	else
-		use_monte_carlo = false;
-	
 	if (id1 == "H1") {
 		board.heuristic = 1;
 		a.innerHTML = "<h3>Selected Heuristic Function is </h3>(my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2 * (my_king_pieces - opp_king_pieces)";
@@ -346,12 +341,12 @@ function setHeuristic(id) {
 	}
 	else if (id1 == "H6") {
 		board.heuristic = 6;
-		a.innerHTML = "<h3>Selected Heuristic Function is </h3>(my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces) + 0.2 * (my_corner_pieces - opp_corner_pieces)";
+		a.innerHTML = "<h3>Selected Heuristic Function is </h3>(my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.25 * (my_king_pieces - opp_king_pieces)";
 		console.log(board.heuristic);
 	}
 	else {
 		board.heuristic = 7;
-		a.innerHTML = "<h3>Selected Heuristic Function is </h3>(my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 1.5 * (my_king_pieces - opp_king_pieces) + 0.4 * (my_corner_pieces - opp_corner_pieces)";
+		a.innerHTML = "<h3>Selected Heuristic Function is </h3>(my_pieces - my_king_pieces) - (opp_pieces - opp_king_pieces) + 2.5 * (my_king_pieces - opp_king_pieces)";
 		console.log(board.heuristic);
 	}
 

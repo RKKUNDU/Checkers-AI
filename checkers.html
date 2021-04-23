@@ -58,7 +58,8 @@
 			</div>
 			<div class="understand_1 box">
 				<select name="Heuristic" id="H" class="button button1" onchange="setHeuristic('H')">
-					<option>Heuristic Level</option>
+					<option>Set Heuristic</option>
+					<option value="m1" id="M1" >Monte Carlo</option>
 					<option value="h1" id="H1" >Heuristic1</option>
 					<option value="h2" id="H2" >Heuristic2</option>
 					<option value="h3" id="H3" >Heuristic3</option>
@@ -202,7 +203,7 @@
 			</table>
 		</div>
 		<div class="class3_play" id="sec3_play">
-			<div class="class3_1_play" id="rule" style="font-size: 20px;">
+			<div class="class3_1_play" id="rule">
 				<li>Pieces may only move one diagonal space forward (towards their opponents pieces) in the
 				beginning of the game</li>
 				<li>Pieces must stay on the black squares.</li>
@@ -220,6 +221,7 @@
 					when capturing an opponent's piece(s) it may move diagonally forward or backwards.
 				</li>	
 				<li>There is no limit to how many king pieces a player may have.</li>	
+				<li>If you win the game you gain 100 points.</li>
 			</div>
 		</div>
 

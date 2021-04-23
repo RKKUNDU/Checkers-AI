@@ -79,7 +79,7 @@ function update_visualization_before_calling_recursion (reset_data, seq_of_indic
     };
 
     // console.log(from_cell_id,to_cell_id, parent_node.children[index].name, JSON.parse(JSON.stringify(visualization_tree_data[0])));
-    console.log(from_cell_id,to_cell_id);
+    //console.log(from_cell_id,to_cell_id);
 
     return seq_of_indices;
 }

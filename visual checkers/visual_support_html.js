@@ -130,6 +130,7 @@ function closeWinMessage() {
 // =============== Visual tree ============ 
 function showVisualization()
 {
+	clear_visualization_tree();
 	var modal1 = document.getElementById("visualModal");
 	modal1.style.display = "block";
 }

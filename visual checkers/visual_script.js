@@ -10,7 +10,12 @@ var capture = [];
 var move = [];
 var AutoAI = false;
 var AIvsAI = false;
+
+var ai_is_first = false;
+var user_is_first = false;
+
 var understanding_mode = false;
+var learn_mode = false;
 var startGame = false;
 var quitGame = false;
 const BEFORE_MAKING_MOVE = false;
@@ -20,27 +25,27 @@ var board = new Board(true, false);
 var newBoard = new Board(true, false);
 
 
-board.board[4][3] = 1;
-board.board[5][4] = -1;
-board.board[6][5] = 0;
-board.board[7][6] = -1;
+// board.board[4][3] = 1;
+// board.board[5][4] = -1;
+// board.board[6][5] = 0;
+// board.board[7][6] = -1;
 
-board.board[1][2] = 0;
-board.board[1][4] = 0;
-board.board[1][6] = 0;
-board.board[1][8] = 0;
+// board.board[1][2] = 0;
+// board.board[1][4] = 0;
+// board.board[1][6] = 0;
+// board.board[1][8] = 0;
 
-board.board[2][1] = 0;
-board.board[2][3] = 0;
-board.board[2][5] = 0;
-board.board[2][7] = 0;
+// board.board[2][1] = 0;
+// board.board[2][3] = 0;
+// board.board[2][5] = 0;
+// board.board[2][7] = 0;
 
-board.board[3][2] = 0;
-board.board[3][4] = 0;
-board.board[3][6] = 0;
-board.board[3][8] = 0;
+// board.board[3][2] = 0;
+// board.board[3][4] = 0;
+// board.board[3][6] = 0;
+// board.board[3][8] = 0;
 
-board.board[8][7] = 0;
+// board.board[8][7] = 0;
 
 // board.board[3][6] =1;
 // board.board[5][8] =1;

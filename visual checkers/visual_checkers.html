@@ -14,6 +14,8 @@
     <script src = "tree_visualize.js"></script>
     <script src="handle_ai.js"> </script>
     <script src="visual_support_html.js"> </script>
+
+	<script src="support_html.js"> </script>
 </head>
 
 <body>
@@ -161,10 +163,12 @@
     <div id="visualModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="button button1" id="clear_tree" onclick="clear_visualization_tree();">Clear Tree</button>
+              <!-- <button class="button button1" id="clear_tree" onclick="clear_visualization_tree();">Clear Tree</button> --> 
+              <h2>Press "Update Tree" button to see the tree</h2>
                 <button class="button button1" id="update_tree" onclick="update_visualization_tree();">Update
                     Tree</button>
                 <button class="button button1" id="close_tree" onclick="closeVisualization();">Close</button>
+                
             </div>
 
             <div class="modal-body" id="visualBody">
@@ -194,7 +198,7 @@
                 width = 10000;
             height = 500 - margin.top - margin.bottom;
             height = 1000 - margin.top - margin.bottom;
-            height = 2500; // TODO: dynamically change height wrt Difficulty level
+            //height = 1500; // TODO: dynamically change height wrt Difficulty level
 
             var i = 0,
                 duration = 750,
@@ -206,7 +210,7 @@
             var diagonal = d3.svg.diagonal()
                 .projection(function (d) { return [d.y, d.x]; });
 
-            var svg = d3.select("visualBody").append("svg")
+            var svg = d3.select("#visualBody").append("svg")
                 .attr("width", width + margin.right + margin.left)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")

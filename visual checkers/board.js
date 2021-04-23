@@ -1425,11 +1425,108 @@ function get_path(from_row, from_col, captures_array, captures_index) {
 }
 
 
-function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
-    //Monte Carlo condition 
-    // if (use_monte_carlo) 
-    //          return monte_carlo_best_move(board.MAX_DEPTH); 
+// function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
+    
+//     if (depth == 0 || board.is_game_finished(maximizer)) 
+//         return board.evaluate_board(maximizer);
 
+//     if (maximizer) {
+//         var max_val = Number.NEGATIVE_INFINITY;
+//         var moves = board.get_all_moves();
+//         var best_move = {};
+
+//         for (var i = 0; i < moves.length; i++) {
+//             for (var j = 0; j < moves[i]['moves'].length; j++) {
+//                 var board_copy = new Board();
+//                 board.copyOf(board_copy);
+
+//                 var move = {
+//                     'from_row': moves[i]['from_row'],
+//                     'from_col': moves[i]['from_col'],
+//                     'to_row': moves[i]['moves'][j]['to_row'],
+//                     'to_col': moves[i]['moves'][j]['to_col'],
+//                     'captures': moves[i]['moves'][j]['captures']
+//                 };
+                
+//                 board_copy.make_move(move);
+//                 var val = alpha_beta(board_copy, depth-1, alpha, beta, false, make_move);
+
+//                 if (val > max_val) {
+//                     max_val = val;
+//                     best_move = JSON.parse(JSON.stringify(move));
+//                 }
+
+//                 if (val == max_val && move.captures.length > best_move.captures.length)
+//                     best_move = JSON.parse(JSON.stringify(move));
+
+//                 if (val == max_val && move.captures.length == best_move.captures.length) {
+//                     var toss = Math.round(Math.random());
+//                     if (toss == 1) {
+//                         best_move = JSON.parse(JSON.stringify(move));
+//                     }
+//                 }
+
+//                 board_copy = null;
+//                 move = null;
+
+//                 if (val > alpha)
+//                     alpha = val;
+
+//                 if (alpha >= beta)
+//                     break;
+//             }
+//         }
+
+//         moves = null;
+
+//         if (depth == board.MAX_DEPTH && make_move) {
+//             board.make_move(best_move);
+//             return best_move;
+//         } else if (depth == board.MAX_DEPTH && !make_move) {
+//             return best_move;
+//         }
+        
+//         return max_val;
+//     } else {
+//         var min_val = Number.POSITIVE_INFINITY;
+//         var moves = board.get_all_opponent_moves();
+
+//         for (var i = 0; i < moves.length; i++) {
+//             for (var j = 0; j < moves[i]['moves'].length; j++) {
+//                 var board_copy = new Board();
+//                 board.copyOf(board_copy);
+
+//                 var move = {
+//                     'from_row': moves[i]['from_row'],
+//                     'from_col': moves[i]['from_col'],
+//                     'to_row': moves[i]['moves'][j]['to_row'],
+//                     'to_col': moves[i]['moves'][j]['to_col'],
+//                     'captures': moves[i]['moves'][j]['captures']
+//                 };
+
+//                 board_copy.make_move(move);
+//                 var val = alpha_beta(board_copy, depth-1, alpha, beta, true, make_move); // don't make the move
+
+//                 board_copy = null;
+//                 move = null;
+
+//                 if (val < min_val)
+//                     min_val = val;
+
+//                 if (val < beta)
+//                     beta = val;
+
+//                 if (alpha >= beta)
+//                     break;
+//             }
+//         }
+        
+//         moves = null;
+//         return min_val;
+//     }
+// }
+function alpha_beta(board, depth, alpha, beta, maximizer, make_move, parent_node_seq_of_indices) {
+    
     if (depth == 0 || board.is_game_finished(maximizer)) 
         return board.evaluate_board(maximizer);
 
@@ -1440,6 +1537,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
 
         for (var i = 0; i < moves.length; i++) {
             for (var j = 0; j < moves[i]['moves'].length; j++) {
+                var from_id =  moves[i]['from_row'] * 10 +  moves[i]['from_col'];
+                var to_id =  moves[i]['moves'][j]['to_row'] * 10 + moves[i]['moves'][j]['to_col'];
                 var board_copy = new Board();
                 board.copyOf(board_copy);
 
@@ -1450,9 +1549,10 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                     'to_col': moves[i]['moves'][j]['to_col'],
                     'captures': moves[i]['moves'][j]['captures']
                 };
-                
+
                 board_copy.make_move(move);
-                var val = alpha_beta(board_copy, depth-1, alpha, beta, false, make_move);
+                var current_node_seq_of_indices = update_visualization_before_calling_recursion((i==0 && j==0 && depth == board.MAX_DEPTH), parent_node_seq_of_indices, from_id, to_id, maximizer, depth, board.MAX_DEPTH, alpha, beta);
+                var val = alpha_beta(board_copy, depth-1, alpha, beta, false, make_move, current_node_seq_of_indices);              
 
                 if (val > max_val) {
                     max_val = val;
@@ -1474,6 +1574,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
 
                 if (val > alpha)
                     alpha = val;
+                
+                update_visualization_after_calling_recursion(current_node_seq_of_indices, alpha, beta); // TODO: gain is not passed
 
                 if (alpha >= beta)
                     break;
@@ -1483,6 +1585,7 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
         moves = null;
 
         if (depth == board.MAX_DEPTH && make_move) {
+            update_visualization_tree();
             board.make_move(best_move);
             return best_move;
         } else if (depth == board.MAX_DEPTH && !make_move) {
@@ -1496,6 +1599,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
 
         for (var i = 0; i < moves.length; i++) {
             for (var j = 0; j < moves[i]['moves'].length; j++) {
+                var from_id =  moves[i]['from_row'] * 10 +  moves[i]['from_col'];
+                var to_id =  moves[i]['moves'][j]['to_row'] * 10 + moves[i]['moves'][j]['to_col'];
                 var board_copy = new Board();
                 board.copyOf(board_copy);
 
@@ -1508,7 +1613,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
                 };
 
                 board_copy.make_move(move);
-                var val = alpha_beta(board_copy, depth-1, alpha, beta, true, make_move); // don't make the move
+                var current_node_seq_of_indices = update_visualization_before_calling_recursion(false, parent_node_seq_of_indices, from_id, to_id, maximizer, depth, board.MAX_DEPTH, alpha, beta);
+                var val = alpha_beta(board_copy, depth-1, alpha, beta, true, make_move, current_node_seq_of_indices); // don't make the move
 
                 board_copy = null;
                 move = null;
@@ -1518,6 +1624,8 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
 
                 if (val < beta)
                     beta = val;
+
+                update_visualization_after_calling_recursion(current_node_seq_of_indices, alpha, beta);
 
                 if (alpha >= beta)
                     break;
