@@ -1429,7 +1429,9 @@ function alpha_beta(board, depth, alpha, beta, maximizer, make_move) {
     //Monte Carlo condition 
     // if (use_monte_carlo) 
     //          return monte_carlo_best_move(board.MAX_DEPTH); 
-
+    if (use_monte_carlo){ 
+        return next_move(board) 
+    }
     if (depth == 0 || board.is_game_finished(maximizer)) 
         return board.evaluate_board(maximizer);
 
