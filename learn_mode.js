@@ -75,7 +75,8 @@ function reviewUserMove(userTo, userFrom)
     else
     {   
         $('#win').text("Wrong move")
-        text = "Summary= gain lost: "+shuffledState.gain;
+        // text = "Summary= gain: "+shuffledState.gain;
+        text = "";
         //prepare mistake summary
         console.log("inside else")
         console.log(index)

@@ -847,7 +847,7 @@ function displayCell(from_id, to_id, best_id, to_gain, best_gain) {
 	$("#" + to_id).children("p").text("Your move");
 	$("#" + best_id).children("p").text("Best move");
 	//var text=""+
-	$("#" + to_id).prop("title","gain lost"+to_gain);
+	$("#" + to_id).prop("title","gain"+to_gain);
 	$("#" + best_id).prop("title","gain"+best_gain);
 }
 
