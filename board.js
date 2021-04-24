@@ -31,7 +31,7 @@ class Board {
         this.is_red_top = is_red_top;
         this.is_ai_red = is_ai_red;
         this.heuristic = 1; // default: 1; Possible heuristic: {1, 2, 3, 4, 5, 6, 7}
-        this.MAX_DEPTH = 5;
+        this.MAX_DEPTH = 1;
         this.DEPTH_FOR_USER_HINT = 4;
         this.mistakes = new Array(); // store only 5 top mistakes
         this.prev_boards = new Array(); // store only 5 previous board states

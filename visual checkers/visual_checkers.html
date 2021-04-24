@@ -193,11 +193,11 @@
             <!-- load the d3.js library --> */
             // ************** Generate the tree diagram	 *****************
 
-            var margin = { top: 500, right: 120, bottom: 20, left: 300 },
+            var margin = { top: 50, right: 120, bottom: 20, left: 300 },
                 // width = 960 - margin.right - margin.left,
                 width = 10000;
             height = 500 - margin.top - margin.bottom;
-            height = 1000 - margin.top - margin.bottom;
+            height = 1500 - margin.top - margin.bottom;
             //height = 1500; // TODO: dynamically change height wrt Difficulty level
 
             var i = 0,
@@ -245,8 +245,8 @@
                     .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
                     .attr("dy", ".35em")
                     .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-                    // .text(function(d) { return d.name; })
-                    .text(function (d) { return d.name + " (" + d.alpha + ", " + d.beta + ")"; }) // prints "{from_id}->{to_id} ({alpha}, {beta})
+                    .text(function(d) { return d.name; })
+                    // .text(function (d) { return d.name + " (" + d.alpha + ", " + d.beta + ")"; }) // prints "{from_id}->{to_id} ({alpha}, {beta})
                     .style("fill-opacity", 1e-6);
 
                 // Transition nodes to their new position.

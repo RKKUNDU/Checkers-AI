@@ -715,9 +715,9 @@ font-size: 30px;
 }
 #refresh_gains{
  text-align: center;
-   width: 160px;
-  height: 38px;
-   margin-left: 200px;
+  width: 160px;
+  height: 50px;
+  margin-left: 250px;
 }
 .node {
 		cursor: pointer;

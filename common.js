@@ -111,6 +111,8 @@ function GameStarted() {
 			startGame = true;
 		else
 			handle_ai_turn();
+		
+		startGame = true;
 	}
 	else{
 		$("#level_l").prop("disabled",true)
