@@ -210,16 +210,19 @@ function difficultyLevel(id) {
 	id1 = d.options[d.selectedIndex].id;
 	console.log(id1)
 	if (id1 == "Medium") {
+		board.heuristic = 6;
 		board.MAX_DEPTH = 4;
-		console.log(board.MAX_DEPTH);
+		console.log(board.MAX_DEPTH, board.heuristic);
 	}
 	else if (id1 == "Hard") {
-		board.MAX_DEPTH = 6;
-		console.log(board.MAX_DEPTH);
+		board.heuristic = 7;
+		board.MAX_DEPTH = 5;
+		console.log(board.MAX_DEPTH, board.heuristic);
 	}
 	else {
-		board.MAX_DEPTH = 1;
-		console.log(board.MAX_DEPTH);
+		board.heuristic = 4;
+		board.MAX_DEPTH = 2;
+		console.log(board.MAX_DEPTH, board.heuristic);
 	}
 	console.log(board.MAX_DEPTH);
 }
