@@ -914,7 +914,8 @@ class Board {
         // Make the user AI. So that minimax can be called by the user
         this.is_ai_red = ! this.is_ai_red;
 
-        var best_move_sequence = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true);
+        // var best_move_sequence = this.show_gains_of_pieces(this, this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true, false, 0, 0, true, USE_CUSTOM_MAX_DEPTH, this.DEPTH_FOR_USER_HINT);
+        var best_move_sequence = this.show_move_sequence_with_max_gain_with_custom_depth(this.DEPTH_FOR_USER_HINT, Number.NEGATIVE_INFINITY);
         best_move_sequence.pop()
 
         // Revert back the change

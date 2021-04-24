@@ -210,17 +210,20 @@ function difficultyLevel(id) {
 	id1 = d.options[d.selectedIndex].id;
 	console.log(id1)
 	if (id1 == "Medium") {
-		board.heuristic = 6;
+		if (!understanding_mode)
+			board.heuristic = 6;
 		board.MAX_DEPTH = 4;
 		console.log(board.MAX_DEPTH, board.heuristic);
 	}
 	else if (id1 == "Hard") {
-		board.heuristic = 7;
+		if (!understanding_mode)
+			board.heuristic = 7;
 		board.MAX_DEPTH = 5;
 		console.log(board.MAX_DEPTH, board.heuristic);
 	}
 	else {
-		board.heuristic = 4;
+		if (!understanding_mode)
+			board.heuristic = 4;
 		board.MAX_DEPTH = 2;
 		console.log(board.MAX_DEPTH, board.heuristic);
 	}
@@ -373,14 +376,21 @@ function showPoints() {
 		var from_id = values[i].from_row.toString() + values[i].from_col.toString()
 		//var to_id=values[i].from_row.toString()+values[i].to_col.toString()
 		var gain = values[i].gain.toString()
-		tables.innerHTML += "<tr><td class='show_points'>"+from_id+"</td><td class='show_points'>" + gain + "</td></tr>";
-		//tables.innerHTML += "<tr><td class='show_points'><button class='showMoveSequenceButton' onclick='showMoveSeq("+from_id+")'>" + from_id + "</button></td><td class='show_points'>" + gain + "</td></tr>";
+		// tables.innerHTML += "<tr><td class='show_points'>"+from_id+"</td><td class='show_points'>" + gain + "</td></tr>";
+		tables.innerHTML += "<tr><td class='show_points'><button class='showMoveSequenceButton' onclick='showMoveSeq("+from_id+")'>" + from_id + "</button></td><td class='show_points'>" + gain + "</td></tr>";
 	}
 
 
 }
+
+var last_refresh = false;
 function refreshGains(){
+	var tmp = board.is_ai_red;
+	board.is_ai_red = !last_refresh;
 	var values = board.show_gains_util();
+	board.is_ai_red = tmp;
+	last_refresh = !last_refresh;
+
 	console.log(values);
 	//Implement this
 	var tables = document.getElementById('show_table');
