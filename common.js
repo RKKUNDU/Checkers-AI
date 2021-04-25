@@ -103,6 +103,7 @@ function GameStarted() {
 			$("#H").prop("disabled",true);
 			$("#level_u").prop("disabled",true);
 			$("#turn_u").prop("disabled",true)
+
 		}
 		if (!user_is_first && !ai_is_first) {
 			setRandomTurn();
@@ -110,7 +111,7 @@ function GameStarted() {
 		if (user_is_first)
 			startGame = true;
 		else
-			handle_ai_turn();
+			{ handle_ai_turn(); }
 		
 		startGame = true;
 	}

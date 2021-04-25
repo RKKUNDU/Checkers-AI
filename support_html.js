@@ -390,7 +390,6 @@ function refreshGains(){
 	var values = board.show_gains_util();
 	board.is_ai_red = tmp;
 	last_refresh = !last_refresh;
-
 	console.log(values);
 	//Implement this
 	var tables = document.getElementById('show_table');
