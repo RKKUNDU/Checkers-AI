@@ -6,13 +6,25 @@ Hard = 3
 */
 
 var proficiency = 1;
-data = [{"from_row":4,"from_col":5,"to_row":8,"to_col":5,"captures":[[7,4],[5,4]],"gain":2.9000000000000004,"val":9,"board":[[0,0,0,0,0,0,0,0,0],[0,3,1,3,1,3,1,3,1],[0,1,3,1,3,-1,3,1,3],[0,3,0,3,0,3,0,3,1],[0,1,3,0,3,1,3,0,3],[0,3,0,3,-1,3,0,3,2],[0,0,3,0,3,0,3,-1,3],[0,3,0,3,-1,3,0,3,-1],[0,-1,3,-1,3,0,3,-1,3]]}]
-console.log(data.length)
+// data = [{"from_row":4,"from_col":5,"to_row":8,"to_col":5,"captures":[[7,4],[5,4]],"gain":2.9000000000000004,"val":9,"board":[[0,0,0,0,0,0,0,0,0],[0,3,1,3,1,3,1,3,1],[0,1,3,1,3,-1,3,1,3],[0,3,0,3,0,3,0,3,1],[0,1,3,0,3,1,3,0,3],[0,3,0,3,-1,3,0,3,2],[0,0,3,0,3,0,3,-1,3],[0,3,0,3,-1,3,0,3,-1],[0,-1,3,-1,3,0,3,-1,3]]}]
+// console.log(data.length)
 
-var hard = [0,1,2,3,4,5]
-hard = [0]
-var meduim = [0]
-var easy = [0]
+var hard = []
+var medium =[]
+var easy =[]
+var i;
+for (i = 0; i < 146; i++) {
+  hard.push(i);
+} 
+i = 146
+for (i = 146; i < 292; i++) {
+  medium.push(i)
+} 
+
+i=292
+for (i = 292; i < data.length; i++) {
+  easy.push(i)
+} 
 var shuffled = false
 var shuffledState;
 var odd = true;
